@@ -1,0 +1,16 @@
+{
+  "manifest_version": 2,
+
+  "name": "CTab-Page",
+  "description": "This extension creates a custom new tab page where the user can freely modify what page links are present on the page.",
+  "version": "1.0",
+
+  "browser_action": {
+    "default_icon": "icon.png",
+    "default_popup": "popup.html"
+  },
+  "permissions": [
+    "activeTab",
+    "storage"
+  ]
+}
