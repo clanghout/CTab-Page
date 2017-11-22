@@ -6,10 +6,29 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>CTab Page</title>
-    <link href=style.css rel=stylesheet/>
-    <script type="text/javascript" src="index.js"></script>
+    <link href="style.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="modules/gridstack.min.css" />
+    <link rel="stylesheet" href="modules/gridstack-extra.min.css" />
 </head>
 <body>
-Hello World!
+<div class="grid-stack">
+    <div class="grid-stack-item"
+         data-gs-x="0" data-gs-y="0"
+         data-gs-width="4" data-gs-height="2">
+        <div class="grid-stack-item-content">test</div>
+    </div>
+    <div class="grid-stack-item"
+         data-gs-x="4" data-gs-y="0"
+         data-gs-width="4" data-gs-height="4">
+        <div class="grid-stack-item-content">test</div>
+    </div>
+</div>
+
+<script src="modules/lodash.js"></script>
+<script src="modules/jquery-3.2.1.min.js"></script>
+<script src="modules/jquery-ui.min.js"></script>
+<script src="modules/jquery.ui.touch-punch.min.js"></script>
+<script src="modules/gridstack.all.js"></script>
+<script type="text/javascript" src="index.js"></script>
 </body>
 </html>

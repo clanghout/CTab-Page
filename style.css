@@ -1,0 +1,13 @@
+.grid-stack{
+    background-color: lightgrey;
+}
+
+.grid-stack-item-content{
+    background-color: aliceblue;
+    right: 0 !important;
+
+}
+
+.grid-stack-item > .ui-resizable-se {
+    right: 0 !important;
+}
