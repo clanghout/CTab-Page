@@ -5,9 +5,14 @@
 .grid-stack-item-content{
     background-color: aliceblue;
     right: 0 !important;
+    border: 1px solid #b94a48;
 
 }
 
 .grid-stack-item > .ui-resizable-se {
     right: 0 !important;
+}
+
+body {
+    background-color: gainsboro;
 }

@@ -11,15 +11,19 @@
     <link rel="stylesheet" href="modules/gridstack-extra.min.css" />
 </head>
 <body>
-<div class="grid-stack">
+<div class="grid-stack" id="main-dashboard">
     <div class="grid-stack-item"
          data-gs-x="0" data-gs-y="0"
-         data-gs-width="4" data-gs-height="2">
-        <div class="grid-stack-item-content">test</div>
+         data-gs-width="2" data-gs-height="1">
+        <div class="grid-stack-item-content">
+            <object data="contentElement.html" type="html">
+                test
+            </object>
+        </div>
     </div>
     <div class="grid-stack-item"
          data-gs-x="4" data-gs-y="0"
-         data-gs-width="4" data-gs-height="4">
+         data-gs-width="2" data-gs-height="1">
         <div class="grid-stack-item-content">test</div>
     </div>
 </div>
@@ -29,6 +33,7 @@
 <script src="modules/jquery-ui.min.js"></script>
 <script src="modules/jquery.ui.touch-punch.min.js"></script>
 <script src="modules/gridstack.all.js"></script>
+<script type="text/javascript" src="gridcontrols.js"></script>
 <script type="text/javascript" src="index.js"></script>
 </body>
 </html>
