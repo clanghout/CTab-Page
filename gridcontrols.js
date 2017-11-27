@@ -3,6 +3,9 @@
 function grid() {
     var service = {};
     service.grid = $(".grid-stack");
+    service.count = 0;
+    service.widgets = {};
+    let widgetFactory = new WidgetFactory();
 
     var options = {
         animate: true,
@@ -14,9 +17,67 @@ function grid() {
         width: 12
     };
 
-    service.grid.gridstack(options);
-    service.gridData = service.grid.data('gridstack');
-    console.log(service.gridData);
+    service.initialize = function () {
+        service.grid.gridstack(options);
+        service.gridData = service.grid.data('gridstack');
+        let curConfig = service.getConfig();
+        console.log("current config", curConfig);
+
+
+        // Batch update to add all widgets at once
+        service.gridData.batchUpdate();
+        // for (let widgetKey in curConfig) {
+        //     let widget = curConfig[widgetKey];
+        //     console.log("widget from config: ", widget);
+        //     let content = widget.content;
+        //     service.addWidgetToGrid(new widgetFactory(
+        //         `<div>
+        //             <div class="grid-stack-item-content">
+        //                 ${content}
+        //             </div>
+        //         </div>
+        //         `, 0, 0, 1, 1, true, 1, 2, 1, 2, 0)
+        //     );
+        // }
+        service.load();
+        service.gridData.commit();
+
+        window.onbeforeunload = function () {
+            service.saveGrid();
+        };
+
+        service.grid.on("change", function (event, items) {
+            console.log("change registered");
+            // When you change the title of a widget, a gridstack onChange event is retrieved with
+            // items === 'undefined'.
+            debugger;
+            if (typeof items !== 'undefined') {
+                for (let i = 0; i < items.length; i++) {
+                    if (items[i].id in service.widgets) {
+                        service.update(items[i].id, items[i]);
+                    }
+                }
+            }
+        });
+    };
+
+    // Update the mutable object in the model.widgets
+    // two way binding
+    service.update = function (id, item) {
+        let widget = service.widgets[id];
+        widget.settings.x = item.x;
+        widget.settings.y = item.y;
+        widget.settings.width = item.width;
+        widget.settings.minWidth = item.minWidth;
+        widget.settings.maxWidth = item.maxWidth;
+        widget.settings.height = item.height;
+        widget.settings.minHeight = item.minHeight;
+        widget.settings.maxHeight = item.maxHeight;
+        // hardcode autoposition to false to actually load the widget on the same spot next time.
+        widget.settings.autoPosition = false;
+    };
+
+
     service.getSortedWidgets = function () {
         service.gridData.grid._sortNodes();
         var ids = [];
@@ -39,56 +100,168 @@ function grid() {
             });
     };
 
-    service.addWidgetToGrid = function (widget) {
+    service.addWidgetToGrid = function (widget, id, autoPos) {
+        if (typeof id === 'undefined') {
+            service.count++;
+            widget.id = service.count;
+        } else {
+            widget.id = id;
+        }
+        console.log("widget", widget.settings.x);
 
+        service.widgets[service.count] = widget;
+        if (autoPos) {
+            widget.settings.autoPosition = true;
+        }
         service.gridData.addWidget(
-            widget.el,
-            widget.x,
-            widget.y,
-            widget.width,
-            widget.height,
-            widget.autoPosition,
-            widget.minWidth,
-            widget.maxWidth,
-            widget.minHeight,
-            widget.maxHeight,
+            widget.widgetTemplate(),
+            widget.settings.x,
+            widget.settings.y,
+            widget.settings.width,
+            widget.settings.height,
+            false,
+            widget.settings.minWidth,
+            widget.settings.maxWidth,
+            widget.settings.minHeight,
+            widget.settings.maxHeight,
             widget.id);
+        widget.settings.autoPosition = false;
+    };
+
+    function WidgetFactory() {
+        this.createWidget = function (title, contentUrl, settings, id) {
+            var widget = function () {
+            };
+            widget.settings = settings;
+            widget.title = title;
+
+            // TODO HTML and javascript need to be separated
+            widget.getTag = function () {
+                return '<a href="' + contentUrl + '">' + contentUrl + '</a>';
+            };
+
+            // The basic template for a widget
+            widget.widgetTemplate = function () {
+                return '<div>' +
+                    '<div class="grid-stack-item-content">' +
+                    '<div id="' +
+                    id +
+                    '">' +
+                    this.title +
+                    '</div>' +
+                    '</div>' +
+                    '</div>';
+            };
+
+            widget.getConfig = function () {
+                return {
+                    "title": this.title,
+                    "settings": settings,
+                    "contentUrl": contentUrl,
+                };
+            };
+
+            widget.toString = function () {
+                return "{Title: " + title + ",\n" +
+                    "settings: " + JSON.stringify(settings) +
+                    ",\ncontentUrl: " + contentUrl + "\n" +
+                    "}"
+            };
+
+            return widget;
+        };
+    };
+
+    service.getConfig = function () {
+        return JSON.parse(window.localStorage.getItem("CTabConfig"));
+    };
+
+    service.setConfig = function (config) {
+        console.log("set storage", config);
+        window.localStorage.setItem("CTabConfig", JSON.stringify(config));
+    };
+    service.saveGrid = function () {
+        console.log("curconfig genereated: ", service.getDashboardConfig());
+        service.setConfig(service.getDashboardConfig());
+    };
+
+    service.getDashboardConfig = function () {
+        let configuration = [];
+        let ids = service.getSortedWidgets();
+        for (let i = 0; i < ids.length; i++) {
+            let w = service.widgets[ids[i]];
+            let wc = w.getConfig();
+            configuration = configuration.concat(wc);
+        }
+        return configuration;
+    };
+
+
+    // Loads the user configuration in the dashboard
+    service.load = function () {
+        service.loadModel();
+        service.loadGrid();
+    };
+
+    service.loadModel = function () {
+        let widgetData = service.getConfig();
+        service.widgets = {};
+        widgetData = Array.isArray(widgetData) ? widgetData : [];
+
+        for (let i = 0; i < widgetData.length; i++) {
+            let title = widgetData[i].title;
+            let settings = widgetData[i].settings;
+            let content = widgetData[i].content;
+            let widget = widgetFactory.createWidget(title, content, settings, i);
+            widget.prototype.id = service.count;
+            service.widgets[service.count] = widget;
+            service.count++;
+        }
 
     };
 
-    service.widgetFactory = function () {
-        return function (el, x, y, width, height, autoPosition, minWidth, maxWidth, minHeight, maxHeight, id) {
-            // define the default properties of a gridstack widget
-            console.log("tjos", this);
-            this.el = (typeof el === 'undefined') ? "" : el;
-            this.x = (typeof x === 'number') ? x : 0;
-            this.y = (typeof y === 'number') ? y : 0;
-            this.width = (typeof width === 'number') ? width : 1;
-            this.height = (typeof height === 'number') ? height : 1;
-            this.autoPosition = (typeof autoPosition === 'boolean') ? autoPosition : false;
-            this.minWidth = (typeof minWidth === 'number') ? minWidth : 1;
-            this.maxWidth = (typeof maxWidth === 'number') ? maxWidth : 2;
-            this.minHeight = (typeof minHeight === 'number') ? minHeight : 1;
-            this.maxHeight = (typeof maxHeight === 'number') ? maxHeight : 2;
-            this.id = (typeof id === 'number') ? id : 0;
-            // TODO: incremental id
-
-            this.getConfig = function () {
-                return {
-                    "el": this.el,
-                    "x": this.x,
-                    "y": this.y,
-                    "width": this.width,
-                    "height": this.height,
-                    "autoPosition": this.autoPosition,
-                    "minWidth": this.minWidth,
-                    "maxWidth": this.maxWidth,
-                    "minHeight": this.minHeight,
-                    "maxHeight": this.maxHeight
-                };
+    service.loadGrid = function () {
+        // add the widgets to the grid
+        for (let key in service.widgets) {
+            if (service.widgets.hasOwnProperty(key)) {
+                let widget = service.widgets[key];
+                service.addWidgetToGrid(widget, key, true);
             }
-            console.log("adding widget", this.getConfig());
         }
-    }
+
+    };
+
+
+    service.debug = function (sampleConfig, addSampleWidgets) {
+        console.log("debug:");
+        if (sampleConfig) {
+            console.log("using sample config");
+            let sampleConfiguration = {
+                "widgets": [{
+                    "widgetConfig": {"width": 2, "height": 2},
+                    "title": "github",
+                    "content": '<a href="https://www.github.com">github</a>'
+                }],
+            };
+            CTabGrid.setConfig(sampleConfiguration);
+        }
+        if (addSampleWidgets) {
+            console.log("adding widget");
+            let settings = {
+                'x': 5,
+                'y': 5,
+                'width': 1,
+                'height': 1,
+                'autoposition': false,
+                'minWidth': 1,
+                'maxWidth': 2,
+                'minHeight': 1,
+                'maxHeight': 2,
+                'id': 0
+            };
+            service.addWidgetToGrid(widgetFactory.createWidget("testwidget", "https://www.facebook.com", settings, service.count + 1));
+        }
+    };
+
     return service;
 }

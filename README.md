@@ -16,3 +16,16 @@ TODO: remove modules
 1. make sure developer mode is enabled
 1. click "load unpacked extension"
 1. select the project root folder
+
+
+## Features
+|Feature | Status |
+| --- | --- |
+|localstorage|in progress|
+|styling|todo|
+|link preview|todo|
+|simple add|todo|
+|multi type blocks|todo|
+
+## To fix
+- Position save is not correctly used 
