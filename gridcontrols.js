@@ -6,6 +6,7 @@ function grid() {
     service.count = 0;
     service.widgets = {};
     let widgetFactory = new WidgetFactory();
+    let dirty = false;
 
     var options = {
         animate: true,
@@ -47,7 +48,7 @@ function grid() {
         };
 
         service.grid.on("change", function (event, items) {
-            console.log("change registered");
+            dirty = true;
             // When you change the title of a widget, a gridstack onChange event is retrieved with
             // items === 'undefined'.
             if (typeof items !== 'undefined') {
@@ -185,8 +186,14 @@ function grid() {
         window.localStorage.setItem("CTabConfig", config);
     };
     service.saveGrid = function () {
-        console.log("curconfig genereated: ", service.getDashboardConfig());
-        service.setConfig(service.getDashboardConfig());
+        if(dirty){
+            console.log("curconfig genereated: ", service.getDashboardConfig());
+            service.setConfig(service.getDashboardConfig());
+            dirty = false;
+        }
+        else{
+            console.log("nothing to save");
+        }
     };
 
     service.getDashboardConfig = function () {

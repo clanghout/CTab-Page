@@ -25,7 +25,9 @@ TODO: remove modules
 |styling|todo|
 |link preview|todo|
 |simple add|todo|
-|multi type blocks|todo|
+|multi type blocks<br>calendar<br>notes<br>|todo|
 
 ## To fix
 - Position save is not correctly used 
+
+
