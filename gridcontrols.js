@@ -43,14 +43,13 @@ function grid() {
         service.gridData.commit();
 
         window.onbeforeunload = function () {
-            service.saveGrid();
+            //service.saveGrid();
         };
 
         service.grid.on("change", function (event, items) {
             console.log("change registered");
             // When you change the title of a widget, a gridstack onChange event is retrieved with
             // items === 'undefined'.
-            debugger;
             if (typeof items !== 'undefined') {
                 for (let i = 0; i < items.length; i++) {
                     if (items[i].id in service.widgets) {
@@ -112,6 +111,8 @@ function grid() {
         service.widgets[service.count] = widget;
         if (autoPos) {
             widget.settings.autoPosition = true;
+        }else{
+            widget.settings.autoposition = false;
         }
         service.gridData.addWidget(
             widget.widgetTemplate(),
@@ -119,7 +120,7 @@ function grid() {
             widget.settings.y,
             widget.settings.width,
             widget.settings.height,
-            false,
+            widget.settings.autoposition,
             widget.settings.minWidth,
             widget.settings.maxWidth,
             widget.settings.minHeight,
@@ -178,7 +179,10 @@ function grid() {
 
     service.setConfig = function (config) {
         console.log("set storage", config);
-        window.localStorage.setItem("CTabConfig", JSON.stringify(config));
+        if(typeof config !== 'string'){
+            config = JSON.stringify(config);
+        }
+        window.localStorage.setItem("CTabConfig", config);
     };
     service.saveGrid = function () {
         console.log("curconfig genereated: ", service.getDashboardConfig());
@@ -225,7 +229,7 @@ function grid() {
         for (let key in service.widgets) {
             if (service.widgets.hasOwnProperty(key)) {
                 let widget = service.widgets[key];
-                service.addWidgetToGrid(widget, key, true);
+                service.addWidgetToGrid(widget, key, false);
             }
         }
 
@@ -252,14 +256,15 @@ function grid() {
                 'y': 5,
                 'width': 1,
                 'height': 1,
-                'autoposition': false,
+                'autoposition': true,
                 'minWidth': 1,
                 'maxWidth': 2,
                 'minHeight': 1,
                 'maxHeight': 2,
                 'id': 0
             };
-            service.addWidgetToGrid(widgetFactory.createWidget("testwidget", "https://www.facebook.com", settings, service.count + 1));
+            service.addWidgetToGrid(widgetFactory.createWidget("testwidget", "https://www.facebook.com", settings, service.count + 1),service.count,true);
+            service.count++;
         }
     };
 
