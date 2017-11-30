@@ -172,7 +172,7 @@ function grid() {
 
             return widget;
         };
-    };
+    }
 
     service.getConfig = function () {
         return JSON.parse(window.localStorage.getItem("CTabConfig"));

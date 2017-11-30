@@ -1,0 +1,13 @@
+{
+  "name": "CTab-Page",
+  "version": "1.0.0",
+  "main": "index.html",
+  "repository": "https://github.com/clanghout/CTab-Page",
+  "author": "clanghout",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "bootstrap": "3",
+    "gridstack": "^0.3.0"
+  }
+}
