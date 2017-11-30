@@ -139,7 +139,7 @@ function grid() {
 
             // TODO HTML and javascript need to be separated
             widget.getTag = function () {
-                return '<a href="' + contentUrl + '">' + contentUrl + '</a>';
+                return '<a href="' + contentUrl + '">' + title + '</a>';
             };
 
             // The basic template for a widget
@@ -149,7 +149,7 @@ function grid() {
                     '<div id="' +
                     id +
                     '">' +
-                    this.title +
+                    this.getTag() +
                     '</div>' +
                     '</div>' +
                     '</div>';
