@@ -107,12 +107,12 @@ function grid() {
         } else {
             widget.id = id;
         }
-        console.log("widget", widget.settings.x);
+        console.log("widget", widget.toString());
 
         service.widgets[service.count] = widget;
         if (autoPos) {
             widget.settings.autoPosition = true;
-        }else{
+        } else {
             widget.settings.autoposition = false;
         }
         service.gridData.addWidget(
@@ -136,10 +136,11 @@ function grid() {
             };
             widget.settings = settings;
             widget.title = title;
+            widget.contentUrl = contentUrl;
 
             // TODO HTML and javascript need to be separated
             widget.getTag = function () {
-                return '<a href="' + contentUrl + '">' + title + '</a>';
+                return title + '<a href="' + contentUrl + '"><span class="ctab-widget-link"></span></a>';
             };
 
             // The basic template for a widget
@@ -148,7 +149,7 @@ function grid() {
                     '<div class="grid-stack-item-content">' +
                     '<div id="' +
                     id +
-                    '">' +
+                    '" class="ctab-widget-body">' +
                     this.getTag() +
                     '</div>' +
                     '</div>' +
@@ -180,18 +181,18 @@ function grid() {
 
     service.setConfig = function (config) {
         console.log("set storage", config);
-        if(typeof config !== 'string'){
+        if (typeof config !== 'string') {
             config = JSON.stringify(config);
         }
         window.localStorage.setItem("CTabConfig", config);
     };
     service.saveGrid = function () {
-        if(dirty){
+        if (dirty) {
             console.log("curconfig genereated: ", service.getDashboardConfig());
             service.setConfig(service.getDashboardConfig());
             dirty = false;
         }
-        else{
+        else {
             console.log("nothing to save");
         }
     };
@@ -222,8 +223,8 @@ function grid() {
         for (let i = 0; i < widgetData.length; i++) {
             let title = widgetData[i].title;
             let settings = widgetData[i].settings;
-            let content = widgetData[i].content;
-            let widget = widgetFactory.createWidget(title, content, settings, i);
+            let contentUrl = widgetData[i].contentUrl;
+            let widget = widgetFactory.createWidget(title, contentUrl, settings, i);
             widget.prototype.id = service.count;
             service.widgets[service.count] = widget;
             service.count++;
@@ -251,7 +252,7 @@ function grid() {
                 "widgets": [{
                     "widgetConfig": {"width": 2, "height": 2},
                     "title": "github",
-                    "content": '<a href="https://www.github.com">github</a>'
+                    "contentUrl": 'https://www.github.com'
                 }],
             };
             CTabGrid.setConfig(sampleConfiguration);
@@ -270,7 +271,7 @@ function grid() {
                 'maxHeight': 2,
                 'id': 0
             };
-            service.addWidgetToGrid(widgetFactory.createWidget("testwidget", "https://www.facebook.com", settings, service.count + 1),service.count,true);
+            service.addWidgetToGrid(widgetFactory.createWidget("testwidget", "https://www.facebook.com", settings, service.count + 1), service.count, true);
             service.count++;
         }
     };
