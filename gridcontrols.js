@@ -276,5 +276,15 @@ function grid() {
         }
     };
 
+    service.simpleAdd = function (title, url) {
+        service.addWidgetToGrid(widgetFactory.createWidget(title, url, {
+            'x': 10,
+            'y': 10,
+            'autoposition': true,
+        }, service.count + 1), service.count, true);
+        service.count++;
+    };
+
+
     return service;
 }
