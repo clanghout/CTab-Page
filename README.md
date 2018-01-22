@@ -10,6 +10,7 @@ TODO: remove modules
   - combination with chrome extension to work client side
 - https://developer.chrome.com/extensions/getstarted#unpacked
 - css3 grids
+- extension button in bar to add to config
 
 ## Add as new tab page
 1. open chrome://extensions
@@ -21,13 +22,13 @@ TODO: remove modules
 ## Features
 |Feature | Status |
 | --- | --- |
-|localstorage|in progress|
+|localstorage|done|
 |styling|todo|
 |link preview|todo|
-|simple add|todo|
+|simple add|temporary solution|
 |multi type blocks<br>calendar<br>notes<br>|todo|
 
 ## To fix
-- Position save is not correctly used 
+✅done - Position save is not correctly used 
 
 

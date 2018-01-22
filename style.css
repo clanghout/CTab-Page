@@ -1,11 +1,13 @@
 .grid-stack {
     background-color: lightgrey;
+    padding: 10px 0;
 }
 
 .grid-stack-item-content {
-    background-color: aliceblue;
+    background-color: lightblue;
     right: 0 !important;
-    border: 1px solid #b94a48;
+    border: 1px solid dimgray;
+    border-radius: 7px;
 
 }
 
@@ -19,13 +21,15 @@ body {
 
 .ctab-widget-body {
     position: relative;
-    width: 100%;
+    width: 95%;
     height: 100%;
     font-size: 2em;
     text-align: center;
     vertical-align: middle;
+
 }
 
+/*Invisible overlay containing the link*/
 .ctab-widget-link {
     position: absolute;
     width: 100%;
@@ -38,4 +42,28 @@ body {
     /* fixes overlap error in IE7/8,
        make sure you have an empty gif */
     background-image: url('empty.gif');
+}
+
+.buttonBar button{
+    border: 1px solid lightslategrey;
+    border-radius: 3px;
+    background-color: lightblue;
+    font-weight: bold;
+    margin: 5px 2px 10px;
+}
+ .buttonBar #saveButton, .buttonBar #backupButton{
+     background-color: lightgreen;
+ }
+.buttonBar #clearButton{
+    background-color: lightcoral;
+}
+
+.buttonBar #debugButton, .buttonBar #widescreenButton {
+    background-color: yellow;
+}
+
+
+/*DEBUG STYLES*/
+.devConfig #configField #configFieldInput{
+    width: 70%;
 }

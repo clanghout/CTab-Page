@@ -11,7 +11,7 @@ function grid() {
     var options = {
         animate: true,
         cellHeight: 60,
-        verticalMargin: 0,
+        verticalMargin: 5,
         float: true,
         disableOneColumnMode: true,
         removable: true,
@@ -27,24 +27,12 @@ function grid() {
 
         // Batch update to add all widgets at once
         service.gridData.batchUpdate();
-        // for (let widgetKey in curConfig) {
-        //     let widget = curConfig[widgetKey];
-        //     console.log("widget from config: ", widget);
-        //     let content = widget.content;
-        //     service.addWidgetToGrid(new widgetFactory(
-        //         `<div>
-        //             <div class="grid-stack-item-content">
-        //                 ${content}
-        //             </div>
-        //         </div>
-        //         `, 0, 0, 1, 1, true, 1, 2, 1, 2, 0)
-        //     );
-        // }
         service.load();
         service.gridData.commit();
 
+        // Save whenever you leave the screen
         window.onbeforeunload = function () {
-            //service.saveGrid();
+            //service.saveGrid(); // Disabled to keep me from accidentally clearing my config
         };
 
         service.grid.on("change", function (event, items) {
@@ -107,7 +95,6 @@ function grid() {
         } else {
             widget.id = id;
         }
-        console.log("widget", widget.toString());
 
         service.widgets[service.count] = widget;
         if (autoPos) {
