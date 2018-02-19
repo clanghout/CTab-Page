@@ -7,7 +7,9 @@
 
   "permissions": [
     "activeTab",
-    "storage"
+    "storage",
+    "http://*/",
+    "https://*/"
   ],
   "chrome_url_overrides" : {
     "newtab" : "index.html"

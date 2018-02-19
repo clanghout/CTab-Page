@@ -115,6 +115,7 @@ function grid() {
             widget.settings.maxHeight,
             widget.id);
         widget.settings.autoPosition = false;
+        $("#"+widget.title).linkpreview();
     };
 
     function WidgetFactory() {
@@ -127,7 +128,7 @@ function grid() {
 
             // TODO HTML and javascript need to be separated
             widget.getTag = function () {
-                return title + '<a href="' + contentUrl + '"><span class="ctab-widget-link"></span></a>';
+                return title + '<a href="' + contentUrl + '" id="' + title + '"><span class="ctab-widget-link"></span></a>';
             };
 
             // The basic template for a widget
