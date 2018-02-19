@@ -9,9 +9,9 @@
     <link href="style.css" rel="stylesheet"/>
     <link rel="stylesheet" href="node_modules/gridstack/dist/gridstack.css"/>
     <link rel="stylesheet" href="node_modules/gridstack/dist/gridstack-extra.css"/>
+    <link rel="stylesheet" href="modules/bootstrap-linkpreview.css">
 </head>
 <body>
-
 <div class="grid-stack" id="main-dashboard">
 </div>
 
@@ -20,16 +20,6 @@
     <button id="clearButton">Reset to Default</button>
     <button id="debugButton">Add Test Widget</button>
     <button id="widescreenButton">Widescreen Mode</button>
-</div>
-
-<div class="devConfig">
-    <div id="configField">
-        <textarea name="configFieldInput" id="configFieldInput" cols="30" rows="10"></textarea>
-    </div>
-    <button id="saveDevConfig">save dev config</button>
-    <button id="backupButton">Save config to file</button>
-    <button id="loadBackupButton">Load config from file</button>
-
 </div>
 
 <div class="simpleAdd">
@@ -44,12 +34,28 @@
     <button id="simpleAddButton">Add</button>
 </div>
 
+<div class="others">
+    <input type="checkbox" id="devEnabled"/>
+    <label for="devEnabled">Developer mode</label>
+</div>
+<div class="devConfig">
+    <div id="configField">
+        <textarea name="configFieldInput" id="configFieldInput" cols="30" rows="10"></textarea>
+    </div>
+    <button id="saveDevConfig">save dev config</button>
+    <button id="backupButton">Save config to file</button>
+    <button id="loadBackupButton">Load config from file</button>
+
+</div>
+
 <script src="modules/lodash.js"></script>
 <script src="modules/jquery-3.2.1.min.js"></script>
 <script src="modules/jquery.ui.touch-punch.min.js"></script>
 <script src="modules/jquery-ui.min.js"></script>
+<script src="node_modules/bootstrap/dist/js/bootstrap.js"></script>
 <script src="node_modules/gridstack/dist/gridstack.all.js"></script>
 <script src="node_modules/gridstack/dist/gridstack.jQueryUI.js"></script>
+<script src="modules/bootstrap-linkpreview.min.js"></script>
 <script type="text/javascript" src="gridcontrols.js"></script>
 <script type="text/javascript" src="index.js"></script>
 </body>
