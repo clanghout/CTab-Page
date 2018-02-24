@@ -19,9 +19,10 @@ function supportsImports() {
     return 'import' in document.createElement('link');
 }
 
-document.querySelector("#saveButton").addEventListener('click', CTabGrid.saveGrid);
-document.querySelector("#clearButton").addEventListener('click', () => CTabGrid.debug(true, false));
-document.querySelector("#debugButton").addEventListener('click', () => CTabGrid.debug(false, true));
+document.getElementById("saveButton").addEventListener('click', CTabGrid.saveGrid);
+document.getElementById("previewButton").addEventListener('click', CTabGrid.loadLinkPreview);
+document.getElementById("clearButton").addEventListener('click', () => CTabGrid.debug(true, false));
+document.getElementById("debugButton").addEventListener('click', () => CTabGrid.debug(false, true));
 document.getElementById("backupButton").addEventListener('click', saveCurConfig);
 document.getElementById("devEnabled").addEventListener('change', (a) => {
     if (a.srcElement.checked) {

@@ -115,7 +115,6 @@ function grid() {
             widget.settings.maxHeight,
             widget.id);
         widget.settings.autoPosition = false;
-        $("#"+widget.title).linkpreview();
     };
 
     function WidgetFactory() {
@@ -183,6 +182,12 @@ function grid() {
         else {
             console.log("nothing to save");
         }
+    };
+
+    service.loadLinkPreview = function () {
+        console.log(Object.keys(service.widgets));
+        Object.keys(service.widgets).forEach(a =>
+            $("#"+service.widgets[a].title).linkpreview())
     };
 
     service.getDashboardConfig = function () {
