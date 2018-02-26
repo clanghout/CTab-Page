@@ -118,22 +118,27 @@ function grid() {
     };
 
     function WidgetFactory() {
-        this.createWidget = function (title, contentUrl, settings, id) {
+        this.createWidget = function (title, contentUrl, settings, id, color) {
             var widget = function () {
             };
             widget.settings = settings;
             widget.title = title;
             widget.contentUrl = contentUrl;
+            widget.color = color;
 
             // TODO HTML and javascript need to be separated
             widget.getTag = function () {
                 return title + '<a href="' + contentUrl + '" id="' + title + '"><span class="ctab-widget-link"></span></a>';
             };
 
+            widget.colorInfo = function () {
+                return this.color !== undefined ? 'style="background-color: ' + this.color + '"' : '';
+            };
+
             // The basic template for a widget
             widget.widgetTemplate = function () {
                 return '<div>' +
-                    '<div class="grid-stack-item-content">' +
+                    '<div class="grid-stack-item-content"' + this.colorInfo() + '>' +
                     '<div id="' +
                     id +
                     '" class="ctab-widget-body">' +
@@ -148,6 +153,7 @@ function grid() {
                     "title": this.title,
                     "settings": settings,
                     "contentUrl": contentUrl,
+                    "color": color,
                 };
             };
 
@@ -155,6 +161,7 @@ function grid() {
                 return "{Title: " + title + ",\n" +
                     "settings: " + JSON.stringify(settings) +
                     ",\ncontentUrl: " + contentUrl + "\n" +
+                    ",\ncolor: " + color + "\n" +
                     "}"
             };
 
@@ -187,7 +194,10 @@ function grid() {
     service.loadLinkPreview = function () {
         console.log(Object.keys(service.widgets));
         Object.keys(service.widgets).forEach(a =>
-            $("#"+service.widgets[a].title).linkpreview())
+            $("#" + service.widgets[a].title).linkpreview({
+                previewContainer: $("#" + service.widgets[a].title).before(),
+                errorMessage: "unable to load"
+            }))
     };
 
     service.getDashboardConfig = function () {
@@ -217,7 +227,8 @@ function grid() {
             let title = widgetData[i].title;
             let settings = widgetData[i].settings;
             let contentUrl = widgetData[i].contentUrl;
-            let widget = widgetFactory.createWidget(title, contentUrl, settings, i);
+            let color = widgetData[i].color;
+            let widget = widgetFactory.createWidget(title, contentUrl, settings, i, color);
             widget.prototype.id = service.count;
             service.widgets[service.count] = widget;
             service.count++;
