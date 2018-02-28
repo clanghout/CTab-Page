@@ -118,13 +118,14 @@ function grid() {
     };
 
     function WidgetFactory() {
-        this.createWidget = function (title, contentUrl, settings, id, color) {
+        this.createWidget = function (title, contentUrl, settings, id, color, textcolor) {
             var widget = function () {
             };
             widget.settings = settings;
             widget.title = title;
             widget.contentUrl = contentUrl;
             widget.color = color;
+            widget.textcolor = textcolor;
 
             // TODO HTML and javascript need to be separated
             widget.getTag = function () {
@@ -132,7 +133,10 @@ function grid() {
             };
 
             widget.colorInfo = function () {
-                return this.color !== undefined ? 'style="background-color: ' + this.color + '"' : '';
+                let styleInfo = 'style="';
+                styleInfo += this.textcolor !== undefined ? 'color:' + this.textcolor + ';' : "";
+                styleInfo += this.color !== undefined ? 'background-color:' + this.color + ';' : "";
+                return styleInfo + '"';
             };
 
             // The basic template for a widget
@@ -154,6 +158,7 @@ function grid() {
                     "settings": settings,
                     "contentUrl": contentUrl,
                     "color": color,
+                    "textcolor": textcolor,
                 };
             };
 
@@ -162,6 +167,7 @@ function grid() {
                     "settings: " + JSON.stringify(settings) +
                     ",\ncontentUrl: " + contentUrl + "\n" +
                     ",\ncolor: " + color + "\n" +
+                    ",\ntextcolor: " + textcolor + "\n" +
                     "}"
             };
 
@@ -228,7 +234,8 @@ function grid() {
             let settings = widgetData[i].settings;
             let contentUrl = widgetData[i].contentUrl;
             let color = widgetData[i].color;
-            let widget = widgetFactory.createWidget(title, contentUrl, settings, i, color);
+            let textcolor = widgetData[i].textcolor;
+            let widget = widgetFactory.createWidget(title, contentUrl, settings, i, color, textcolor);
             widget.prototype.id = service.count;
             service.widgets[service.count] = widget;
             service.count++;
