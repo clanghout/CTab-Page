@@ -6,6 +6,7 @@ function grid() {
     service.count = 0;
     service.widgets = {};
     let widgetFactory = new WidgetFactory();
+    let defaultWidgetColor = "#fff";
     let dirty = false;
 
     var options = {
@@ -135,7 +136,8 @@ function grid() {
             widget.colorInfo = function () {
                 let styleInfo = 'style="';
                 styleInfo += this.textcolor !== undefined ? 'color:' + this.textcolor + ';' : "";
-                styleInfo += this.color !== undefined ? 'background-color:' + this.color + ';' : "";
+                styleInfo += this.color !== undefined ? '--item-color:' + this.color + ';' :
+                    "--item-color:" + defaultWidgetColor + ";";
                 return styleInfo + '"';
             };
 

@@ -1,14 +1,30 @@
+
+
 .grid-stack {
-    background-color: lightgrey;
     padding: 10px 0;
 }
 
 .grid-stack-item-content {
-    background-color: lightblue;
     right: 0 !important;
     border: 1px solid dimgray;
     border-radius: 7px;
+    overflow: hidden;
 
+    display: inline-block;
+    position: relative;
+
+}
+
+.grid-stack-item-content:before {
+    content: "";
+    display: block;
+    position: absolute;
+    z-index: -1;
+    width: 100%;
+    height: 100%;
+    opacity: .5;
+    /*--item-color will be defined dynamically within the item itself in gridcontrols.js*/
+    background-color: var(--item-color);
 }
 
 .grid-stack-item > .ui-resizable-se {
@@ -16,7 +32,7 @@
 }
 
 body {
-    background-color: gainsboro;
+    background: url("https://source.unsplash.com/random/1920x1080");
 }
 
 .ctab-widget-body {
@@ -26,6 +42,8 @@ body {
     font-size: 2em;
     text-align: center;
     vertical-align: middle;
+    overflow: hidden;
+    opacity: 1;
 
 }
 
@@ -36,7 +54,6 @@ body {
     height: 100%;
     top: 0;
     left: 0;
-
     z-index: 1;
 
     /* fixes overlap error in IE7/8,
@@ -44,17 +61,19 @@ body {
     background-image: url('empty.gif');
 }
 
-.buttonBar button{
+.buttonBar button {
     border: 1px solid lightslategrey;
     border-radius: 3px;
     background-color: lightblue;
     font-weight: bold;
     margin: 5px 2px 10px;
 }
- .buttonBar #saveButton, .buttonBar #backupButton{
-     background-color: lightgreen;
- }
-.buttonBar #clearButton{
+
+.buttonBar #saveButton, .buttonBar #backupButton {
+    background-color: lightgreen;
+}
+
+.buttonBar #clearButton {
     background-color: lightcoral;
 }
 
@@ -62,8 +81,7 @@ body {
     background-color: yellow;
 }
 
-
 /*DEBUG STYLES*/
-.devConfig #configField #configFieldInput{
+.devConfig #configField #configFieldInput {
     width: 70%;
 }
