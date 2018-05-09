@@ -84,5 +84,26 @@ body {
 
 /*DEBUG STYLES*/
 .devConfig #configField #configFieldInput {
-    width: 70%;
+    width: calc(100% - 15px);
+}
+
+.simpleAdd{
+    display: grid;
+    grid-template-columns: 50px 150px;
+    grid-template-rows: repeat(2,20px);
+    width: min-content;
+    padding: 5px;
+    border: 1px solid dimgray;
+    border-radius: 3px;
+    background-color: rgba(255,255,255,0.5);
+}
+.simpleAdd > label, .simpleAdd > button{
+    font-weight: bolder;
+}
+
+.others{
+    border: 1px solid dimgray;
+    border-radius: 3px;
+    background-color: rgba(255,255,255,0.5);
+    max-width: 80%;
 }
