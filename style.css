@@ -33,6 +33,7 @@
 
 body {
     background: url("https://source.unsplash.com/random/1920x1080");
+    background-size: cover;
 }
 
 .ctab-widget-body {
