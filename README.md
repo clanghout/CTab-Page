@@ -1,15 +1,14 @@
 # CTab-Page
 
-https://github.com/gridstack/gridstack.js
-
 TODO: remove modules
 
+## Get to work(Install)
+1. clone the repo
+1. yarn / npm install
+1. see Add as new tab section
+
 ## Ideas
-- localstorage for configuration
-- https://github.com/Ekito/bootstrap-linkpreview
-  - combination with chrome extension to work client side
 - https://developer.chrome.com/extensions/getstarted#unpacked
-- css3 grids
 - extension button in bar to add to config
 
 ## Add as new tab page
@@ -21,14 +20,16 @@ TODO: remove modules
 
 ## Features
 |Feature | Status |
-| --- | --- |
-|localstorage|done|
-|styling|todo|
-|link preview|todo|
-|simple add|temporary solution|
-|multi type blocks<br>calendar<br>notes<br>|todo|
+| ---            | ---                    |
+|localstorage    |done                    |
+|styling         |in progress             |
+|link preview    |bad solution            |
+|simple add      |temporary solution      |
+|multi type blocks<br>calendar<br>notes<br>clock|TODO|
+|Shortcut to save|implemented Ctrl+Shift+S|
 
 ## To fix
-✅done - Position save is not correctly used 
+- ✅done - Position save is not correctly used
+
 
 
