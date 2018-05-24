@@ -26,10 +26,10 @@ document.getElementById("debugButton").addEventListener('click', () => CTabGrid.
 document.getElementById("backupButton").addEventListener('click', saveCurConfig);
 document.getElementById("devEnabled").addEventListener('change', (a) => {
     if (a.srcElement.checked) {
-        devSwitch('block')
+        devSwitch('block');
     }
     else {
-        devSwitch('none')
+        devSwitch('none');
     }
 });
 
@@ -43,6 +43,8 @@ document.querySelector("#saveDevConfig").addEventListener('click', () => {
 
 document.querySelector("#configFieldInput").value = prettyPrintConfig(CTabGrid.getConfig());
 document.querySelector('#simpleAddButton').addEventListener('click', simpleAddWidget);
+
+chrome.commands.onCommand.addListener(CTabGrid.saveGrid);
 
 function saveCurConfig() {
     console.log(JSON.stringify(CTabGrid.getConfig()));

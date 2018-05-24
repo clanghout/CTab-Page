@@ -13,5 +13,13 @@
   ],
   "chrome_url_overrides" : {
     "newtab" : "index.html"
+  },
+  "commands":{
+    "save_configuration":{
+      "suggested_key":{
+        "default": "Ctrl+Shift+S"
+      },
+      "description":"Save configuration of the grid"
+    }
   }
 }
