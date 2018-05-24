@@ -1,4 +1,6 @@
-
+:root{
+--ctab-widget-controls-width: 15px;
+}
 
 .grid-stack {
     padding: 10px 0;
@@ -12,6 +14,11 @@
 
     display: inline-block;
     position: relative;
+
+    /*Set a barely visible text stroke so dark text on dark background is somewhat readable
+    TODO: Not sure yet if this is too ugly*/
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: rgba(255,255,255,0.2);
 
 }
 
@@ -38,14 +45,22 @@ body {
 
 .ctab-widget-body {
     position: relative;
-    width: 95%;
+    width: calc(95% - var(--ctab-widget-controls-width));
     height: 100%;
     font-size: 2em;
     text-align: center;
     vertical-align: middle;
     overflow: hidden;
     opacity: 1;
-
+    float: left;
+}
+.ctab-widget-controls {
+    height: 100%;
+    float: right;
+    width: var(--ctab-widget-controls-width);
+    position: relative;
+    overflow: hidden;
+    opacity: 1;
 }
 
 /*Invisible overlay containing the link*/

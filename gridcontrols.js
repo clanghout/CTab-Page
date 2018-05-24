@@ -1,7 +1,7 @@
 "use strict";
 
 function grid() {
-    var service = {};
+    let service = {};
     service.grid = $(".grid-stack");
     service.count = 0;
     service.widgets = {};
@@ -9,7 +9,7 @@ function grid() {
     let defaultWidgetColor = "#fff";
     let dirty = false;
 
-    var options = {
+    const options = {
         animate: true,
         cellHeight: 60,
         verticalMargin: 5,
@@ -69,7 +69,7 @@ function grid() {
 
     service.getSortedWidgets = function () {
         service.gridData.grid._sortNodes();
-        var ids = [];
+        let ids = [];
         _.map($('.grid-stack > .grid-stack-item:visible'),
             function (el) {
                 el = $(el);
@@ -120,7 +120,7 @@ function grid() {
 
     function WidgetFactory() {
         this.createWidget = function (title, contentUrl, settings, id, color, textcolor) {
-            var widget = function () {
+            let widget = function () {
             };
             widget.settings = settings;
             widget.title = title;
@@ -131,6 +131,10 @@ function grid() {
             // TODO HTML and javascript need to be separated
             widget.getTag = function () {
                 return title + '<a href="' + contentUrl + '" id="' + title + '"><span class="ctab-widget-link"></span></a>';
+            };
+
+            widget.getHtmlControls = function () {
+                return `<div class="ctab-widget-controls"><div class="deletebutton">${this.id}</div></div>`;
             };
 
             widget.colorInfo = function () {
@@ -145,6 +149,7 @@ function grid() {
             widget.widgetTemplate = function () {
                 return '<div>' +
                     '<div class="grid-stack-item-content"' + this.colorInfo() + '>' +
+                    this.getHtmlControls() +
                     '<div id="' +
                     id +
                     '" class="ctab-widget-body">' +
@@ -170,7 +175,7 @@ function grid() {
                     ",\ncontentUrl: " + contentUrl + "\n" +
                     ",\ncolor: " + color + "\n" +
                     ",\ntextcolor: " + textcolor + "\n" +
-                    "}"
+                    "}";
             };
 
             return widget;
@@ -205,7 +210,7 @@ function grid() {
             $("#" + service.widgets[a].title).linkpreview({
                 previewContainer: $("#" + service.widgets[a].title).before(),
                 errorMessage: "unable to load"
-            }))
+            }));
     };
 
     service.getDashboardConfig = function () {
