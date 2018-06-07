@@ -129,6 +129,7 @@ function grid() {
             widget.textcolor = textcolor;
 
             // TODO HTML and javascript need to be separated
+            //  https://github.com/polymer/lit-element#minimal-example
             widget.getTag = function () {
                 return title + '<a href="' + contentUrl + '" id="' + title + '"><span class="ctab-widget-link"></span></a>';
             };
@@ -142,6 +143,7 @@ function grid() {
                 styleInfo += this.textcolor !== undefined ? 'color:' + this.textcolor + ';' : "";
                 styleInfo += this.color !== undefined ? '--item-color:' + this.color + ';' :
                     "--item-color:" + defaultWidgetColor + ";";
+                //TODO document.style.setproperty
                 return styleInfo + '"';
             };
 
@@ -183,6 +185,10 @@ function grid() {
     }
 
     service.getConfig = function () {
+        let chromeresult = chrome.storage.sync.get(['CTabConfig'], function (res) {
+            return res;
+        });
+        console.log("chromeresult",chromeresult);
         return JSON.parse(window.localStorage.getItem("CTabConfig"));
     };
 
@@ -192,6 +198,7 @@ function grid() {
             config = JSON.stringify(config);
         }
         window.localStorage.setItem("CTabConfig", config);
+        // chrome.storage.sync.set({"CTabConfig": config}); // TODO: Too much data apparently, maybe save per widget? instead of whole json at once -> title can only occur once
     };
     service.saveGrid = function () {
         if (dirty) {
@@ -306,3 +313,5 @@ function grid() {
 
     return service;
 }
+
+export {grid};

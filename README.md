@@ -28,7 +28,11 @@ TODO: remove modules
 |simple add|temporary solution|
 |multi type blocks<br>calendar<br>notes<br>|todo|
 
-## To fix
+## To do
 ✅done - Position save is not correctly used 
+ - grid-stack-item -> https://github.com/polymer/lit-element#minimal-example
+ - set bg color -> document.style.setproperty
+ - delete button
+ 
 
 
