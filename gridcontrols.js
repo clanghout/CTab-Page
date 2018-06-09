@@ -15,8 +15,9 @@ function grid() {
         verticalMargin: 5,
         float: true,
         disableOneColumnMode: true,
-        removable: true,
-        width: 12
+        width: 12,
+        removable: '.trash', // Trash area has to exist: div.trash is enough => with style to display
+        removeTimeout: 100
     };
 
     service.initialize = function () {
@@ -177,7 +178,6 @@ function grid() {
                     ",\ntextcolor: " + textcolor + "\n" +
                     "}";
             };
-
             return widget;
         };
     }
@@ -296,8 +296,6 @@ function grid() {
 
     service.simpleAdd = function (title, url) {
         service.addWidgetToGrid(widgetFactory.createWidget(title, url, {
-            'x': 10,
-            'y': 10,
             'autoposition': true,
         }, service.count + 1), service.count, true);
         service.count++;
