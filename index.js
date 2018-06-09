@@ -49,6 +49,8 @@ document.querySelector("#saveDevConfig").addEventListener('click', () => {
 document.querySelector("#configFieldInput").value = prettyPrintConfig(CTabGrid.getConfig());
 document.querySelector('#simpleAddButton').addEventListener('click', simpleAddWidget);
 
+chrome.commands.onCommand.addListener(CTabGrid.saveGrid);
+
 function saveCurConfig() {
     console.log(JSON.stringify(CTabGrid.getConfig()));
 }
