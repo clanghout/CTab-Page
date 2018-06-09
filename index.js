@@ -47,7 +47,6 @@ document.querySelector("#saveDevConfig").addEventListener('click', () => {
 });
 
 document.querySelector("#configFieldInput").value = prettyPrintConfig(CTabGrid.getConfig());
-document.querySelector('#simpleAddButton').addEventListener('click', simpleAddWidget);
 
 chrome.commands.onCommand.addListener(CTabGrid.saveGrid);
 
@@ -55,18 +54,8 @@ function saveCurConfig() {
     console.log(JSON.stringify(CTabGrid.getConfig()));
 }
 
-function simpleAddWidget() {
-    let title = document.querySelector("#simpleAddTitle");
-    let url = document.querySelector("#simpleAddUrl");
-    if (title.value !== "") {
-        CTabGrid.simpleAdd(title.value, url.value);
-        title.value = "";
-        url.value = "";
-    }
-}
-
 function prettyPrintConfig(config) {
-    if(config){
+    if (config) {
         let result = "[";
         for (let i = 0; i < config.length; i++) {
             result += i === 0 ? "\n\t" : ",\n\t";
@@ -76,10 +65,39 @@ function prettyPrintConfig(config) {
     }
 }
 
-CtabGridElement.on('dragstart', function(event, ui) {
+CtabGridElement.on('dragstart', function (event, ui) {
     document.getElementsByClassName("trash")[0].classList.add("active");
 });
 
-CtabGridElement.on('dragstop', function(event, ui) {
+CtabGridElement.on('dragstop', function (event, ui) {
     document.getElementsByClassName("trash")[0].classList.remove("active");
 });
+
+
+// New Add button
+let addMenu = document.getElementById('addMenu');
+let addButton = document.getElementById('addButton');
+let addCancelButton = document.getElementById('simpleAddCancelButton');
+addMenu.classList.add('hidden');
+
+document.querySelector('#simpleAddButton').addEventListener('click', simpleAddWidget);
+addButton.addEventListener('click', () => {
+    addButton.classList.add('hidden');
+    addMenu.classList.remove('hidden');
+});
+addCancelButton.addEventListener('click', () => {
+    addButton.classList.remove('hidden');
+    addMenu.classList.add('hidden');
+});
+
+function simpleAddWidget() {
+    let title = document.querySelector("#simpleAddTitle");
+    let url = document.querySelector("#simpleAddUrl");
+    let bgcolor = document.getElementById('simpleAddBGC');
+    let textcolor = document.getElementById('simpleAddTC');
+    if (title.value !== "") {
+        CTabGrid.simpleAdd(title.value, url.value, bgcolor.value, textcolor.value);
+        title.value = "";
+        url.value = "";
+    }
+}

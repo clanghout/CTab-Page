@@ -49,6 +49,9 @@ function grid() {
                 }
             }
         });
+
+        // Start clocks
+        startTime();
     };
 
     // Update the mutable object in the model.widgets
@@ -120,7 +123,7 @@ function grid() {
     };
 
     function WidgetFactory() {
-        this.createWidget = function (title, contentUrl, settings, id, color, textcolor) {
+        this.createWidget = function (title, contentUrl, settings, id, color, textcolor, type) {
             let widget = function () {
             };
             widget.settings = settings;
@@ -149,14 +152,24 @@ function grid() {
             };
 
             // The basic template for a widget
+
             widget.widgetTemplate = function () {
+                if (typeof type === "undefined")
+                    return '<div>' +
+                        '<div class="grid-stack-item-content"' + this.colorInfo() + '>' +
+                        this.getHtmlControls() +
+                        '<div id="' +
+                        id +
+                        '" class="ctab-widget-body">' +
+                        this.getTag() +
+                        '</div>' +
+                        '</div>' +
+                        '</div>';
                 return '<div>' +
                     '<div class="grid-stack-item-content"' + this.colorInfo() + '>' +
-                    this.getHtmlControls() +
                     '<div id="' +
                     id +
-                    '" class="ctab-widget-body">' +
-                    this.getTag() +
+                    '" class="ctab-widget-body txt">' +
                     '</div>' +
                     '</div>' +
                     '</div>';
@@ -169,6 +182,7 @@ function grid() {
                     "contentUrl": contentUrl,
                     "color": color,
                     "textcolor": textcolor,
+                    "type":type
                 };
             };
 
@@ -188,7 +202,7 @@ function grid() {
         let chromeresult = chrome.storage.sync.get(['CTabConfig'], function (res) {
             return res;
         });
-        console.log("chromeresult",chromeresult);
+        console.log("chromeresult", chromeresult);
         return JSON.parse(window.localStorage.getItem("CTabConfig"));
     };
 
@@ -249,7 +263,8 @@ function grid() {
             let contentUrl = widgetData[i].contentUrl;
             let color = widgetData[i].color;
             let textcolor = widgetData[i].textcolor;
-            let widget = widgetFactory.createWidget(title, contentUrl, settings, i, color, textcolor);
+            let type = widgetData[i].type;
+            let widget = widgetFactory.createWidget(title, contentUrl, settings, i, color, textcolor, type);
             widget.prototype.id = service.count;
             service.widgets[service.count] = widget;
             service.count++;
@@ -301,12 +316,35 @@ function grid() {
         }
     };
 
-    service.simpleAdd = function (title, url) {
+    service.simpleAdd = function (title, url, color, textcolor) {
         service.addWidgetToGrid(widgetFactory.createWidget(title, url, {
             'autoposition': true,
-        }, service.count + 1), service.count, true);
+        }, service.count + 1, color, textcolor), service.count, true);
         service.count++;
     };
+
+    // From w3 to add clock
+    function startTime() {
+        let clocks = document.querySelectorAll('.txt');
+        if (clocks.length > 0) {
+            let today = new Date();
+            const h = today.getHours();
+            let m = today.getMinutes();
+            let s = today.getSeconds();
+            m = checkTime(m);
+            s = checkTime(s);
+            clocks.forEach(a => a.innerHTML =
+                h + ":" + m + ":" + s);
+            setTimeout(startTime, 500);
+        }
+    }
+
+    function checkTime(i) {
+        if (i < 10) {
+            i = "0" + i;
+        } // add zero in front of numbers < 10
+        return i;
+    }
 
 
     return service;
