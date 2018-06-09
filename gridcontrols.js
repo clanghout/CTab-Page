@@ -1,7 +1,7 @@
 "use strict";
 
 function grid() {
-    var service = {};
+    let service = {};
     service.grid = $(".grid-stack");
     service.count = 0;
     service.widgets = {};
@@ -9,14 +9,15 @@ function grid() {
     let defaultWidgetColor = "#fff";
     let dirty = false;
 
-    var options = {
+    const options = {
         animate: true,
         cellHeight: 60,
         verticalMargin: 5,
         float: true,
         disableOneColumnMode: true,
-        removable: true,
-        width: 12
+        width: 12,
+        removable: '.trash', // Trash area has to exist: div.trash is enough => with style to display
+        removeTimeout: 100
     };
 
     service.initialize = function () {
@@ -69,7 +70,7 @@ function grid() {
 
     service.getSortedWidgets = function () {
         service.gridData.grid._sortNodes();
-        var ids = [];
+        let ids = [];
         _.map($('.grid-stack > .grid-stack-item:visible'),
             function (el) {
                 el = $(el);
@@ -120,7 +121,7 @@ function grid() {
 
     function WidgetFactory() {
         this.createWidget = function (title, contentUrl, settings, id, color, textcolor) {
-            var widget = function () {
+            let widget = function () {
             };
             widget.settings = settings;
             widget.title = title;
@@ -129,8 +130,13 @@ function grid() {
             widget.textcolor = textcolor;
 
             // TODO HTML and javascript need to be separated
+            //  https://github.com/polymer/lit-element#minimal-example
             widget.getTag = function () {
                 return title + '<a href="' + contentUrl + '" id="' + title + '"><span class="ctab-widget-link"></span></a>';
+            };
+
+            widget.getHtmlControls = function () {
+                return `<div class="ctab-widget-controls"><div class="deletebutton">${this.id}</div></div>`;
             };
 
             widget.colorInfo = function () {
@@ -138,6 +144,7 @@ function grid() {
                 styleInfo += this.textcolor !== undefined ? 'color:' + this.textcolor + ';' : "";
                 styleInfo += this.color !== undefined ? '--item-color:' + this.color + ';' :
                     "--item-color:" + defaultWidgetColor + ";";
+                //TODO document.style.setproperty
                 return styleInfo + '"';
             };
 
@@ -145,6 +152,7 @@ function grid() {
             widget.widgetTemplate = function () {
                 return '<div>' +
                     '<div class="grid-stack-item-content"' + this.colorInfo() + '>' +
+                    this.getHtmlControls() +
                     '<div id="' +
                     id +
                     '" class="ctab-widget-body">' +
@@ -170,14 +178,17 @@ function grid() {
                     ",\ncontentUrl: " + contentUrl + "\n" +
                     ",\ncolor: " + color + "\n" +
                     ",\ntextcolor: " + textcolor + "\n" +
-                    "}"
+                    "}";
             };
-
             return widget;
         };
     }
 
     service.getConfig = function () {
+        let chromeresult = chrome.storage.sync.get(['CTabConfig'], function (res) {
+            return res;
+        });
+        console.log("chromeresult",chromeresult);
         return JSON.parse(window.localStorage.getItem("CTabConfig"));
     };
 
@@ -187,6 +198,7 @@ function grid() {
             config = JSON.stringify(config);
         }
         window.localStorage.setItem("CTabConfig", config);
+        // chrome.storage.sync.set({"CTabConfig": config}); // TODO: Too much data apparently, maybe save per widget? instead of whole json at once -> title can only occur once
     };
     service.saveGrid = function () {
         if (dirty) {
@@ -205,7 +217,7 @@ function grid() {
             $("#" + service.widgets[a].title).linkpreview({
                 previewContainer: $("#" + service.widgets[a].title).before(),
                 errorMessage: "unable to load"
-            }))
+            }));
     };
 
     service.getDashboardConfig = function () {
@@ -291,8 +303,6 @@ function grid() {
 
     service.simpleAdd = function (title, url) {
         service.addWidgetToGrid(widgetFactory.createWidget(title, url, {
-            'x': 10,
-            'y': 10,
             'autoposition': true,
         }, service.count + 1), service.count, true);
         service.count++;
@@ -301,3 +311,5 @@ function grid() {
 
     return service;
 }
+
+export {grid};

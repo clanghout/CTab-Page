@@ -28,8 +28,11 @@ TODO: remove modules
 |multi type blocks<br>calendar<br>notes<br>clock|TODO|
 |Shortcut to save|implemented Ctrl+Shift+S|
 
-## To fix
-- ✅done - Position save is not correctly used
+
+## To do
+✅done - Position save is not correctly used 
+ - grid-stack-item -> https://github.com/polymer/lit-element#minimal-example
+ - set bg color -> document.style.setproperty
 
 
 
