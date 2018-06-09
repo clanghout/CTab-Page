@@ -6,8 +6,9 @@
 import {grid} from './gridcontrols.js';
 
 let CTabGrid = grid();
-
 CTabGrid.initialize();
+
+let CtabGridElement = $('.grid-stack');
 
 function devSwitch(displayStyle) {
     document.querySelector(".devConfig").style.display = displayStyle;
@@ -63,10 +64,21 @@ function simpleAddWidget() {
 }
 
 function prettyPrintConfig(config) {
-    let result = "[";
-    for (let i = 0; i < config.length; i++) {
-        result += i === 0 ? "\n\t" : ",\n\t";
-        result += JSON.stringify(config[i]);
+    if(config){
+        let result = "[";
+        for (let i = 0; i < config.length; i++) {
+            result += i === 0 ? "\n\t" : ",\n\t";
+            result += JSON.stringify(config[i]);
+        }
+        return result + "\n]";
     }
-    return result + "\n]";
 }
+
+CtabGridElement.on('dragstart', function(event, ui) {
+    document.getElementsByClassName("trash")[0].classList.add("active");
+});
+
+CtabGridElement.on('dragstop', function(event, ui) {
+    document.getElementsByClassName("trash")[0].classList.remove("active");
+});
+// $("#google").linkpreview();
