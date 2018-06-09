@@ -81,4 +81,3 @@ CtabGridElement.on('dragstart', function(event, ui) {
 CtabGridElement.on('dragstop', function(event, ui) {
     document.getElementsByClassName("trash")[0].classList.remove("active");
 });
-// $("#google").linkpreview();
