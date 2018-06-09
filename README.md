@@ -2,6 +2,8 @@
 
 TODO: remove modules
 
+:warning: Refresh extension in chrome://extensions/ after editing manifest.json
+
 ## Get to work(Install)
 1. clone the repo
 1. yarn / npm install
