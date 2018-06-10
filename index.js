@@ -20,11 +20,20 @@ function devSwitch(displayStyle) {
 // disable dev mode by default
 devSwitch('none');
 
+let toastBox = document.getElementById("toast");
 function supportsImports() {
     return 'import' in document.createElement('link');
 }
 
-document.getElementById("saveButton").addEventListener('click', CTabGrid.saveGrid);
+function saveGrid() {
+        toastBox.innerText = CTabGrid.saveGrid();
+        toastBox.classList.remove('hidden');
+        setTimeout(() => {
+            toastBox.classList.add("hidden");
+        }, 2000);
+}
+
+document.getElementById("saveButton").addEventListener('click', saveGrid);
 document.getElementById("previewButton").addEventListener('click', CTabGrid.loadLinkPreview);
 document.getElementById("clearButton").addEventListener('click', () => CTabGrid.debug(true, false));
 document.getElementById("debugButton").addEventListener('click', () => CTabGrid.debug(false, true));
@@ -48,7 +57,7 @@ document.querySelector("#saveDevConfig").addEventListener('click', () => {
 
 document.querySelector("#configFieldInput").value = prettyPrintConfig(CTabGrid.getConfig());
 
-chrome.commands.onCommand.addListener(CTabGrid.saveGrid);
+chrome.commands.onCommand.addListener(saveGrid);
 
 function saveCurConfig() {
     console.log(JSON.stringify(CTabGrid.getConfig()));
@@ -113,13 +122,13 @@ typeChanger.addEventListener('change', () => {
     let titleLabel = document.querySelector("#titleLabel");
     let url = document.querySelector("#simpleAddUrl");
     let urlLabel = document.querySelector("#urlLabel");
-    if(curVal === "link"){
+    if (curVal === "link") {
         title.classList.remove("hidden");
         url.classList.remove("hidden");
         titleLabel.classList.remove("hidden");
         urlLabel.classList.remove("hidden");
     }
-    if(curVal === "clock"){
+    if (curVal === "clock") {
         title.classList.add("hidden");
         url.classList.add("hidden");
         titleLabel.classList.add("hidden");

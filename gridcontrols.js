@@ -218,12 +218,12 @@ function grid() {
     };
     service.saveGrid = function () {
         if (dirty) {
-            console.log("curconfig genereated: ", service.getDashboardConfig());
             service.setConfig(service.getDashboardConfig());
             dirty = false;
+            return "Configuration saved!";
         }
         else {
-            console.log("nothing to save");
+           return "nothing to save";
         }
     };
 
