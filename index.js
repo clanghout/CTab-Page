@@ -95,9 +95,32 @@ function simpleAddWidget() {
     let url = document.querySelector("#simpleAddUrl");
     let bgcolor = document.getElementById('simpleAddBGC');
     let textcolor = document.getElementById('simpleAddTC');
-    if (title.value !== "") {
-        CTabGrid.simpleAdd(title.value, url.value, bgcolor.value, textcolor.value);
+    console.log(typeChanger.value);
+    if (title.value !== "" || typeChanger.value === "clock") {
+        CTabGrid.simpleAdd(title.value, url.value, bgcolor.value, textcolor.value, typeChanger.value);
         title.value = "";
         url.value = "";
     }
 }
+
+let typeChanger = document.getElementById("typeDropdown");
+typeChanger.addEventListener('change', () => {
+    let curVal = typeChanger.value;
+    let title = document.querySelector("#simpleAddTitle");
+    let titleLabel = document.querySelector("#titleLabel");
+    let url = document.querySelector("#simpleAddUrl");
+    let urlLabel = document.querySelector("#urlLabel");
+    if(curVal === "link"){
+        title.classList.remove("hidden");
+        url.classList.remove("hidden");
+        titleLabel.classList.remove("hidden");
+        urlLabel.classList.remove("hidden");
+    }
+    if(curVal === "clock"){
+        title.classList.add("hidden");
+        url.classList.add("hidden");
+        titleLabel.classList.add("hidden");
+        urlLabel.classList.add("hidden");
+    }
+
+});

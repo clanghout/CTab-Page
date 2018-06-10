@@ -131,6 +131,7 @@ function grid() {
             widget.contentUrl = contentUrl;
             widget.color = color;
             widget.textcolor = textcolor;
+            widget.type = type;
 
             // TODO HTML and javascript need to be separated
             //  https://github.com/polymer/lit-element#minimal-example
@@ -154,7 +155,16 @@ function grid() {
             // The basic template for a widget
 
             widget.widgetTemplate = function () {
-                if (typeof type === "undefined")
+                if (type === "clock")
+                    return '<div>' +
+                        '<div class="grid-stack-item-content"' + this.colorInfo() + '>' +
+                        '<div id="' +
+                        id +
+                        '" class="ctab-widget-body txt">' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>';
+                else
                     return '<div>' +
                         '<div class="grid-stack-item-content"' + this.colorInfo() + '>' +
                         this.getHtmlControls() +
@@ -165,14 +175,6 @@ function grid() {
                         '</div>' +
                         '</div>' +
                         '</div>';
-                return '<div>' +
-                    '<div class="grid-stack-item-content"' + this.colorInfo() + '>' +
-                    '<div id="' +
-                    id +
-                    '" class="ctab-widget-body txt">' +
-                    '</div>' +
-                    '</div>' +
-                    '</div>';
             };
 
             widget.getConfig = function () {
@@ -182,7 +184,7 @@ function grid() {
                     "contentUrl": contentUrl,
                     "color": color,
                     "textcolor": textcolor,
-                    "type":type
+                    "type": type
                 };
             };
 
@@ -316,10 +318,10 @@ function grid() {
         }
     };
 
-    service.simpleAdd = function (title, url, color, textcolor) {
+    service.simpleAdd = function (title, url, color, textcolor, type) {
         service.addWidgetToGrid(widgetFactory.createWidget(title, url, {
             'autoposition': true,
-        }, service.count + 1, color, textcolor), service.count, true);
+        }, service.count + 1, color, textcolor, type), service.count, true);
         service.count++;
     };
 
