@@ -100,6 +100,9 @@ function simpleAddWidget() {
         CTabGrid.simpleAdd(title.value, url.value, bgcolor.value, textcolor.value, typeChanger.value);
         title.value = "";
         url.value = "";
+
+        // Trigger hiding of the add window
+        addCancelButton.click();
     }
 }
 
@@ -122,5 +125,4 @@ typeChanger.addEventListener('change', () => {
         titleLabel.classList.add("hidden");
         urlLabel.classList.add("hidden");
     }
-
 });
