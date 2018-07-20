@@ -2,6 +2,10 @@
 --ctab-widget-controls-width: 0;
 }
 
+body{
+    overflow-x: hidden;
+}
+
 .hidden{
     display: none !important;
 }
@@ -17,6 +21,7 @@
     height: 50px;
     width: 100%;
     background-color: #000000;
+    z-index: 2;
 }
 
 .grid-stack-item-content {
@@ -213,6 +218,12 @@ body {
     font-size: 1em;
     text-align: left;
     word-wrap: break-word;
+}
+.note textarea{
+    width: 100%;
+    height: 100%;
+    resize: none;
+    overflow: hidden;
 }
 
 #toast{

@@ -37,6 +37,8 @@ TODO: remove modules
  - grid-stack-item -> https://github.com/polymer/lit-element#minimal-example
  - set bg color -> document.style.setproperty
  - Less or Sass for css structured
+ - Bind textareas of note items back to the settings so they can be edited
+ - simple add logo is not centered (anymore)
 
 When the ctab page is open, and a bookmark is created within the browser. This site is also added to the ctab grid. The title change currently does not track the changing of the name, since this is probably an event triggered after the oncreate is already called. Need to figure out a way to track this.
 

@@ -171,9 +171,9 @@ function grid() {
                         this.getHtmlControls() +
                         '<div id="' +
                         id +
-                        '" class="ctab-widget-body note">' +
+                        '" class="ctab-widget-body note"><textarea>' +
                         this.title +
-                        '</div>' +
+                        '</textarea></div>' +
                         '</div>' +
                         '</div>';
                 else
