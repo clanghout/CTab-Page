@@ -9,7 +9,10 @@
     "activeTab",
     "storage",
     "http://*/",
-    "https://*/"
+    "https://*/",
+    "history",
+    "bookmarks",
+    "tabs"
   ],
   "chrome_url_overrides" : {
     "newtab" : "index.html"

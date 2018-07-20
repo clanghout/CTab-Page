@@ -9,10 +9,19 @@
     <link href="style.css" rel="stylesheet"/>
     <link rel="stylesheet" href="node_modules/gridstack/dist/gridstack.css"/>
     <link rel="stylesheet" href="node_modules/gridstack/dist/gridstack-extra.css"/>
+
     <link rel="stylesheet" href="modules/bootstrap-linkpreview.css">
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">
 </head>
 <body>
 <div class="trash"></div>
+<div class="top-bar">
+    <div id="logo1" class="col-sm-6">C-Tab</div>
+    <div class="clockdate col-sm-6">
+        <div class="clock txt"></div>
+        <div class="date"></div>
+    </div>
+</div>
 <div class="grid-stack" id="main-dashboard">
     <div id="toast" class="hidden"></div>
 </div>
@@ -28,11 +37,14 @@
 <div class="addButton" id="addButton">
     <div class="addSign"></div>
 </div>
+
+<!--TODO types: auto?-->
 <div class="simpleAdd" id="addMenu">
     <label>Type:</label>
     <select name="type" id="typeDropdown">
         <option value="link">link</option>
         <option value="clock">clock</option>
+        <option value="note">note</option>
     </select>
 
     <!--Empty row-->

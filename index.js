@@ -115,6 +115,20 @@ function simpleAddWidget() {
     }
 }
 
+chrome.bookmarks.onCreated.addListener(function(id, bookmark) {
+    console.log("id", id);
+    console.log("bookmark",bookmark);
+    CTabGrid.simpleAdd(bookmark.title, bookmark.url, "#fff", "#000", "url");
+
+});
+
+chrome.history.search({text: '', maxResults: 10}, function(data) {
+    data.forEach(function(page) {
+        //TODO add from history?
+        // console.log(page.url);
+    });
+});
+
 let typeChanger = document.getElementById("typeDropdown");
 typeChanger.addEventListener('change', () => {
     let curVal = typeChanger.value;
@@ -122,6 +136,8 @@ typeChanger.addEventListener('change', () => {
     let titleLabel = document.querySelector("#titleLabel");
     let url = document.querySelector("#simpleAddUrl");
     let urlLabel = document.querySelector("#urlLabel");
+
+    // TODO types: better scalable
     if (curVal === "link") {
         title.classList.remove("hidden");
         url.classList.remove("hidden");
@@ -132,6 +148,12 @@ typeChanger.addEventListener('change', () => {
         title.classList.add("hidden");
         url.classList.add("hidden");
         titleLabel.classList.add("hidden");
+        urlLabel.classList.add("hidden");
+    }
+    if (curVal === "note") {
+        title.classList.remove("hidden");
+        url.classList.add("hidden");
+        titleLabel.classList.remove("hidden");
         urlLabel.classList.add("hidden");
     }
 });

@@ -34,7 +34,7 @@ function grid() {
 
         // Save whenever you leave the screen
         window.onbeforeunload = function () {
-            //service.saveGrid(); // Disabled to keep me from accidentally clearing my config
+            service.saveGrid(); // Disabled to keep me from accidentally clearing my config
         };
 
         service.grid.on("change", function (event, items) {
@@ -155,12 +155,24 @@ function grid() {
             // The basic template for a widget
 
             widget.widgetTemplate = function () {
+                // TODO types: custom elements + scalable (getTag() for example)
                 if (type === "clock")
                     return '<div>' +
                         '<div class="grid-stack-item-content"' + this.colorInfo() + '>' +
                         '<div id="' +
                         id +
                         '" class="ctab-widget-body txt">' +
+                        '</div>' +
+                        '</div>' +
+                        '</div>';
+                else if(type === "note")
+                    return '<div>' +
+                        '<div class="grid-stack-item-content"' + this.colorInfo() + '>' +
+                        this.getHtmlControls() +
+                        '<div id="' +
+                        id +
+                        '" class="ctab-widget-body note">' +
+                        this.title +
                         '</div>' +
                         '</div>' +
                         '</div>';
