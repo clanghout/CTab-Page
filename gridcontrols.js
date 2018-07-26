@@ -157,25 +157,35 @@ function grid() {
             widget.widgetTemplate = function () {
                 // TODO types: custom elements + scalable (getTag() for example)
                 if (type === "clock")
-                    return '<div>' +
-                        '<div class="grid-stack-item-content"' + this.colorInfo() + '>' +
-                        '<div id="' +
-                        id +
-                        '" class="ctab-widget-body txt">' +
-                        '</div>' +
-                        '</div>' +
-                        '</div>';
-                else if(type === "note")
-                    return '<div>' +
-                        '<div class="grid-stack-item-content"' + this.colorInfo() + '>' +
-                        this.getHtmlControls() +
-                        '<div id="' +
-                        id +
-                        '" class="ctab-widget-body note"><textarea>' +
-                        this.title +
-                        '</textarea></div>' +
-                        '</div>' +
-                        '</div>';
+                    return `<div>
+                                <div class="grid-stack-item-content"${this.colorInfo()}>
+                                    <div id="${id}" class="ctab-widget-body txt">
+                                    </div>
+                                </div>
+                             </div>`;
+                else if (type === "note"){
+                    let templateString = `<div> 
+                                <div class="grid-stack-item-content"  ${this.colorInfo()}> 
+                                    ${this.getHtmlControls()}
+                                    <div id="${id}" class="ctab-widget-body note">
+                                        <textarea> 
+                                            ${this.title} 
+                                        </textarea>
+                                    </div> 
+                                </div> 
+                            </div>`;
+                    debugger;
+                    return templateString;
+                }
+                else if (type === "buienradar") {
+                    return `<div>
+                                <div class="grid-stack-item-content"${this.colorInfo()}>
+                                    <div id="${id}" class="ctab-widget-body">
+                                        ` + '<IFRAME SRC="https://api.buienradar.nl/image/1.0/RadarMapNL?w=256&h=256" NORESIZE SCROLLING=NO HSPACE=0 VSPACE=0 FRAMEBORDER=0 MARGINHEIGHT=0 MARGINWIDTH=0 WIDTH=256 HEIGHT=256></IFRAME>' +
+                        `            </div>
+                                </div>
+                             </div>`;
+                }
                 else
                     return '<div>' +
                         '<div class="grid-stack-item-content"' + this.colorInfo() + '>' +
@@ -235,7 +245,7 @@ function grid() {
             return "Configuration saved!";
         }
         else {
-           return "nothing to save";
+            return "nothing to save";
         }
     };
 
