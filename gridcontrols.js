@@ -1,6 +1,13 @@
 "use strict";
 
+
+// import {eventLogger} from './eventLogger/eventLogger.js';
+
 function grid() {
+    // let el = eventLogger();
+    // el.addEvent("kaas");
+    // let val = el.getFromIndex(0);
+    // console.log("eventlogger: ", el.eventLog);
     let service = {};
     service.grid = $(".grid-stack");
     service.count = 0;
@@ -8,6 +15,8 @@ function grid() {
     let widgetFactory = new WidgetFactory();
     let defaultWidgetColor = "#fff";
     let dirty = false;
+    // el.addEvent("test");
+
 
     const options = {
         animate: true,
