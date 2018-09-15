@@ -20,11 +20,20 @@ function devSwitch(displayStyle) {
 // disable dev mode by default
 devSwitch('none');
 
+let toastBox = document.getElementById("toast");
 function supportsImports() {
     return 'import' in document.createElement('link');
 }
 
-document.getElementById("saveButton").addEventListener('click', CTabGrid.saveGrid);
+function saveGrid() {
+        toastBox.innerText = CTabGrid.saveGrid();
+        toastBox.classList.remove('hidden');
+        setTimeout(() => {
+            toastBox.classList.add("hidden");
+        }, 2000);
+}
+
+document.getElementById("saveButton").addEventListener('click', saveGrid);
 document.getElementById("previewButton").addEventListener('click', CTabGrid.loadLinkPreview);
 document.getElementById("clearButton").addEventListener('click', () => CTabGrid.debug(true, false));
 document.getElementById("debugButton").addEventListener('click', () => CTabGrid.debug(false, true));
@@ -47,26 +56,15 @@ document.querySelector("#saveDevConfig").addEventListener('click', () => {
 });
 
 document.querySelector("#configFieldInput").value = prettyPrintConfig(CTabGrid.getConfig());
-document.querySelector('#simpleAddButton').addEventListener('click', simpleAddWidget);
 
-chrome.commands.onCommand.addListener(CTabGrid.saveGrid);
+chrome.commands.onCommand.addListener(saveGrid);
 
 function saveCurConfig() {
     console.log(JSON.stringify(CTabGrid.getConfig()));
 }
 
-function simpleAddWidget() {
-    let title = document.querySelector("#simpleAddTitle");
-    let url = document.querySelector("#simpleAddUrl");
-    if (title.value !== "") {
-        CTabGrid.simpleAdd(title.value, url.value);
-        title.value = "";
-        url.value = "";
-    }
-}
-
 function prettyPrintConfig(config) {
-    if(config){
+    if (config) {
         let result = "[";
         for (let i = 0; i < config.length; i++) {
             result += i === 0 ? "\n\t" : ",\n\t";
@@ -76,10 +74,86 @@ function prettyPrintConfig(config) {
     }
 }
 
-CtabGridElement.on('dragstart', function(event, ui) {
+CtabGridElement.on('dragstart', function (event, ui) {
     document.getElementsByClassName("trash")[0].classList.add("active");
 });
 
-CtabGridElement.on('dragstop', function(event, ui) {
+CtabGridElement.on('dragstop', function (event, ui) {
     document.getElementsByClassName("trash")[0].classList.remove("active");
+});
+
+
+// New Add button
+let addMenu = document.getElementById('addMenu');
+let addButton = document.getElementById('addButton');
+let addCancelButton = document.getElementById('simpleAddCancelButton');
+addMenu.classList.add('hidden');
+
+document.querySelector('#simpleAddButton').addEventListener('click', simpleAddWidget);
+addButton.addEventListener('click', () => {
+    addButton.classList.add('hidden');
+    addMenu.classList.remove('hidden');
+});
+addCancelButton.addEventListener('click', () => {
+    addButton.classList.remove('hidden');
+    addMenu.classList.add('hidden');
+});
+
+function simpleAddWidget() {
+    let title = document.querySelector("#simpleAddTitle");
+    let url = document.querySelector("#simpleAddUrl");
+    let bgcolor = document.getElementById('simpleAddBGC');
+    let textcolor = document.getElementById('simpleAddTC');
+    console.log(typeChanger.value);
+    if (title.value !== "" || typeChanger.value === "clock") {
+        CTabGrid.simpleAdd(title.value, url.value, bgcolor.value, textcolor.value, typeChanger.value);
+        title.value = "";
+        url.value = "";
+
+        // Trigger hiding of the add window
+        addCancelButton.click();
+    }
+}
+
+chrome.bookmarks.onCreated.addListener(function(id, bookmark) {
+    console.log("id", id);
+    console.log("bookmark",bookmark);
+    CTabGrid.simpleAdd(bookmark.title, bookmark.url, "#fff", "#000", "url");
+
+});
+
+chrome.history.search({text: '', maxResults: 10}, function(data) {
+    data.forEach(function(page) {
+        //TODO add from history?
+        // console.log(page.url);
+    });
+});
+
+let typeChanger = document.getElementById("typeDropdown");
+typeChanger.addEventListener('change', () => {
+    let curVal = typeChanger.value;
+    let title = document.querySelector("#simpleAddTitle");
+    let titleLabel = document.querySelector("#titleLabel");
+    let url = document.querySelector("#simpleAddUrl");
+    let urlLabel = document.querySelector("#urlLabel");
+
+    // TODO types: better scalable
+    if (curVal === "link") {
+        title.classList.remove("hidden");
+        url.classList.remove("hidden");
+        titleLabel.classList.remove("hidden");
+        urlLabel.classList.remove("hidden");
+    }
+    if (curVal === "clock") {
+        title.classList.add("hidden");
+        url.classList.add("hidden");
+        titleLabel.classList.add("hidden");
+        urlLabel.classList.add("hidden");
+    }
+    if (curVal === "note") {
+        title.classList.remove("hidden");
+        url.classList.add("hidden");
+        titleLabel.classList.remove("hidden");
+        urlLabel.classList.add("hidden");
+    }
 });

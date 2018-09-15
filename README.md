@@ -23,18 +23,23 @@ TODO: remove modules
 ## Features
 |Feature | Status |
 | ---            | ---                    |
-|localstorage    |done                    |
+|localstorage    |done - need session storage |
+|lower json size |todo: needed for session storage|
 |styling         |in progress             |
-|link preview    |bad solution            |
+|link preview    |bad solution :(         |
 |simple add      |temporary solution      |
-|multi type blocks<br>calendar<br>notes<br>clock|TODO|
-|Shortcut to save|implemented Ctrl+Shift+S|
+|multi type blocks<br>calendar<br>notes<br>clock|needs good implementation|
+|Shortcut to save|implemented; Ctrl+Shift+S|
 
 
 ## To do
 ✅done - Position save is not correctly used 
  - grid-stack-item -> https://github.com/polymer/lit-element#minimal-example
  - set bg color -> document.style.setproperty
+ - Less or Sass for css structured
+ - Bind textareas of note items back to the settings so they can be edited
+ - simple add logo is not centered (anymore)
 
+When the ctab page is open, and a bookmark is created within the browser. This site is also added to the ctab grid. The title change currently does not track the changing of the name, since this is probably an event triggered after the oncreate is already called. Need to figure out a way to track this.
 
-
+Maybe it is an idea to only check for bookmarks added to a specific folder. Then keep track of the id's that chrome bookmarks use and on opening ctab page check if any new ones exist so page does not have to stay open.

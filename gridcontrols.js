@@ -43,7 +43,7 @@ function grid() {
 
         // Save whenever you leave the screen
         window.onbeforeunload = function () {
-            //service.saveGrid(); // Disabled to keep me from accidentally clearing my config
+            service.saveGrid(); // Disabled to keep me from accidentally clearing my config
         };
 
         service.grid.on("change", function (event, items) {
@@ -58,6 +58,9 @@ function grid() {
                 }
             }
         });
+
+        // Start clocks
+        startTime();
     };
 
     // Update the mutable object in the model.widgets
@@ -129,7 +132,7 @@ function grid() {
     };
 
     function WidgetFactory() {
-        this.createWidget = function (title, contentUrl, settings, id, color, textcolor) {
+        this.createWidget = function (title, contentUrl, settings, id, color, textcolor, type) {
             let widget = function () {
             };
             widget.settings = settings;
@@ -137,6 +140,7 @@ function grid() {
             widget.contentUrl = contentUrl;
             widget.color = color;
             widget.textcolor = textcolor;
+            widget.type = type;
 
             // TODO HTML and javascript need to be separated
             //  https://github.com/polymer/lit-element#minimal-example
@@ -158,17 +162,50 @@ function grid() {
             };
 
             // The basic template for a widget
+
             widget.widgetTemplate = function () {
-                return '<div>' +
-                    '<div class="grid-stack-item-content"' + this.colorInfo() + '>' +
-                    this.getHtmlControls() +
-                    '<div id="' +
-                    id +
-                    '" class="ctab-widget-body">' +
-                    this.getTag() +
-                    '</div>' +
-                    '</div>' +
-                    '</div>';
+                // TODO types: custom elements + scalable (getTag() for example)
+                if (type === "clock")
+                    return `<div>
+                                <div class="grid-stack-item-content"${this.colorInfo()}>
+                                    <div id="${id}" class="ctab-widget-body txt">
+                                    </div>
+                                </div>
+                             </div>`;
+                else if (type === "note"){
+                    let templateString = `<div> 
+                                <div class="grid-stack-item-content"  ${this.colorInfo()}> 
+                                    ${this.getHtmlControls()}
+                                    <div id="${id}" class="ctab-widget-body note">
+                                        <textarea> 
+                                            ${this.title} 
+                                        </textarea>
+                                    </div> 
+                                </div> 
+                            </div>`;
+                    debugger;
+                    return templateString;
+                }
+                else if (type === "buienradar") {
+                    return `<div>
+                                <div class="grid-stack-item-content"${this.colorInfo()}>
+                                    <div id="${id}" class="ctab-widget-body">
+                                        ` + '<IFRAME SRC="https://api.buienradar.nl/image/1.0/RadarMapNL?w=256&h=256" NORESIZE SCROLLING=NO HSPACE=0 VSPACE=0 FRAMEBORDER=0 MARGINHEIGHT=0 MARGINWIDTH=0 WIDTH=256 HEIGHT=256></IFRAME>' +
+                        `            </div>
+                                </div>
+                             </div>`;
+                }
+                else
+                    return '<div>' +
+                        '<div class="grid-stack-item-content"' + this.colorInfo() + '>' +
+                        this.getHtmlControls() +
+                        '<div id="' +
+                        id +
+                        '" class="ctab-widget-body">' +
+                        this.getTag() +
+                        '</div>' +
+                        '</div>' +
+                        '</div>';
             };
 
             widget.getConfig = function () {
@@ -178,6 +215,7 @@ function grid() {
                     "contentUrl": contentUrl,
                     "color": color,
                     "textcolor": textcolor,
+                    "type": type
                 };
             };
 
@@ -197,7 +235,7 @@ function grid() {
         let chromeresult = chrome.storage.sync.get(['CTabConfig'], function (res) {
             return res;
         });
-        console.log("chromeresult",chromeresult);
+        console.log("chromeresult", chromeresult);
         return JSON.parse(window.localStorage.getItem("CTabConfig"));
     };
 
@@ -211,12 +249,12 @@ function grid() {
     };
     service.saveGrid = function () {
         if (dirty) {
-            console.log("curconfig genereated: ", service.getDashboardConfig());
             service.setConfig(service.getDashboardConfig());
             dirty = false;
+            return "Configuration saved!";
         }
         else {
-            console.log("nothing to save");
+            return "nothing to save";
         }
     };
 
@@ -258,7 +296,8 @@ function grid() {
             let contentUrl = widgetData[i].contentUrl;
             let color = widgetData[i].color;
             let textcolor = widgetData[i].textcolor;
-            let widget = widgetFactory.createWidget(title, contentUrl, settings, i, color, textcolor);
+            let type = widgetData[i].type;
+            let widget = widgetFactory.createWidget(title, contentUrl, settings, i, color, textcolor, type);
             widget.prototype.id = service.count;
             service.widgets[service.count] = widget;
             service.count++;
@@ -310,12 +349,35 @@ function grid() {
         }
     };
 
-    service.simpleAdd = function (title, url) {
+    service.simpleAdd = function (title, url, color, textcolor, type) {
         service.addWidgetToGrid(widgetFactory.createWidget(title, url, {
             'autoposition': true,
-        }, service.count + 1), service.count, true);
+        }, service.count + 1, color, textcolor, type), service.count, true);
         service.count++;
     };
+
+    // From w3 to add clock
+    function startTime() {
+        let clocks = document.querySelectorAll('.txt');
+        if (clocks.length > 0) {
+            let today = new Date();
+            const h = today.getHours();
+            let m = today.getMinutes();
+            let s = today.getSeconds();
+            m = checkTime(m);
+            s = checkTime(s);
+            clocks.forEach(a => a.innerHTML =
+                h + ":" + m + ":" + s);
+            setTimeout(startTime, 500);
+        }
+    }
+
+    function checkTime(i) {
+        if (i < 10) {
+            i = "0" + i;
+        } // add zero in front of numbers < 10
+        return i;
+    }
 
 
     return service;
