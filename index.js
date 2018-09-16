@@ -10,6 +10,35 @@ CTabGrid.initialize();
 
 let CtabGridElement = $('.grid-stack');
 
+let typeChanger = document.getElementById("typeDropdown");
+typeChanger.addEventListener('change', () => {
+    let curVal = typeChanger.value;
+    let title = document.querySelector("#simpleAddTitle");
+    let titleLabel = document.querySelector("#titleLabel");
+    let url = document.querySelector("#simpleAddUrl");
+    let urlLabel = document.querySelector("#urlLabel");
+
+    // TODO types: better scalable
+    if (curVal === "link") {
+        title.classList.remove("hidden");
+        url.classList.remove("hidden");
+        titleLabel.classList.remove("hidden");
+        urlLabel.classList.remove("hidden");
+    }
+    if (curVal === "clock") {
+        title.classList.add("hidden");
+        url.classList.add("hidden");
+        titleLabel.classList.add("hidden");
+        urlLabel.classList.add("hidden");
+    }
+    if (curVal === "note") {
+        title.classList.remove("hidden");
+        url.classList.add("hidden");
+        titleLabel.classList.remove("hidden");
+        urlLabel.classList.add("hidden");
+    }
+});
+
 function devSwitch(displayStyle) {
     document.querySelector(".devConfig").style.display = displayStyle;
     document.querySelector("#clearButton").style.display = displayStyle;
@@ -127,33 +156,4 @@ chrome.history.search({text: '', maxResults: 10}, function(data) {
         //TODO add from history?
         // console.log(page.url);
     });
-});
-
-let typeChanger = document.getElementById("typeDropdown");
-typeChanger.addEventListener('change', () => {
-    let curVal = typeChanger.value;
-    let title = document.querySelector("#simpleAddTitle");
-    let titleLabel = document.querySelector("#titleLabel");
-    let url = document.querySelector("#simpleAddUrl");
-    let urlLabel = document.querySelector("#urlLabel");
-
-    // TODO types: better scalable
-    if (curVal === "link") {
-        title.classList.remove("hidden");
-        url.classList.remove("hidden");
-        titleLabel.classList.remove("hidden");
-        urlLabel.classList.remove("hidden");
-    }
-    if (curVal === "clock") {
-        title.classList.add("hidden");
-        url.classList.add("hidden");
-        titleLabel.classList.add("hidden");
-        urlLabel.classList.add("hidden");
-    }
-    if (curVal === "note") {
-        title.classList.remove("hidden");
-        url.classList.add("hidden");
-        titleLabel.classList.remove("hidden");
-        urlLabel.classList.add("hidden");
-    }
 });
