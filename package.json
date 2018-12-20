@@ -7,7 +7,6 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "@polymer/lit-element": "^0.5.2",
     "bootstrap": "3",
     "gridstack": "^0.4.0"
   }
