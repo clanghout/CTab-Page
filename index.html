@@ -9,11 +9,21 @@
     <link href="style.css" rel="stylesheet"/>
     <link rel="stylesheet" href="node_modules/gridstack/dist/gridstack.css"/>
     <link rel="stylesheet" href="node_modules/gridstack/dist/gridstack-extra.css"/>
+
     <link rel="stylesheet" href="modules/bootstrap-linkpreview.css">
+    <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">
 </head>
 <body>
 <div class="trash"></div>
+<div class="top-bar">
+    <div id="logo1" class="col-sm-6"><a href="https://github.com/clanghout/ctab-page">C-Tab</a></div>
+    <div class="clockdate col-sm-6">
+        <div class="clock txt"></div>
+        <div class="date"></div>
+    </div>
+</div>
 <div class="grid-stack" id="main-dashboard">
+    <div id="toast" class="hidden"></div>
 </div>
 
 <div class="buttonBar">
@@ -24,16 +34,42 @@
     <button id="widescreenButton">Widescreen Mode</button>
 </div>
 
-<div class="simpleAdd">
-    <label>
+<div class="addButton" id="addButton">
+    <div class="addSign"></div>
+</div>
+
+<!--TODO types: auto?-->
+<div class="simpleAdd" id="addMenu">
+    <label for="typeDropdown">Type:</label>
+    <select name="type" id="typeDropdown">
+        <option value="link">link</option>
+        <option value="clock">clock</option>
+        <option value="buienradar">buienradar</option>
+        <option value="note">note</option>
+    </select>
+
+    <!--Empty row-->
+    <p></p>
+    <p></p>
+
+    <label id="titleLabel" for="simpleAddTitle">
         Title:
     </label>
     <input type="text" id="simpleAddTitle">
-    <label>
+
+    <label id="urlLabel" for="simpleAddUrl">
         Url:
     </label>
     <input type="text" id="simpleAddUrl">
+
+    <label for="simpleAddBGC">Background color:</label>
+    <input type="color" id="simpleAddBGC" value="#ffffff">
+
+    <label for="simpleAddTC">Text color:</label>
+    <input type="color" id="simpleAddTC" value="#000000">
+
     <button id="simpleAddButton">Add</button>
+    <button id="simpleAddCancelButton">Cancel</button>
 </div>
 
 <div class="others">
