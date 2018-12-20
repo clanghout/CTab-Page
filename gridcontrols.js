@@ -21,6 +21,10 @@ function grid() {
     const defaultWidgetColor = "#fff";
 
 
+    service.noteChanged = () => {
+        dirty = true;
+    };
+
     service.initialize = function () {
         service.grid.gridstack(options);
         service.gridData = service.grid.data('gridstack');
@@ -133,11 +137,12 @@ function grid() {
             widget.color = color;
             widget.textcolor = textcolor;
             widget.type = type;
+            widget.id = id;
 
             // TODO HTML and javascript need to be separated
             //  option: https://github.com/polymer/lit-element#minimal-example
             //  option: vue components
-            widget.getTag = () => `${title}<a href="${contentUrl}" id="${title}"><span class="ctab-widget-link"></span></a>`;
+            widget.getTag = () => `${title}<a href="${this.contentUrl}" id="${this.title}"><span class="ctab-widget-link"></span></a>`;
 
             widget.getHtmlControls = () => `<div class="ctab-widget-controls"><div class="deletebutton">${this.id}</div></div>`;
 
@@ -157,7 +162,7 @@ function grid() {
                 if (type === "clock")
                     return `<div>
                                 <div class="grid-stack-item-content"${this.colorInfo()}>
-                                    <div id="${id}" class="ctab-widget-body txt">
+                                    <div id="${this.id}" class="ctab-widget-body txt">
                                     </div>
                                 </div>
                              </div>`;
@@ -165,10 +170,8 @@ function grid() {
                     let templateString = `<div> 
                                 <div class="grid-stack-item-content"  ${this.colorInfo()}> 
                                     ${this.getHtmlControls()}
-                                    <div id="${id}" class="ctab-widget-body note">
-                                        <textarea> 
-                                            ${this.title} 
-                                        </textarea>
+                                    <div id="${this.id}" class="ctab-widget-body note">
+                                        <textarea id="note-${this.id}">${this.title}</textarea>
                                     </div> 
                                 </div> 
                             </div>`;
@@ -176,7 +179,7 @@ function grid() {
                 } else if (type === "buienradar") {
                     return `<div>
                                 <div class="grid-stack-item-content"${this.colorInfo()}>
-                                    <div id="${id}" class="ctab-widget-body">
+                                    <div id="${this.id}" class="ctab-widget-body">
                                         <IFRAME SRC="https://api.buienradar.nl/image/1.0/RadarMapNL?w=256&h=256" NORESIZE SCROLLING=NO HSPACE=0 VSPACE=0 FRAMEBORDER=0 MARGINHEIGHT=0 MARGINWIDTH=0 WIDTH=256 HEIGHT=256></IFRAME>
                                     </div>
                                 </div>
@@ -185,7 +188,7 @@ function grid() {
                     return `<div> 
                                 <div class="grid-stack-item-content" ${this.colorInfo()}> 
                                     ${this.getHtmlControls()} 
-                                    <div id="${id}" class="ctab-widget-body"> 
+                                    <div id="${this.id}" class="ctab-widget-body"> 
                                         ${this.getTag()} 
                                     </div> 
                                 </div> 
@@ -195,20 +198,21 @@ function grid() {
             widget.getConfig = function () {
                 return {
                     title: this.title,
-                    settings: settings,
-                    contentUrl: contentUrl,
-                    color: color,
-                    textcolor: textcolor,
-                    type: type
+                    settings: this.settings,
+                    contentUrl: this.contentUrl,
+                    color: this.color,
+                    textcolor: this.textcolor,
+                    type: this.type,
+                    id: this.id
                 };
             };
 
             widget.toString = () => `{
-                Title: ${title},
-                settings: ${JSON.stringify(settings)},
-                contentUrl: ${contentUrl},
-                color: ${color},
-                textcolor: ${textcolor}
+                Title: ${this.title},
+                settings: ${JSON.stringify(this.settings)},
+                contentUrl: ${this.contentUrl},
+                color: ${this.color},
+                textcolor: ${this.textcolor}
             }`;
 
             return widget;
@@ -216,13 +220,12 @@ function grid() {
     }
 
     service.getConfig = function () {
-        try{
+        try {
             let chromeresult = chrome.storage.sync.get(['CTabConfig'], function (res) {
                 return res;
             });
             console.log("chromeresult", chromeresult);
-        }
-        catch(error){
+        } catch (error) {
             console.info("cant find chrome result");
         }
         let lsConfig = window.localStorage.getItem("CTabConfig");
@@ -269,6 +272,14 @@ function grid() {
         for (let i = 0; i < ids.length; i++) {
             let w = service.widgets[ids[i]];
             let wc = w.getConfig();
+            if(w.type === 'note') {
+                // save internals of node objects
+                let innerText = document.getElementById('note-'+wc.id).value;
+                if (innerText.replace(/\s/g,'').length !==0){
+                    wc.title = innerText.trim();
+                }
+                console.log(innerText);
+            }
             configuration = configuration.concat(wc);
         }
         return configuration;

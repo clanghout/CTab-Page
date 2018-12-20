@@ -1,12 +1,12 @@
-:root{
---ctab-widget-controls-width: 0;
+:root {
+    --ctab-widget-controls-width: 0;
 }
 
-body{
+body {
     overflow-x: hidden;
 }
 
-.hidden{
+.hidden {
     display: none !important;
 }
 
@@ -14,8 +14,9 @@ body{
     padding: 10px 0;
     margin-top: 60px;
 }
-.top-bar{
-    position:fixed;
+
+.top-bar {
+    position: fixed;
     top: 0;
     left: 0;
     height: 50px;
@@ -36,7 +37,7 @@ body{
     /*Set a barely visible text stroke so dark text on dark background is somewhat readable
     TODO: Not sure yet if this is too ugly*/
     -webkit-text-stroke-width: 1px;
-    -webkit-text-stroke-color: rgba(255,255,255,0.2);
+    -webkit-text-stroke-color: rgba(255, 255, 255, 0.2);
 
 }
 
@@ -52,7 +53,7 @@ body{
     background-color: var(--item-color);
 }
 
-#logo1{
+#logo1 {
     color: #ffffff;
     font-size: 3em;
     margin-top: 4px;
@@ -64,7 +65,7 @@ body{
 }
 
 /*Trash can styles*/
-.active{
+.active {
     z-index: 1;
     border-radius: 0 0 7px 7px;
     position: fixed;
@@ -94,6 +95,7 @@ body {
     opacity: 1;
     float: left;
 }
+
 .ctab-widget-controls {
     height: 100%;
     float: right;
@@ -142,22 +144,23 @@ body {
     width: calc(100% - 15px);
 }
 
-.others{
+.others {
     border: 1px solid dimgray;
     border-radius: 3px;
-    background-color: rgba(255,255,255,0.5);
+    background-color: rgba(255, 255, 255, 0.5);
     max-width: 80%;
 }
 
-.clockdate{
+.clockdate {
     text-align: right;
 }
-.clock{
+
+.clock {
     color: #ffffff;
     float: right;
 }
 
-.addButton{
+.addButton {
     position: fixed;
     bottom: 25px;
     right: 25px;
@@ -168,20 +171,21 @@ body {
     border-radius: 50%;
 }
 
-.simpleAdd{
+.simpleAdd {
     position: fixed;
     bottom: 25px;
     right: 25px;
     display: grid;
     grid-template-columns: 120px 150px;
-    grid-template-rows: repeat(2,20px);
+    grid-template-rows: repeat(2, 20px);
     width: min-content;
     padding: 5px;
     border: 1px solid #f00;
     border-radius: 3px;
-    background-color: rgba(255,255,255,0.8);
+    background-color: rgba(255, 255, 255, 0.8);
 }
-.simpleAdd > label, .simpleAdd > button{
+
+.simpleAdd > label, .simpleAdd > button {
     display: inline-block;
     font-weight: bolder;
     vertical-align: middle;
@@ -189,16 +193,17 @@ body {
 }
 
 /*The plus sign in the add button*/
-.addSign{
+.addSign {
     position: absolute;
-    top:32px;
+    top: 32px;
     left: 20px;
     height: 6px;
     width: 30px;
     border-radius: 3px;
     background: rgba(255, 255, 255, 1);
 }
-.addSign:before{
+
+.addSign:before {
     content: '';
     z-index: -1;
     position: absolute;
@@ -209,26 +214,28 @@ body {
     transform: rotate(90deg);
 }
 
-.txt{
+.txt {
     font-size: 3em;
 }
 
 /*TODO types: needs clear structure*/
-.note{
+.note {
     font-size: 1em;
     text-align: left;
     word-wrap: break-word;
+    vertical-align: top;
 }
-.note textarea{
+
+.note textarea {
     width: 100%;
     height: 100%;
     resize: none;
     overflow: hidden;
 }
 
-#toast{
+#toast {
     min-width: 250px;
-    margin-left: -125px;/* half of min-width*/
+    margin-left: -125px; /* half of min-width*/
     background-color: #333333;
     color: #ffffff;
     text-align: center;
