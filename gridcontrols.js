@@ -6,7 +6,6 @@ function grid() {
     service.count = 0;
     service.widgets = {};
     let widgetFactory = new WidgetFactory();
-    let defaultWidgetColor = "#fff";
     let dirty = false;
 
     const options = {
@@ -19,6 +18,8 @@ function grid() {
         removable: '.trash', // Trash area has to exist: div.trash is enough => with style to display
         removeTimeout: 100
     };
+    const defaultWidgetColor = "#fff";
+
 
     service.initialize = function () {
         service.grid.gridstack(options);
@@ -134,26 +135,23 @@ function grid() {
             widget.type = type;
 
             // TODO HTML and javascript need to be separated
-            //  https://github.com/polymer/lit-element#minimal-example
-            widget.getTag = function () {
-                return title + '<a href="' + contentUrl + '" id="' + title + '"><span class="ctab-widget-link"></span></a>';
-            };
+            //  option: https://github.com/polymer/lit-element#minimal-example
+            //  option: vue components
+            widget.getTag = () => `${title}<a href="${contentUrl}" id="${title}"><span class="ctab-widget-link"></span></a>`;
 
-            widget.getHtmlControls = function () {
-                return `<div class="ctab-widget-controls"><div class="deletebutton">${this.id}</div></div>`;
-            };
+            widget.getHtmlControls = () => `<div class="ctab-widget-controls"><div class="deletebutton">${this.id}</div></div>`;
+
 
             widget.colorInfo = function () {
                 let styleInfo = 'style="';
-                styleInfo += this.textcolor !== undefined ? 'color:' + this.textcolor + ';' : "";
-                styleInfo += this.color !== undefined ? '--item-color:' + this.color + ';' :
-                    "--item-color:" + defaultWidgetColor + ";";
+                styleInfo += this.textcolor !== undefined ? `color:${this.textcolor};` : "";
+                styleInfo += this.color !== undefined ? `--item-color:${this.color};` :
+                    `--item-color:${defaultWidgetColor};`;
                 //TODO document.style.setproperty
                 return styleInfo + '"';
             };
 
             // The basic template for a widget
-
             widget.widgetTemplate = function () {
                 // TODO types: custom elements + scalable (getTag() for example)
                 if (type === "clock")
@@ -163,7 +161,7 @@ function grid() {
                                     </div>
                                 </div>
                              </div>`;
-                else if (type === "note"){
+                else if (type === "note") {
                     let templateString = `<div> 
                                 <div class="grid-stack-item-content"  ${this.colorInfo()}> 
                                     ${this.getHtmlControls()}
@@ -174,60 +172,68 @@ function grid() {
                                     </div> 
                                 </div> 
                             </div>`;
-                    debugger;
                     return templateString;
-                }
-                else if (type === "buienradar") {
+                } else if (type === "buienradar") {
                     return `<div>
                                 <div class="grid-stack-item-content"${this.colorInfo()}>
                                     <div id="${id}" class="ctab-widget-body">
-                                        ` + '<IFRAME SRC="https://api.buienradar.nl/image/1.0/RadarMapNL?w=256&h=256" NORESIZE SCROLLING=NO HSPACE=0 VSPACE=0 FRAMEBORDER=0 MARGINHEIGHT=0 MARGINWIDTH=0 WIDTH=256 HEIGHT=256></IFRAME>' +
-                        `            </div>
+                                        <IFRAME SRC="https://api.buienradar.nl/image/1.0/RadarMapNL?w=256&h=256" NORESIZE SCROLLING=NO HSPACE=0 VSPACE=0 FRAMEBORDER=0 MARGINHEIGHT=0 MARGINWIDTH=0 WIDTH=256 HEIGHT=256></IFRAME>
+                                    </div>
                                 </div>
                              </div>`;
-                }
-                else
-                    return '<div>' +
-                        '<div class="grid-stack-item-content"' + this.colorInfo() + '>' +
-                        this.getHtmlControls() +
-                        '<div id="' +
-                        id +
-                        '" class="ctab-widget-body">' +
-                        this.getTag() +
-                        '</div>' +
-                        '</div>' +
-                        '</div>';
+                } else
+                    return `<div> 
+                                <div class="grid-stack-item-content" ${this.colorInfo()}> 
+                                    ${this.getHtmlControls()} 
+                                    <div id="${id}" class="ctab-widget-body"> 
+                                        ${this.getTag()} 
+                                    </div> 
+                                </div> 
+                            </div>`;
             };
 
             widget.getConfig = function () {
                 return {
-                    "title": this.title,
-                    "settings": settings,
-                    "contentUrl": contentUrl,
-                    "color": color,
-                    "textcolor": textcolor,
-                    "type": type
+                    title: this.title,
+                    settings: settings,
+                    contentUrl: contentUrl,
+                    color: color,
+                    textcolor: textcolor,
+                    type: type
                 };
             };
 
-            widget.toString = function () {
-                return "{Title: " + title + ",\n" +
-                    "settings: " + JSON.stringify(settings) +
-                    ",\ncontentUrl: " + contentUrl + "\n" +
-                    ",\ncolor: " + color + "\n" +
-                    ",\ntextcolor: " + textcolor + "\n" +
-                    "}";
-            };
+            widget.toString = () => `{
+                Title: ${title},
+                settings: ${JSON.stringify(settings)},
+                contentUrl: ${contentUrl},
+                color: ${color},
+                textcolor: ${textcolor}
+            }`;
+
             return widget;
         };
     }
 
     service.getConfig = function () {
-        let chromeresult = chrome.storage.sync.get(['CTabConfig'], function (res) {
-            return res;
-        });
-        console.log("chromeresult", chromeresult);
-        return JSON.parse(window.localStorage.getItem("CTabConfig"));
+        try{
+            let chromeresult = chrome.storage.sync.get(['CTabConfig'], function (res) {
+                return res;
+            });
+            console.log("chromeresult", chromeresult);
+        }
+        catch(error){
+            console.info("cant find chrome result");
+        }
+        let lsConfig = window.localStorage.getItem("CTabConfig");
+        let config = [];
+        try {
+            config = JSON.parse(lsConfig);
+        } catch (error) {
+            console.error(`Config could not be parsed, found configuration:`, lsConfig);
+            console.error(error);
+        }
+        return config;
     };
 
     service.setConfig = function (config) {
@@ -243,8 +249,7 @@ function grid() {
             service.setConfig(service.getDashboardConfig());
             dirty = false;
             return "Configuration saved!";
-        }
-        else {
+        } else {
             return "nothing to save";
         }
     };
@@ -313,27 +318,27 @@ function grid() {
         if (sampleConfig) {
             console.log("using sample config");
             let sampleConfiguration = {
-                "widgets": [{
-                    "widgetConfig": {"width": 2, "height": 2},
-                    "title": "github",
-                    "contentUrl": 'https://www.github.com'
+                widgets: [{
+                    widgetConfig: {"width": 2, "height": 2},
+                    title: "github",
+                    contentUrl: 'https://www.github.com'
                 }],
             };
-            CTabGrid.setConfig(sampleConfiguration);
+            service.setConfig(sampleConfiguration);
         }
         if (addSampleWidgets) {
-            console.log("adding widget");
+            console.log("adding debug widget");
             let settings = {
-                'x': 5,
-                'y': 5,
-                'width': 1,
-                'height': 1,
-                'autoposition': true,
-                'minWidth': 1,
-                'maxWidth': 2,
-                'minHeight': 1,
-                'maxHeight': 2,
-                'id': 0
+                x: 5,
+                y: 5,
+                width: 1,
+                height: 1,
+                autoposition: true,
+                minWidth: 1,
+                maxWidth: 2,
+                minHeight: 1,
+                maxHeight: 2,
+                id: 0
             };
             service.addWidgetToGrid(widgetFactory.createWidget("testwidget", "https://www.facebook.com", settings, service.count + 1), service.count, true);
             service.count++;
@@ -342,7 +347,7 @@ function grid() {
 
     service.simpleAdd = function (title, url, color, textcolor, type) {
         service.addWidgetToGrid(widgetFactory.createWidget(title, url, {
-            'autoposition': true,
+            autoposition: true,
         }, service.count + 1, color, textcolor, type), service.count, true);
         service.count++;
     };

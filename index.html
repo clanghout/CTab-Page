@@ -40,7 +40,7 @@
 
 <!--TODO types: auto?-->
 <div class="simpleAdd" id="addMenu">
-    <label>Type:</label>
+    <label for="typeDropdown">Type:</label>
     <select name="type" id="typeDropdown">
         <option value="link">link</option>
         <option value="clock">clock</option>
@@ -52,20 +52,20 @@
     <p></p>
     <p></p>
 
-    <label id="titleLabel">
+    <label id="titleLabel" for="simpleAddTitle">
         Title:
     </label>
     <input type="text" id="simpleAddTitle">
 
-    <label id="urlLabel">
+    <label id="urlLabel" for="simpleAddUrl">
         Url:
     </label>
     <input type="text" id="simpleAddUrl">
 
-    <label>Background color:</label>
+    <label for="simpleAddBGC">Background color:</label>
     <input type="color" id="simpleAddBGC" value="#ffffff">
 
-    <label>Text color:</label>
+    <label for="simpleAddTC">Text color:</label>
     <input type="color" id="simpleAddTC" value="#000000">
 
     <button id="simpleAddButton">Add</button>
@@ -85,8 +85,6 @@
 
     </div>
 </div>
-
-
 
 
 <script src="node_modules/lodash/lodash.min.js"></script>
