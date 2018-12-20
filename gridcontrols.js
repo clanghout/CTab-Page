@@ -6,7 +6,6 @@ function grid() {
     service.count = 0;
     service.widgets = {};
     let widgetFactory = new WidgetFactory();
-    let defaultWidgetColor = "#fff";
     let dirty = false;
 
     const options = {
@@ -19,6 +18,8 @@ function grid() {
         removable: '.trash', // Trash area has to exist: div.trash is enough => with style to display
         removeTimeout: 100
     };
+    const defaultWidgetColor = "#fff";
+
 
     service.initialize = function () {
         service.grid.gridstack(options);
@@ -143,9 +144,9 @@ function grid() {
 
             widget.colorInfo = function () {
                 let styleInfo = 'style="';
-                styleInfo += this.textcolor !== undefined ? 'color:' + this.textcolor + ';' : "";
-                styleInfo += this.color !== undefined ? '--item-color:' + this.color + ';' :
-                    "--item-color:" + defaultWidgetColor + ";";
+                styleInfo += this.textcolor !== undefined ? `color:${this.textcolor};` : "";
+                styleInfo += this.color !== undefined ? `--item-color:${this.color};` :
+                    `--item-color:${defaultWidgetColor};`;
                 //TODO document.style.setproperty
                 return styleInfo + '"';
             };
@@ -215,10 +216,15 @@ function grid() {
     }
 
     service.getConfig = function () {
-        let chromeresult = chrome.storage.sync.get(['CTabConfig'], function (res) {
-            return res;
-        });
-        console.log("chromeresult", chromeresult);
+        try{
+            let chromeresult = chrome.storage.sync.get(['CTabConfig'], function (res) {
+                return res;
+            });
+            console.log("chromeresult", chromeresult);
+        }
+        catch(error){
+            console.info("cant find chrome result");
+        }
         let lsConfig = window.localStorage.getItem("CTabConfig");
         let config = [];
         try {
@@ -312,27 +318,27 @@ function grid() {
         if (sampleConfig) {
             console.log("using sample config");
             let sampleConfiguration = {
-                "widgets": [{
-                    "widgetConfig": {"width": 2, "height": 2},
-                    "title": "github",
-                    "contentUrl": 'https://www.github.com'
+                widgets: [{
+                    widgetConfig: {"width": 2, "height": 2},
+                    title: "github",
+                    contentUrl: 'https://www.github.com'
                 }],
             };
-            CTabGrid.setConfig(sampleConfiguration);
+            service.setConfig(sampleConfiguration);
         }
         if (addSampleWidgets) {
-            console.log("adding widget");
+            console.log("adding debug widget");
             let settings = {
-                'x': 5,
-                'y': 5,
-                'width': 1,
-                'height': 1,
-                'autoposition': true,
-                'minWidth': 1,
-                'maxWidth': 2,
-                'minHeight': 1,
-                'maxHeight': 2,
-                'id': 0
+                x: 5,
+                y: 5,
+                width: 1,
+                height: 1,
+                autoposition: true,
+                minWidth: 1,
+                maxWidth: 2,
+                minHeight: 1,
+                maxHeight: 2,
+                id: 0
             };
             service.addWidgetToGrid(widgetFactory.createWidget("testwidget", "https://www.facebook.com", settings, service.count + 1), service.count, true);
             service.count++;
@@ -341,7 +347,7 @@ function grid() {
 
     service.simpleAdd = function (title, url, color, textcolor, type) {
         service.addWidgetToGrid(widgetFactory.createWidget(title, url, {
-            'autoposition': true,
+            autoposition: true,
         }, service.count + 1, color, textcolor, type), service.count, true);
         service.count++;
     };
