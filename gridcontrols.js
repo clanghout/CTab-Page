@@ -1,13 +1,6 @@
 "use strict";
 
-
-// import {eventLogger} from './eventLogger/eventLogger.js';
-
 function grid() {
-    // let el = eventLogger();
-    // el.addEvent("kaas");
-    // let val = el.getFromIndex(0);
-    // console.log("eventlogger: ", el.eventLog);
     let service = {};
     service.grid = $(".grid-stack");
     service.count = 0;
@@ -143,14 +136,12 @@ function grid() {
             widget.type = type;
 
             // TODO HTML and javascript need to be separated
-            //  https://github.com/polymer/lit-element#minimal-example
-            widget.getTag = function () {
-                return title + '<a href="' + contentUrl + '" id="' + title + '"><span class="ctab-widget-link"></span></a>';
-            };
+            //  option: https://github.com/polymer/lit-element#minimal-example
+            //  option: vue components
+            widget.getTag = () => `${title}<a href="${contentUrl}" id="${title}"><span class="ctab-widget-link"></span></a>`;
 
-            widget.getHtmlControls = function () {
-                return `<div class="ctab-widget-controls"><div class="deletebutton">${this.id}</div></div>`;
-            };
+            widget.getHtmlControls = () => `<div class="ctab-widget-controls"><div class="deletebutton">${this.id}</div></div>`;
+
 
             widget.colorInfo = function () {
                 let styleInfo = 'style="';
@@ -162,7 +153,6 @@ function grid() {
             };
 
             // The basic template for a widget
-
             widget.widgetTemplate = function () {
                 // TODO types: custom elements + scalable (getTag() for example)
                 if (type === "clock")
@@ -172,7 +162,7 @@ function grid() {
                                     </div>
                                 </div>
                              </div>`;
-                else if (type === "note"){
+                else if (type === "note") {
                     let templateString = `<div> 
                                 <div class="grid-stack-item-content"  ${this.colorInfo()}> 
                                     ${this.getHtmlControls()}
@@ -183,50 +173,45 @@ function grid() {
                                     </div> 
                                 </div> 
                             </div>`;
-                    debugger;
                     return templateString;
-                }
-                else if (type === "buienradar") {
+                } else if (type === "buienradar") {
                     return `<div>
                                 <div class="grid-stack-item-content"${this.colorInfo()}>
                                     <div id="${id}" class="ctab-widget-body">
-                                        ` + '<IFRAME SRC="https://api.buienradar.nl/image/1.0/RadarMapNL?w=256&h=256" NORESIZE SCROLLING=NO HSPACE=0 VSPACE=0 FRAMEBORDER=0 MARGINHEIGHT=0 MARGINWIDTH=0 WIDTH=256 HEIGHT=256></IFRAME>' +
-                        `            </div>
+                                        <IFRAME SRC="https://api.buienradar.nl/image/1.0/RadarMapNL?w=256&h=256" NORESIZE SCROLLING=NO HSPACE=0 VSPACE=0 FRAMEBORDER=0 MARGINHEIGHT=0 MARGINWIDTH=0 WIDTH=256 HEIGHT=256></IFRAME>
+                                    </div>
                                 </div>
                              </div>`;
-                }
-                else
-                    return '<div>' +
-                        '<div class="grid-stack-item-content"' + this.colorInfo() + '>' +
-                        this.getHtmlControls() +
-                        '<div id="' +
-                        id +
-                        '" class="ctab-widget-body">' +
-                        this.getTag() +
-                        '</div>' +
-                        '</div>' +
-                        '</div>';
+                } else
+                    return `<div> 
+                                <div class="grid-stack-item-content" ${this.colorInfo()}> 
+                                    ${this.getHtmlControls()} 
+                                    <div id="${id}" class="ctab-widget-body"> 
+                                        ${this.getTag()} 
+                                    </div> 
+                                </div> 
+                            </div>`;
             };
 
             widget.getConfig = function () {
                 return {
-                    "title": this.title,
-                    "settings": settings,
-                    "contentUrl": contentUrl,
-                    "color": color,
-                    "textcolor": textcolor,
-                    "type": type
+                    title: this.title,
+                    settings: settings,
+                    contentUrl: contentUrl,
+                    color: color,
+                    textcolor: textcolor,
+                    type: type
                 };
             };
 
-            widget.toString = function () {
-                return "{Title: " + title + ",\n" +
-                    "settings: " + JSON.stringify(settings) +
-                    ",\ncontentUrl: " + contentUrl + "\n" +
-                    ",\ncolor: " + color + "\n" +
-                    ",\ntextcolor: " + textcolor + "\n" +
-                    "}";
-            };
+            widget.toString = () => `{
+                Title: ${title},
+                settings: ${JSON.stringify(settings)},
+                contentUrl: ${contentUrl},
+                color: ${color},
+                textcolor: ${textcolor}
+            }`;
+
             return widget;
         };
     }
@@ -236,7 +221,15 @@ function grid() {
             return res;
         });
         console.log("chromeresult", chromeresult);
-        return JSON.parse(window.localStorage.getItem("CTabConfig"));
+        let lsConfig = window.localStorage.getItem("CTabConfig");
+        let config = [];
+        try {
+            config = JSON.parse(lsConfig);
+        } catch (error) {
+            console.error(`Config could not be parsed, found configuration:`, lsConfig);
+            console.error(error);
+        }
+        return config;
     };
 
     service.setConfig = function (config) {
@@ -252,8 +245,7 @@ function grid() {
             service.setConfig(service.getDashboardConfig());
             dirty = false;
             return "Configuration saved!";
-        }
-        else {
+        } else {
             return "nothing to save";
         }
     };
