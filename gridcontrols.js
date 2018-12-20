@@ -8,8 +8,6 @@ function grid() {
     let widgetFactory = new WidgetFactory();
     let defaultWidgetColor = "#fff";
     let dirty = false;
-    // el.addEvent("test");
-
 
     const options = {
         animate: true,
