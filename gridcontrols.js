@@ -254,15 +254,6 @@ function grid() {
         }
     };
 
-    service.loadLinkPreview = function () {
-        console.log(Object.keys(service.widgets));
-        Object.keys(service.widgets).forEach(a =>
-            $("#" + service.widgets[a].title).linkpreview({
-                previewContainer: $("#" + service.widgets[a].title).before(),
-                errorMessage: "unable to load"
-            }));
-    };
-
     service.getDashboardConfig = function () {
         let configuration = [];
         let ids = service.getSortedWidgets();
