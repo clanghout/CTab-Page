@@ -75,7 +75,6 @@ function saveGrid() {
 document.querySelectorAll(".note").forEach(note => note.addEventListener('change',CTabGrid.noteChanged(note)));
 
 document.getElementById("saveButton").addEventListener('click', saveGrid);
-document.getElementById("previewButton").addEventListener('click', CTabGrid.loadLinkPreview);
 document.getElementById("clearButton").addEventListener('click', () => CTabGrid.debug(true, false));
 document.getElementById("debugButton").addEventListener('click', () => CTabGrid.debug(false, true));
 document.getElementById("backupButton").addEventListener('click', saveCurConfig);
