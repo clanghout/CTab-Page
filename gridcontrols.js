@@ -37,9 +37,13 @@ function grid() {
         service.load();
         service.gridData.commit();
 
+
         // Save whenever you leave the screen
         window.onbeforeunload = function () {
-            service.saveGrid(); // Disabled to keep me from accidentally clearing my config
+            if (dirty) {
+                return "You have unsaved changes on this page. Do you want to leave this page and discard your changes or stay on this page?";
+            }
+            // service.saveGrid(); // Disabled to enable dev edit
         };
 
         service.grid.on("change", function (event, items) {
@@ -50,11 +54,18 @@ function grid() {
                 for (let i = 0; i < items.length; i++) {
                     if (items[i].id in service.widgets) {
                         service.update(items[i].id, items[i]);
+                        $('#' + items[i].id).textfill({
+                            minFontPixels: 10,
+                            allowOverflow: true,
+                        });
                     }
                 }
             }
         });
-
+        Object.keys(service.widgets).forEach(i => $('#' + i).textfill({
+            minFontPixels: 10,
+            allowOverflow: true,
+        }));
         // Start clocks
         startTime();
     };
@@ -142,7 +153,7 @@ function grid() {
             // TODO HTML and javascript need to be separated
             //  option: https://github.com/polymer/lit-element#minimal-example
             //  option: vue components
-            widget.getTag = () => `${title}<a href="${this.contentUrl}" id="${this.title}"><span class="ctab-widget-link"></span></a>`;
+            widget.getTag = () => `<span>${widget.title}</span><a href="${widget.contentUrl}" id="${widget.title}"><span class="ctab-widget-link"></span></a>`;
 
             widget.getHtmlControls = () => `<div class="ctab-widget-controls"><div class="deletebutton">${this.id}</div></div>`;
 
@@ -272,13 +283,12 @@ function grid() {
         for (let i = 0; i < ids.length; i++) {
             let w = service.widgets[ids[i]];
             let wc = w.getConfig();
-            if(w.type === 'note') {
+            if (w.type === 'note') {
                 // save internals of node objects
-                let innerText = document.getElementById('note-'+wc.id).value;
-                if (innerText.replace(/\s/g,'').length !==0){
+                let innerText = document.getElementById('note-' + wc.id).value;
+                if (innerText.replace(/\s/g, '').length !== 0) {
                     wc.title = innerText.trim();
                 }
-                console.log(innerText);
             }
             configuration = configuration.concat(wc);
         }
