@@ -20,9 +20,22 @@ function grid() {
     };
     const defaultWidgetColor = "#fff";
 
-
-    service.noteChanged = () => {
+    const noteChanged = () => {
         dirty = true;
+    };
+
+    const hasChanges = () => {
+        let saved = service.getConfig();
+        let current = service.getDashboardConfig();
+        // compare strings since object compare is always different with ==
+        if (JSON.stringify(saved) !== JSON.stringify(current)) {
+            if (dirty) {
+                return true;
+            }
+            console.log("Changes exist but dirty is false");
+            return true;
+        }
+        return false;
     };
 
     service.initialize = function () {
@@ -40,7 +53,9 @@ function grid() {
 
         // Save whenever you leave the screen
         window.onbeforeunload = function () {
-            if (dirty) {
+            // dirty state is implemented loosely (did not care much before, dirty in the probability of change)
+            // so an extra check is also added comparing the current state to the saved state
+            if (hasChanges()) {
                 return "You have unsaved changes on this page. Do you want to leave this page and discard your changes or stay on this page?";
             }
             // service.saveGrid(); // Disabled to enable dev edit
@@ -68,10 +83,16 @@ function grid() {
         }));
         // Start clocks
         startTime();
+        // Set dirty to false, since note widgets might have set the state to dirty
+        document.querySelectorAll(".note").forEach(note => {
+            note.addEventListener('change', noteChanged);
+            note.addEventListener('keyup', noteChanged);
+        });
+        dirty = false;
     };
 
-    // Update the mutable object in the model.widgets
-    // two way binding
+// Update the mutable object in the model.widgets
+// two way binding
     service.update = function (id, item) {
         let widget = service.widgets[id];
         widget.settings.x = item.x;
@@ -235,7 +256,6 @@ function grid() {
             let chromeresult = chrome.storage.sync.get(['CTabConfig'], function (res) {
                 return res;
             });
-            console.log("chromeresult", chromeresult);
         } catch (error) {
             console.info("cant find chrome result");
         }
@@ -251,7 +271,6 @@ function grid() {
     };
 
     service.setConfig = function (config) {
-        console.log("set storage", config);
         if (typeof config !== 'string') {
             config = JSON.stringify(config);
         }
@@ -259,7 +278,7 @@ function grid() {
         // chrome.storage.sync.set({"CTabConfig": config}); // TODO: Too much data apparently, maybe save per widget? instead of whole json at once -> title can only occur once
     };
     service.saveGrid = function () {
-        if (dirty) {
+        if (hasChanges()) {
             service.setConfig(service.getDashboardConfig());
             dirty = false;
             return "Configuration saved!";
@@ -287,7 +306,7 @@ function grid() {
     };
 
 
-    // Loads the user configuration in the dashboard
+// Loads the user configuration in the dashboard
     service.load = function () {
         service.loadModel();
         service.loadGrid();
@@ -364,7 +383,7 @@ function grid() {
         service.count++;
     };
 
-    // From w3 to add clock
+// From w3 to add clock
     function startTime() {
         let clocks = document.querySelectorAll('.txt');
         if (clocks.length > 0) {

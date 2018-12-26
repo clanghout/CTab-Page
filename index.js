@@ -72,8 +72,6 @@ function saveGrid() {
     }, 2000);
 }
 
-document.querySelectorAll(".note").forEach(note => note.addEventListener('change',CTabGrid.noteChanged(note)));
-
 document.getElementById("saveButton").addEventListener('click', saveGrid);
 document.getElementById("clearButton").addEventListener('click', () => CTabGrid.debug(true, false));
 document.getElementById("debugButton").addEventListener('click', () => CTabGrid.debug(false, true));
