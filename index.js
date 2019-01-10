@@ -66,12 +66,16 @@ function supportsImports() {
     return 'import' in document.createElement('link');
 }
 
-function saveGrid() {
-    toastBox.innerText = CTabGrid.saveGrid();
+function showToast(message) {
+    toastBox.innerText = message;
     toastBox.classList.remove('hidden');
     setTimeout(() => {
         toastBox.classList.add("hidden");
     }, 2000);
+}
+
+function saveGrid() {
+   showToast(CTabGrid.saveGrid());
 }
 
 document.getElementById("saveButton").addEventListener('click', saveGrid);
@@ -159,6 +163,8 @@ function simpleAddWidget() {
 
         // Trigger hiding of the add window
         addCancelButton.click();
+    } else {
+        showToast("Unable to add widget: A title is required, unless the clock widget is used.");
     }
 }
 
