@@ -149,8 +149,8 @@ addCancelButton.addEventListener('click', () => {
 function simpleAddWidget() {
     let title = document.querySelector("#simpleAddTitle");
     let url = document.querySelector("#simpleAddUrl");
-    let bgcolor = document.querySelector('.simpleAddBGC');
-    let textcolor = document.querySelector('.simpleAddTC');
+    let bgcolor = document.querySelector('#simpleAddBGC');
+    let textcolor = document.querySelector('#simpleAddTC');
     console.log(typeChanger.value);
     if (title.value !== "" || typeChanger.value === "clock") {
         CTabGrid.simpleAdd(title.value, url.value, bgcolor.value, textcolor.value, typeChanger.value);
