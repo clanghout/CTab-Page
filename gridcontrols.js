@@ -135,22 +135,22 @@ function grid() {
             service.count++;
             widget.id = service.count;
         } else {
-            widget.id = id;
+            if (typeof id === "number") {
+                widget.id = id;
+            } else {
+                widget.id = parseInt(id);
+            }
         }
 
         service.widgets[service.count] = widget;
-        if (autoPos) {
-            widget.settings.autoPosition = true;
-        } else {
-            widget.settings.autoposition = false;
-        }
+        widget.settings.autoPosition = !!autoPos;
         service.gridData.addWidget(
             widget.widgetTemplate(),
             widget.settings.x,
             widget.settings.y,
             widget.settings.width,
             widget.settings.height,
-            widget.settings.autoposition,
+            widget.settings.autoPosition,
             widget.settings.minWidth,
             widget.settings.maxWidth,
             widget.settings.minHeight,
@@ -364,7 +364,7 @@ function grid() {
                 y: 5,
                 width: 1,
                 height: 1,
-                autoposition: true,
+                autoPosition: true,
                 minWidth: 1,
                 maxWidth: 2,
                 minHeight: 1,
@@ -378,7 +378,7 @@ function grid() {
 
     service.simpleAdd = function (title, url, color, textcolor, type) {
         service.addWidgetToGrid(widgetFactory.createWidget(title, url, {
-            autoposition: true,
+            autoPosition: true,
         }, service.count + 1, color, textcolor, type), service.count, true);
         service.count++;
     };
