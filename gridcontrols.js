@@ -69,6 +69,7 @@ function grid() {
                 for (let i = 0; i < items.length; i++) {
                     if (items[i].id in service.widgets) {
                         service.update(items[i].id, items[i]);
+                        // Call to textfill library, dynamically adapting the font size
                         $('#' + items[i].id).textfill({
                             minFontPixels: 10,
                             allowOverflow: true,
@@ -77,6 +78,7 @@ function grid() {
                 }
             }
         });
+        // Call to textfill library, calculate font sizes that make the text fit in the boxes.
         Object.keys(service.widgets).forEach(i => $('#' + i).textfill({
             minFontPixels: 10,
             allowOverflow: true,
