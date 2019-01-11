@@ -35,7 +35,7 @@ const typeChangerClassChanger = (showTitle, showUrl) => {
     }
 };
 
-const typeChanger = document.getElementById("typeDropdown");
+const typeChanger = document.querySelector("#typeDropdown");
 typeChanger.addEventListener('change', () => {
     const curVal = typeChanger.value;
 
@@ -54,17 +54,13 @@ function devSwitch(displayStyle) {
     document.querySelector(".devConfig").style.display = displayStyle;
     document.querySelector("#clearButton").style.display = displayStyle;
     document.querySelector("#debugButton").style.display = displayStyle;
-    document.getElementById("widescreenButton").style.display = displayStyle;
+    document.querySelector("#widescreenButton").style.display = displayStyle;
 }
 
 // disable dev mode by default
 devSwitch('none');
 
-const toastBox = document.getElementById("toast");
-
-function supportsImports() {
-    return 'import' in document.createElement('link');
-}
+const toastBox = document.querySelector("#toast");
 
 function showToast(message) {
     toastBox.innerText = message;
@@ -75,14 +71,14 @@ function showToast(message) {
 }
 
 function saveGrid() {
-   showToast(CTabGrid.saveGrid());
+    showToast(CTabGrid.saveGrid());
 }
 
-document.getElementById("saveButton").addEventListener('click', saveGrid);
-document.getElementById("clearButton").addEventListener('click', () => CTabGrid.debug(true, false));
-document.getElementById("debugButton").addEventListener('click', () => CTabGrid.debug(false, true));
-document.getElementById("backupButton").addEventListener('click', saveCurConfig);
-document.getElementById("devEnabled").addEventListener('change', (a) => {
+document.querySelector("#saveButton").addEventListener('click', saveGrid);
+document.querySelector("#clearButton").addEventListener('click', () => CTabGrid.debug(true, false));
+document.querySelector("#debugButton").addEventListener('click', () => CTabGrid.debug(false, true));
+document.querySelector("#backupButton").addEventListener('click', saveCurConfig);
+document.querySelector("#devEnabled").addEventListener('change', (a) => {
     if (a.srcElement.checked) {
         devSwitch('block');
     } else {
@@ -116,18 +112,18 @@ function prettyPrintConfig(config) {
 }
 
 CtabGridElement.on('dragstart', function (event, ui) {
-    document.getElementsByClassName("trash")[0].classList.add("active");
+    document.querySelectorAll(".trash")[0].classList.add("active");
 });
 
 CtabGridElement.on('dragstop', function (event, ui) {
-    document.getElementsByClassName("trash")[0].classList.remove("active");
+    document.querySelectorAll(".trash")[0].classList.remove("active");
 });
 
 
 // New Add button
-let addMenu = document.getElementById('addMenu');
-let addButton = document.getElementById('addButton');
-let addCancelButton = document.getElementById('simpleAddCancelButton');
+let addMenu = document.querySelector('#addMenu');
+let addButton = document.querySelector('#addButton');
+let addCancelButton = document.querySelector('#simpleAddCancelButton');
 addMenu.classList.add('hidden');
 
 document.querySelector('#simpleAddButton').addEventListener('click', simpleAddWidget);
@@ -142,7 +138,7 @@ addCancelButton.addEventListener('click', () => {
 
 // Accept the 'Enter' key as alternative to clicking on the 'Add' button with the mouse, when interacting with the 'addMenu'.
 // Doesn't work for the background/text color selectors as the browser seems to override the 'Enter' key for it (i.e. opens the color palette).
-['#typeDropdown', '#simpleAddTitle', '#simpleAddUrl', '#simpleAddButton'].forEach( (item) => {
+['#typeDropdown', '#simpleAddTitle', '#simpleAddUrl', '#simpleAddButton'].forEach((item) => {
     document.querySelector(item).addEventListener('keydown', (e) => {
         if (e.key === "Enter") {
             simpleAddWidget();
@@ -153,8 +149,8 @@ addCancelButton.addEventListener('click', () => {
 function simpleAddWidget() {
     let title = document.querySelector("#simpleAddTitle");
     let url = document.querySelector("#simpleAddUrl");
-    let bgcolor = document.getElementById('simpleAddBGC');
-    let textcolor = document.getElementById('simpleAddTC');
+    let bgcolor = document.querySelector('.simpleAddBGC');
+    let textcolor = document.querySelector('.simpleAddTC');
     console.log(typeChanger.value);
     if (title.value !== "" || typeChanger.value === "clock") {
         CTabGrid.simpleAdd(title.value, url.value, bgcolor.value, textcolor.value, typeChanger.value);

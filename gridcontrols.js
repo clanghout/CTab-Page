@@ -297,7 +297,7 @@ function grid() {
             let wc = w.getConfig();
             if (w.type === 'note') {
                 // save internals of node objects
-                let innerText = document.getElementById('note-' + wc.id).value;
+                let innerText = document.querySelector('#note-' + wc.id).value;
                 if (innerText.replace(/\s/g, '').length !== 0) {
                     wc.title = innerText.trim();
                 }
