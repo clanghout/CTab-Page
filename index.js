@@ -164,7 +164,7 @@ function simpleAddWidget() {
         // Trigger hiding of the add window
         addCancelButton.click();
     } else {
-        showToast("Unable to add widget: A title is required, unless the clock widget is used.");
+        showToast("Unable to add widget: A title is required.");
     }
 }
 
