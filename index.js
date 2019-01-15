@@ -8,11 +8,6 @@ window.chrome = (() => {
     return window.browser || window.chrome || window.msBrowser;
 })();
 
-let CTabGrid = grid();
-CTabGrid.initialize();
-
-let CtabGridElement = $('.grid-stack');
-
 // The toast box that can be used to show a message to the user.
 const toastBox = document.querySelector("#toast");
 
@@ -23,6 +18,11 @@ function showToast(message) {
         toastBox.classList.add("hidden");
     }, 2000);
 }
+
+let CTabGrid = grid();
+CTabGrid.initialize();
+
+let CtabGridElement = $('.grid-stack');
 
 // Save the grid and show the result to user using toastBox.
 function saveGrid() {
@@ -72,7 +72,8 @@ widgetTypeChanger.addEventListener('change', () => {
 
     if (curVal === "link") {
         widgetTypeFieldVisibilityControl(true, true);
-    }if (curVal === "buienradar") {
+    }
+    if (curVal === "buienradar") {
         widgetTypeFieldVisibilityControl(false, false);
     }
     if (curVal === "clock") {
