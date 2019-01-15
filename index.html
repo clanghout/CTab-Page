@@ -32,12 +32,12 @@
     <button id="widescreenButton">Widescreen Mode</button>
 </div>
 
-<div class="addButton" id="addButton">
+<div class="addButton" id="floatingAddButton">
     <div class="addSign"></div>
 </div>
 
 <!--TODO types: auto?-->
-<div class="simpleAdd" id="addMenu">
+<div class="add hidden" id="addMenu">
     <label for="typeDropdown">Type:</label>
     <select name="type" id="typeDropdown">
         <option value="link">link</option>
@@ -50,30 +50,30 @@
     <p></p>
     <p></p>
 
-    <label id="titleLabel" for="simpleAddTitle">
+    <label id="titleLabel" for="addTitle">
         Title:
     </label>
-    <input type="text" id="simpleAddTitle">
+    <input type="text" id="addTitle">
 
-    <label id="urlLabel" for="simpleAddUrl">
+    <label id="urlLabel" for="addUrl">
         Url:
     </label>
-    <input type="text" id="simpleAddUrl">
+    <input type="text" id="addUrl">
 
-    <label for="simpleAddBGC">Background color:</label>
-    <input type="color" id="simpleAddBGC" value="#ffffff">
+    <label for="addBGC">Background color:</label>
+    <input type="color" id="addBGC" value="#ffffff">
 
-    <label for="simpleAddTC">Text color:</label>
-    <input type="color" id="simpleAddTC" value="#000000">
+    <label for="addTC">Text color:</label>
+    <input type="color" id="addTC" value="#000000">
 
-    <button id="simpleAddButton">Add</button>
-    <button id="simpleAddCancelButton">Cancel</button>
+    <button id="widgetAddButton">Add</button>
+    <button id="addCancelButton">Cancel</button>
 </div>
 
 <div class="others">
     <input type="checkbox" id="devEnabled"/>
     <label for="devEnabled">Developer mode</label>
-    <div class="devConfig">
+    <div class="devConfig hidden">
         <div id="configField">
             <textarea name="configFieldInput" id="configFieldInput" cols="30" rows="10"></textarea>
         </div>
