@@ -93,8 +93,8 @@ function grid() {
         dirty = false;
     };
 
-// Update the mutable object in the model.widgets
-// two way binding
+    // Update the mutable object in the model.widgets
+    // two way binding
     service.update = function (id, item) {
         let widget = service.widgets[id];
         widget.settings.x = item.x;
@@ -308,7 +308,7 @@ function grid() {
     };
 
 
-// Loads the user configuration in the dashboard
+    // Loads the user configuration in the dashboard
     service.load = function () {
         service.loadModel();
         service.loadGrid();
@@ -385,7 +385,7 @@ function grid() {
         service.count++;
     };
 
-// From w3 to add clock
+    // From w3 to add clock
     function startTime() {
         let clocks = document.querySelectorAll('.txt');
         if (clocks.length > 0) {
