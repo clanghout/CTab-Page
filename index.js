@@ -1,5 +1,5 @@
 'use strict';
-//EMERENCY CLEAR: uncomment the next line to forcefully overwrite the localstorage with an empty configuration.
+//EMERGENCY CLEAR: uncomment the next line to forcefully overwrite the localstorage with an empty configuration.
 // window.localStorage.setItem("CTabConfig", "[]");
 
 import {grid} from './gridcontrols.js';
@@ -15,6 +15,7 @@ let CtabGridElement = $('.grid-stack');
 
 // The toast box that can be used to show a message to the user.
 const toastBox = document.querySelector("#toast");
+
 function showToast(message) {
     toastBox.innerText = message;
     toastBox.classList.remove('hidden');
@@ -25,7 +26,8 @@ function showToast(message) {
 
 // Save the grid and show the result to user using toastBox.
 function saveGrid() {
-    showToast(CTabGrid.saveGrid());
+    const saveResult = CTabGrid.saveGrid();
+    showToast(saveResult);
 }
 
 document.querySelector("#saveButton").addEventListener('click', saveGrid);
@@ -40,11 +42,10 @@ CtabGridElement.on('dragstop', function (event, ui) {
 
 
 /// Adding Widgets
-const typeChanger = document.querySelector("#typeDropdown");
+const widgetTypeChanger = document.querySelector("#typeDropdown");
 
 // Show or hide the title and url input fields in the simple add area.
-
-function typeChangerClassChanger(showTitle, showUrl) {
+function widgetTypeFieldVisibilityControl(showTitle, showUrl) {
     const hiddenClassName = "hidden";
     let title = document.querySelector("#simpleAddTitle").classList;
     let titleLabel = document.querySelector("#titleLabel").classList;
@@ -66,17 +67,19 @@ function typeChangerClassChanger(showTitle, showUrl) {
     }
 }
 
-typeChanger.addEventListener('change', () => {
-    const curVal = typeChanger.value;
+widgetTypeChanger.addEventListener('change', () => {
+    const curVal = widgetTypeChanger.value;
 
     if (curVal === "link") {
-        typeChangerClassChanger(true, true);
+        widgetTypeFieldVisibilityControl(true, true);
+    }if (curVal === "buienradar") {
+        widgetTypeFieldVisibilityControl(false, false);
     }
     if (curVal === "clock") {
-        typeChangerClassChanger(false, false);
+        widgetTypeFieldVisibilityControl(false, false);
     }
     if (curVal === "note") {
-        typeChangerClassChanger(true, false);
+        widgetTypeFieldVisibilityControl(true, false);
     }
 });
 
@@ -87,8 +90,8 @@ function simpleAddWidget() {
     let url = document.querySelector("#simpleAddUrl");
     let bgcolor = document.querySelector('#simpleAddBGC');
     let textcolor = document.querySelector('#simpleAddTC');
-    if (title.value !== "" || typeChanger.value === "clock") {
-        CTabGrid.simpleAdd(title.value, url.value, bgcolor.value, textcolor.value, typeChanger.value);
+    if (title.value !== "" || widgetTypeChanger.value === "clock") {
+        CTabGrid.simpleAdd(title.value, url.value, bgcolor.value, textcolor.value, widgetTypeChanger.value);
         title.value = "";
         url.value = "";
 
@@ -139,7 +142,7 @@ function devSwitch(displayStyle) {
 devSwitch('none');
 document.querySelector("#clearButton").addEventListener('click', () => CTabGrid.debug(true, false));
 document.querySelector("#debugButton").addEventListener('click', () => CTabGrid.debug(false, true));
-document.querySelector("#backupButton").addEventListener('click', saveCurConfig);
+document.querySelector("#backupButton").addEventListener('click', saveCurrentConfig);
 document.querySelector("#devEnabled").addEventListener('change', (a) => {
     if (a.srcElement.checked) {
         devSwitch('block');
@@ -150,12 +153,11 @@ document.querySelector("#devEnabled").addEventListener('change', (a) => {
 document.querySelector("#saveDevConfig").addEventListener('click', () => {
     let config = document.querySelector("#configFieldInput").value;
     config = JSON.parse(config);
-    console.log("I want to save this", config);
     CTabGrid.setConfig(config);
 });
 document.querySelector("#configFieldInput").value = prettyPrintConfig(CTabGrid.getConfig());
 
-function saveCurConfig() {
+function saveCurrentConfig() {
     console.log(JSON.stringify(CTabGrid.getConfig()));
 }
 
