@@ -85,11 +85,11 @@ widgetTypeChanger.addEventListener('change', () => {
 
 
 // Add the configured widget to the dashboard
-function simpleAddWidget() {
-    let title = document.querySelector("#simpleAddTitle");
-    let url = document.querySelector("#simpleAddUrl");
-    let bgcolor = document.querySelector('#simpleAddBGC');
-    let textcolor = document.querySelector('#simpleAddTC');
+function addWidget() {
+    let title = document.querySelector("#addTitle");
+    let url = document.querySelector("#addUrl");
+    let bgcolor = document.querySelector('#addBGC');
+    let textcolor = document.querySelector('#addTC');
     if (title.value !== "" || widgetTypeChanger.value === "clock") {
         CTabGrid.simpleAdd(title.value, url.value, bgcolor.value, textcolor.value, widgetTypeChanger.value);
         title.value = "";
@@ -104,26 +104,26 @@ function simpleAddWidget() {
 
 // New Add button
 const addMenu = document.querySelector('#addMenu');
-const addButton = document.querySelector('#addButton');
-const addCancelButton = document.querySelector('#simpleAddCancelButton');
+const floatingAddButton = document.querySelector('#floatingAddButton');
+const addCancelButton = document.querySelector('#addCancelButton');
 addMenu.classList.add('hidden');
 
-document.querySelector('#simpleAddButton').addEventListener('click', simpleAddWidget);
-addButton.addEventListener('click', () => {
-    addButton.classList.add('hidden');
+document.querySelector('#widgetAddButton').addEventListener('click', addWidget);
+floatingAddButton.addEventListener('click', () => {
+    floatingAddButton.classList.add('hidden');
     addMenu.classList.remove('hidden');
 });
 addCancelButton.addEventListener('click', () => {
-    addButton.classList.remove('hidden');
+    floatingAddButton.classList.remove('hidden');
     addMenu.classList.add('hidden');
 });
 
 // Accept the 'Enter' key as alternative to clicking on the 'Add' button with the mouse, when interacting with the 'addMenu'.
 // Doesn't work for the background/text color selectors as the browser seems to override the 'Enter' key for it (i.e. opens the color palette).
-['#typeDropdown', '#simpleAddTitle', '#simpleAddUrl', '#simpleAddButton'].forEach((item) => {
+['#typeDropdown', '#addTitle', '#addUrl', '#widgetAddButton'].forEach((item) => {
     document.querySelector(item).addEventListener('keydown', (e) => {
         if (e.key === "Enter") {
-            simpleAddWidget();
+            addWidget();
         }
     });
 });
@@ -132,7 +132,9 @@ addCancelButton.addEventListener('click', () => {
 
 // Show or hide developer mode specific buttons
 function devSwitch(displayStyle) {
+
     document.querySelector(".devConfig").style.display = displayStyle;
+    document.querySelector(".devConfig").classList.remove("hidden");
     document.querySelector("#clearButton").style.display = displayStyle;
     document.querySelector("#debugButton").style.display = displayStyle;
     document.querySelector("#widescreenButton").style.display = displayStyle;
