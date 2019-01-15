@@ -21,8 +21,18 @@
         <div class="date"></div>
     </div>
 </div>
-<div class="grid-stack" id="main-dashboard">
-    <div id="toast" class="hidden"></div>
+
+
+<div id="toast" class="hidden"></div>
+
+<div class="grid" id="main-dashboard">
+    <div class="item">
+        <div class="item-content">
+            <!-- Safe zone, enter your custom markup -->
+            This can be anything.
+            <!-- Safe zone ends -->
+        </div>
+    </div>
 </div>
 
 <div class="buttonBar">
@@ -84,13 +94,17 @@
     </div>
 </div>
 
-<script src="node_modules/lodash/lodash.min.js"></script>
+<script src="modules/web-animations.min.js"></script>
+<script src="modules/hammer.min.js"></script>
+<script src="node_modules/muuri/dist/muuri.js"></script>
+
+<!--<script src="node_modules/lodash/lodash.min.js"></script>-->
 <script src="node_modules/jquery/dist/jquery.js"></script>
-<script src="modules/jquery-ui.min.js"></script>
+<!--<script src="modules/jquery-ui.min.js"></script>-->
 <script src="modules/jquery.textfill.min.js"></script>
-<script src="modules/jquery.ui.touch-punch.min.js"></script>
-<script src="node_modules/gridstack/dist/gridstack.js"></script>
-<script src="node_modules/gridstack/dist/gridstack.jQueryUI.js"></script>
+<!--<script src="modules/jquery.ui.touch-punch.min.js"></script>-->
+<!--<script src="node_modules/gridstack/dist/gridstack.js"></script>-->
+<!--<script src="node_modules/gridstack/dist/gridstack.jQueryUI.js"></script>-->
 <script type=module src="index.js"></script>
 </body>
 </html>

@@ -2,21 +2,25 @@
 
 function grid() {
     let service = {};
-    service.grid = $(".grid-stack");
     service.count = 0;
     service.widgets = {};
     let widgetFactory = new WidgetFactory();
     let dirty = false;
 
     const options = {
-        animate: true,
-        cellHeight: 60,
-        verticalMargin: 5,
-        float: true,
-        disableOneColumnMode: true,
-        width: 12,
-        removable: '.trash', // Trash area has to exist: div.trash is enough => with style to display
-        removeTimeout: 100
+        // Muuri options
+        dragEnabled: true,
+
+
+        // Gridstack options:
+        // animate: true,
+        // cellHeight: 60,
+        // verticalMargin: 5,
+        // float: true,
+        // disableOneColumnMode: true,
+        // width: 12,
+        // removable: '.trash', // Trash area has to exist: div.trash is enough => with style to display
+        // removeTimeout: 100
     };
     const defaultWidgetColor = "#fff";
 
@@ -39,16 +43,17 @@ function grid() {
     };
 
     service.initialize = function () {
-        service.grid.gridstack(options);
-        service.gridData = service.grid.data('gridstack');
+        service.grid = new Muuri(".grid", options);
+        // service.grid.gridstack(options);
+        // service.gridData = service.grid.data('gridstack');
         let curConfig = service.getConfig();
         console.log("current config", curConfig);
 
 
         // Batch update to add all widgets at once
-        service.gridData.batchUpdate();
+        // service.gridData.batchUpdate();
         service.load();
-        service.gridData.commit();
+        // service.gridData.commit();
 
 
         // Save whenever you leave the screen
@@ -111,25 +116,25 @@ function grid() {
 
 
     service.getSortedWidgets = function () {
-        service.gridData.grid._sortNodes();
+        // service.gridData.grid._sortNodes();
         let ids = [];
-        _.map($('.grid-stack > .grid-stack-item:visible'),
-            function (el) {
-                el = $(el);
-                ids.push(el.data('_gridstack_node')["id"]);
-            });
+        // _.map($('.grid > .item:visible'),
+        //     function (el) {
+        //         el = $(el);
+        //         ids.push(el.data('_gridstack_node')["id"]);
+        //     });
         return ids;
     };
 
     service.removeWidget = function (id) {
-        _.map($('.grid-stack > .grid-stack-item:visible'),
-            function (el) {
-                el = $(el);
-                // id is saved in gridstack as a string while the parameter is an integer
-                if (el.data('_gridstack_node')["id"] == id) {
-                    service.gridData.removeWidget(el);
-                }
-            });
+        // _.map($('.grid-stack > .grid-stack-item:visible'),
+        //     function (el) {
+        //         el = $(el);
+        //         // id is saved in gridstack as a string while the parameter is an integer
+        //         if (el.data('_gridstack_node')["id"] == id) {
+        //             service.gridData.removeWidget(el);
+        //         }
+        //     });
     };
 
     service.addWidgetToGrid = function (widget, id, autoPos) {
@@ -146,18 +151,18 @@ function grid() {
 
         service.widgets[service.count] = widget;
         widget.settings.autoPosition = !!autoPos;
-        service.gridData.addWidget(
-            widget.widgetTemplate(),
-            widget.settings.x,
-            widget.settings.y,
-            widget.settings.width,
-            widget.settings.height,
-            widget.settings.autoPosition,
-            widget.settings.minWidth,
-            widget.settings.maxWidth,
-            widget.settings.minHeight,
-            widget.settings.maxHeight,
-            widget.id);
+        // service.gridData.addWidget(
+        //     widget.widgetTemplate(),
+        //     widget.settings.x,
+        //     widget.settings.y,
+        //     widget.settings.width,
+        //     widget.settings.height,
+        //     widget.settings.autoPosition,
+        //     widget.settings.minWidth,
+        //     widget.settings.maxWidth,
+        //     widget.settings.minHeight,
+        //     widget.settings.maxHeight,
+        //     widget.id);
         widget.settings.autoPosition = false;
     };
 
@@ -194,15 +199,15 @@ function grid() {
             widget.widgetTemplate = function () {
                 // TODO types: custom elements + scalable (getTag() for example)
                 if (type === "clock")
-                    return `<div>
-                                <div class="grid-stack-item-content"${this.colorInfo()}>
+                    return `<div class="item">
+                                <div class="item-content"${this.colorInfo()}>
                                     <div id="${this.id}" class="ctab-widget-body txt">
                                     </div>
                                 </div>
                              </div>`;
                 else if (type === "note") {
-                    let templateString = `<div> 
-                                <div class="grid-stack-item-content"  ${this.colorInfo()}> 
+                    let templateString = `<div class="item"> 
+                                <div class="item-content"  ${this.colorInfo()}> 
                                     ${this.getHtmlControls()}
                                     <div id="${this.id}" class="ctab-widget-body note">
                                         <textarea id="note-${this.id}">${this.title}</textarea>
@@ -211,16 +216,16 @@ function grid() {
                             </div>`;
                     return templateString;
                 } else if (type === "buienradar") {
-                    return `<div>
-                                <div class="grid-stack-item-content"${this.colorInfo()}>
+                    return `<div class="item">
+                                <div class="item-content"${this.colorInfo()}>
                                     <div id="${this.id}" class="ctab-widget-body">
                                         <IFRAME SRC="https://api.buienradar.nl/image/1.0/RadarMapNL?w=256&h=256" NORESIZE SCROLLING=NO HSPACE=0 VSPACE=0 FRAMEBORDER=0 MARGINHEIGHT=0 MARGINWIDTH=0 WIDTH=256 HEIGHT=256></IFRAME>
                                     </div>
                                 </div>
                              </div>`;
                 } else
-                    return `<div> 
-                                <div class="grid-stack-item-content" ${this.colorInfo()}> 
+                    return `<div class="item"> 
+                                <div class="item-content" ${this.colorInfo()}> 
                                     ${this.getHtmlControls()} 
                                     <div id="${this.id}" class="ctab-widget-body"> 
                                         ${this.getTag()} 

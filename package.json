@@ -8,6 +8,7 @@
   "private": true,
   "dependencies": {
     "bootstrap": "3",
-    "gridstack": "^0.4.0"
+    "gridstack": "^0.4.0",
+    "muuri": "^0.7.1"
   }
 }
