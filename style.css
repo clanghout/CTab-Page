@@ -27,7 +27,7 @@ body {
     height: 100px;
     margin: 5px;
     z-index: 1;
-    background: #000;
+    background: transparent;
     color: #fff;
 }
 .item.muuri-item-dragging {
@@ -57,7 +57,7 @@ body {
     z-index: 1;
 }
 
-.grid-stack-item-content {
+.item-content {
     right: 0 !important;
     border: 1px solid dimgray;
     border-radius: 2px;
@@ -73,7 +73,7 @@ body {
 
 }
 
-.grid-stack-item-content:before {
+.item-content:before {
     content: "";
     display: block;
     position: absolute;
