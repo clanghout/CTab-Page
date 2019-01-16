@@ -10,8 +10,15 @@ function grid() {
     const options = {
         // Muuri options
         dragEnabled: true,
+        layoutOnInit: false,
+        layout: {
+            fillGaps: false,
+            horizontal: false,
+            alignRight: false,
+            alignBottom: false,
+            rounding: false
+        }
         // items: document.querySelector(".grid").querySelectorAll('.item')
-
 
 
         // Gridstack options:
@@ -155,7 +162,7 @@ function grid() {
         widget.settings.autoPosition = !!autoPos;
         let itemElem = document.createElement('div');
         itemElem.innerHTML = widget.widgetTemplate();
-        service.grid.add(itemElem.firstChild, {index:widget.id});
+        service.grid.add(itemElem.firstChild, {index: widget.id});
         // service.gridData.addWidget(
         //     widget.widgetTemplate(),
         //     widget.settings.x,
@@ -204,14 +211,14 @@ function grid() {
             widget.widgetTemplate = function () {
                 // TODO types: custom elements + scalable (getTag() for example)
                 if (type === "clock")
-                    return `<div class="item h${this.settings.height} w${this.settings.width}">
+                    return `<div class="item he${this.settings.height} w${this.settings.width}">
                                 <div class="item-content"${this.colorInfo()}>
                                     <div id="${this.id}" class="ctab-widget-body txt">
                                     </div>
                                 </div>
                              </div>`;
                 else if (type === "note") {
-                    let templateString = `<div class="item"> 
+                    let templateString = `<div class="item he${this.settings.height} w${this.settings.width}"> 
                                 <div class="item-content"  ${this.colorInfo()}> 
                                     ${this.getHtmlControls()}
                                     <div id="${this.id}" class="ctab-widget-body note">
@@ -221,7 +228,7 @@ function grid() {
                             </div>`;
                     return templateString;
                 } else if (type === "buienradar") {
-                    return `<div class="item">
+                    return `<div class="item he${this.settings.height} w${this.settings.width}">
                                 <div class="item-content"${this.colorInfo()}>
                                     <div id="${this.id}" class="ctab-widget-body">
                                         <IFRAME SRC="https://api.buienradar.nl/image/1.0/RadarMapNL?w=256&h=256" NORESIZE SCROLLING=NO HSPACE=0 VSPACE=0 FRAMEBORDER=0 MARGINHEIGHT=0 MARGINWIDTH=0 WIDTH=256 HEIGHT=256></IFRAME>
@@ -229,7 +236,7 @@ function grid() {
                                 </div>
                              </div>`;
                 } else
-                    return `<div class="item"> 
+                    return `<div class="item he${this.settings.height} w${this.settings.width}"> 
                                 <div class="item-content" ${this.colorInfo()}> 
                                     ${this.getHtmlControls()} 
                                     <div id="${this.id}" class="ctab-widget-body"> 
