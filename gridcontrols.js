@@ -10,6 +10,8 @@ function grid() {
     const options = {
         // Muuri options
         dragEnabled: true,
+        // items: document.querySelector(".grid").querySelectorAll('.item')
+
 
 
         // Gridstack options:
@@ -151,6 +153,9 @@ function grid() {
 
         service.widgets[service.count] = widget;
         widget.settings.autoPosition = !!autoPos;
+        let itemElem = document.createElement('div');
+        itemElem.innerHTML = widget.widgetTemplate();
+        service.grid.add(itemElem.firstChild, {index:widget.id});
         // service.gridData.addWidget(
         //     widget.widgetTemplate(),
         //     widget.settings.x,
@@ -199,7 +204,7 @@ function grid() {
             widget.widgetTemplate = function () {
                 // TODO types: custom elements + scalable (getTag() for example)
                 if (type === "clock")
-                    return `<div class="item">
+                    return `<div class="item h${this.settings.height} w${this.settings.width}">
                                 <div class="item-content"${this.colorInfo()}>
                                     <div id="${this.id}" class="ctab-widget-body txt">
                                     </div>
