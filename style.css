@@ -29,7 +29,7 @@ body {
     margin: 5px;
     z-index: 1;
     background: transparent;
-    color: #fff;
+    color: #000000;
 }
 
 .item.muuri-item-dragging {
