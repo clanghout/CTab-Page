@@ -17,6 +17,18 @@ function grid() {
             alignRight: false,
             alignBottom: false,
             rounding: false
+        },
+        sortData: {
+            id: function (item, element) {
+                return parseFloat(item._id);
+            },
+            title: function (item, element) {
+                const ctabBody = [].slice.call(element.children[0].children).filter(el => el.classList.contains("ctab-widget-body"))[0];
+                if(ctabBody.classList.contains('txt')){
+                    return "ZZZZZZZZZZZZZZ";
+                }
+                return ctabBody.children[0].innerText.toUpperCase();
+            }
         }
         // items: document.querySelector(".grid").querySelectorAll('.item')
 
@@ -70,7 +82,7 @@ function grid() {
             // dirty state is implemented loosely (did not care much before, dirty in the probability of change)
             // so an extra check is also added comparing the current state to the saved state
             if (hasChanges()) {
-                return "You have unsaved changes on this page. Do you want to leave this page and discard your changes or stay on this page?";
+                // return "You have unsaved changes on this page. Do you want to leave this page and discard your changes or stay on this page?";
             }
             // service.saveGrid(); // Disabled to enable dev edit
         };

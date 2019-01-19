@@ -22,8 +22,6 @@ function showToast(message) {
 let CTabGrid = grid();
 CTabGrid.initialize();
 
-let CtabGridElement = $('.grid-stack');
-
 // Save the grid and show the result to user using toastBox.
 function saveGrid() {
     const saveResult = CTabGrid.saveGrid();
@@ -32,12 +30,24 @@ function saveGrid() {
 
 document.querySelector("#saveButton").addEventListener('click', saveGrid);
 
-CtabGridElement.on('dragstart', function (event, ui) {
-    document.querySelectorAll(".trash")[0].classList.add("active");
-});
-
-CtabGridElement.on('dragstop', function (event, ui) {
-    document.querySelectorAll(".trash")[0].classList.remove("active");
+const sortingDropdown = document.querySelector('#sortingDropdown');
+sortingDropdown.addEventListener('change', () => {
+    let sortMode = sortingDropdown.value;
+    switch (sortMode) {
+        case "id-desc" :
+            CTabGrid.grid.sort("id:desc");
+            break;
+        case "alpha-asc" :
+            CTabGrid.grid.sort("title");
+            break;
+        case "alpha-desc" :
+            CTabGrid.grid.sort("title:desc");
+            break;
+        case "id-asc" :
+        default:
+            CTabGrid.grid.sort("id");
+            break;
+    }
 });
 
 
@@ -47,9 +57,9 @@ const widgetTypeChanger = document.querySelector("#typeDropdown");
 // Show or hide the title and url input fields in the simple add area.
 function widgetTypeFieldVisibilityControl(showTitle, showUrl) {
     const hiddenClassName = "hidden";
-    let title = document.querySelector("#simpleAddTitle").classList;
+    let title = document.querySelector("#addTitle").classList;
     let titleLabel = document.querySelector("#titleLabel").classList;
-    let url = document.querySelector("#simpleAddUrl").classList;
+    let url = document.querySelector("#addUrl").classList;
     let urlLabel = document.querySelector("#urlLabel").classList;
     if (showTitle) {
         title.remove(hiddenClassName);

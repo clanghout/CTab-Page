@@ -8,16 +8,24 @@
     <title>CTab Page</title>
     <link href="style.css" rel="stylesheet"/>
     <link href="sizeStyles.css" rel="stylesheet"/>
-    <link rel="stylesheet" href="node_modules/gridstack/dist/gridstack.css"/>
-    <link rel="stylesheet" href="node_modules/gridstack/dist/gridstack-extra.css"/>
-
     <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">
 </head>
 <body>
 <div class="trash"></div>
 <div class="top-bar">
-    <div id="logo1" class="col-sm-6"><a href="https://github.com/clanghout/ctab-page">C-Tab</a></div>
-    <div class="clockdate col-sm-6">
+    <div id="logo1" class="col-sm-4"><a href="https://github.com/clanghout/ctab-page">C-Tab</a></div>
+    <div class="col-sm-4">
+        <div class="sorting-control">
+            <div class=""></div>
+            <select name="sorting" id="sortingDropdown" class="sortingDropdown">
+                <option value="id-asc">date added</option>
+                <option value="id-desc">date added (descending)</option>
+                <option value="alpha-asc">title</option>
+                <option value="alpha-desc">title (descending)</option>
+            </select>
+        </div>
+    </div>
+    <div class="clockdate col-sm-4">
         <div class="clock txt"></div>
         <div class="date"></div>
     </div>
@@ -27,13 +35,6 @@
 <div id="toast" class="hidden"></div>
 
 <div class="grid" id="main-dashboard">
-    <div class="item">
-        <div class="item-content">
-            <!-- Safe zone, enter your custom markup -->
-            This can be anything.
-            <!-- Safe zone ends -->
-        </div>
-    </div>
 </div>
 
 <div class="buttonBar">
@@ -95,17 +96,16 @@
     </div>
 </div>
 
+<!--Muuri scripts-->
 <script src="modules/web-animations.min.js"></script>
 <script src="modules/hammer.min.js"></script>
-<script src="node_modules/muuri/dist/muuri.js"></script>
+<script src="node_modules/muuri/dist/muuri.min.js"></script>
 
-<!--<script src="node_modules/lodash/lodash.min.js"></script>-->
-<script src="node_modules/jquery/dist/jquery.js"></script>
-<!--<script src="modules/jquery-ui.min.js"></script>-->
+<!--Dynamic font-size changing script-->
+<script src="node_modules/jquery/dist/jquery.slim.min.js"></script>
 <script src="modules/jquery.textfill.min.js"></script>
-<!--<script src="modules/jquery.ui.touch-punch.min.js"></script>-->
-<!--<script src="node_modules/gridstack/dist/gridstack.js"></script>-->
-<!--<script src="node_modules/gridstack/dist/gridstack.jQueryUI.js"></script>-->
+
+<!--CTab script-->
 <script type=module src="index.js"></script>
 </body>
 </html>
