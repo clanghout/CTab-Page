@@ -60,13 +60,27 @@ body {
     height: 50px;
     width: 100%;
     background-color: #000000;
+    z-index: 4;
+}
+
+.sortingDropdown{
+    padding-right: 40px;
+    cursor: pointer;
+    position: relative;
+    padding-left: 40px;
     z-index: 1;
+    height: 40px;
+    line-height: 16px;
+    border: 2px solid #e5e5e5;
+    border-radius: 4px;
+    align-items: center;
+    margin-top: 5px;
 }
 
 .item-content {
     right: 0 !important;
-    border: 1px solid dimgray;
-    border-radius: 2px;
+    border: 2px solid dimgray;
+    border-radius: 4px;
     overflow: hidden;
 
     display: inline-block;
@@ -130,8 +144,10 @@ body {
     vertical-align: middle;
     overflow: hidden;
     opacity: 1;
+    padding:5px;
     float: left;
 }
+
 
 .ctab-widget-controls {
     height: 100%;
@@ -216,6 +232,7 @@ body {
     border: 1px solid #f00;
     border-radius: 3px;
     background-color: rgba(255, 255, 255, 0.8);
+    z-index: 4;
 }
 
 .add > label, .add > button {
