@@ -13,10 +13,10 @@
 <body>
 <div class="trash"></div>
 <div class="top-bar">
-    <div id="logo1" class="col-sm-4"><a href="https://github.com/clanghout/ctab-page">C-Tab</a></div>
+    <div id="logo1" class="col-sm-3"><a href="https://github.com/clanghout/ctab-page">C-Tab</a></div>
+    <div class="col-sm-1" style="color: #ffffff;"></div>
     <div class="col-sm-4">
         <div class="sorting-control">
-            <div class=""></div>
             <select name="sorting" id="sortingDropdown" class="sortingDropdown">
                 <option value="id-asc">date added</option>
                 <option value="id-desc">date added (descending)</option>
@@ -26,8 +26,8 @@
         </div>
     </div>
     <div class="clockdate col-sm-4">
-        <div class="clock txt"></div>
-        <div class="date"></div>
+        <div class="clock ctab-item-clock"><span></span></div>
+        <div class="date"><span id="currDate"></span></div>
     </div>
 </div>
 

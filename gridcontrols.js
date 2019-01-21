@@ -24,8 +24,11 @@ function grid() {
             },
             title: function (item, element) {
                 const ctabBody = [].slice.call(element.children[0].children).filter(el => el.classList.contains("ctab-widget-body"))[0];
-                if(ctabBody.classList.contains('txt')){
-                    return "ZZZZZZZZZZZZZZ";
+                if (ctabBody.classList.contains('ctab-item-clock')) {
+                    return "ZZZ";
+                }
+                if (ctabBody.classList.contains('ctab-item-note')) {
+                    return "ZZZ";
                 }
                 return ctabBody.children[0].innerText.toUpperCase();
             }
@@ -49,6 +52,7 @@ function grid() {
         dirty = true;
     };
 
+    // TODO: fix with muuri
     const hasChanges = () => {
         let saved = service.getConfig();
         let current = service.getDashboardConfig();
@@ -65,19 +69,11 @@ function grid() {
 
     service.initialize = function () {
         service.grid = new Muuri(".grid", options);
-        // service.grid.gridstack(options);
-        // service.gridData = service.grid.data('gridstack');
-        let curConfig = service.getConfig();
-        console.log("current config", curConfig);
-
-
-        // Batch update to add all widgets at once
-        // service.gridData.batchUpdate();
         service.load();
-        // service.gridData.commit();
 
 
         // Save whenever you leave the screen
+        // TODO: fix with muuri
         window.onbeforeunload = function () {
             // dirty state is implemented loosely (did not care much before, dirty in the probability of change)
             // so an extra check is also added comparing the current state to the saved state
@@ -87,6 +83,8 @@ function grid() {
             // service.saveGrid(); // Disabled to enable dev edit
         };
 
+
+        // TODO: fix with muuri
         service.grid.on("change", function (event, items) {
             dirty = true;
             // When you change the title of a widget, a gridstack onChange event is retrieved with
@@ -104,6 +102,8 @@ function grid() {
                 }
             }
         });
+
+        // TODO: fix with muuri
         // Call to textfill library, calculate font sizes that make the text fit in the boxes.
         Object.keys(service.widgets).forEach(i => $('#' + i).textfill({
             minFontPixels: 10,
@@ -112,15 +112,22 @@ function grid() {
         // Start clocks
         startTime();
         // Set dirty to false, since note widgets might have set the state to dirty
-        document.querySelectorAll(".note").forEach(note => {
+        document.querySelectorAll(".ctab-item-note").forEach(note => {
             note.addEventListener('change', noteChanged);
             note.addEventListener('keyup', noteChanged);
         });
         dirty = false;
+
+        $('.ctab-item-clock').textfill({
+            minFontPixels: 10,
+            allowOverflow: true,
+        });
     };
 
     // Update the mutable object in the model.widgets
     // two way binding
+
+    // TODO: fix with muuri
     service.update = function (id, item) {
         let widget = service.widgets[id];
         widget.settings.x = item.x;
@@ -136,26 +143,15 @@ function grid() {
     };
 
 
+    // TODO: fix with muuri; check if necessary for deterministic saving and loading
     service.getSortedWidgets = function () {
-        // service.gridData.grid._sortNodes();
-        let ids = [];
-        // _.map($('.grid > .item:visible'),
-        //     function (el) {
-        //         el = $(el);
-        //         ids.push(el.data('_gridstack_node')["id"]);
-        //     });
-        return ids;
+        return Object.keys(service.widgets);
     };
 
+
+    // TODO: fix with muuri; muuri call is here but check where to call this and how id should be
     service.removeWidget = function (id) {
-        // _.map($('.grid-stack > .grid-stack-item:visible'),
-        //     function (el) {
-        //         el = $(el);
-        //         // id is saved in gridstack as a string while the parameter is an integer
-        //         if (el.data('_gridstack_node')["id"] == id) {
-        //             service.gridData.removeWidget(el);
-        //         }
-        //     });
+        service.grid.remove(document.getElementById(id), {removeElements: true});
     };
 
     service.addWidgetToGrid = function (widget, id, autoPos) {
@@ -175,18 +171,6 @@ function grid() {
         let itemElem = document.createElement('div');
         itemElem.innerHTML = widget.widgetTemplate();
         service.grid.add(itemElem.firstChild, {index: widget.id});
-        // service.gridData.addWidget(
-        //     widget.widgetTemplate(),
-        //     widget.settings.x,
-        //     widget.settings.y,
-        //     widget.settings.width,
-        //     widget.settings.height,
-        //     widget.settings.autoPosition,
-        //     widget.settings.minWidth,
-        //     widget.settings.maxWidth,
-        //     widget.settings.minHeight,
-        //     widget.settings.maxHeight,
-        //     widget.id);
         widget.settings.autoPosition = false;
     };
 
@@ -202,6 +186,10 @@ function grid() {
             widget.type = type;
             widget.id = id;
 
+            // set default values
+            widget.settings.width = settings.width ? settings.width : 1;
+            widget.settings.height = settings.height ? settings.height : 1;
+
             // TODO HTML and javascript need to be separated
             //  option: https://github.com/polymer/lit-element#minimal-example
             //  option: vue components
@@ -212,8 +200,8 @@ function grid() {
 
             widget.colorInfo = function () {
                 let styleInfo = 'style="';
-                styleInfo += this.textcolor !== undefined ? `color:${this.textcolor};` : "";
-                styleInfo += this.color !== undefined ? `--item-color:${this.color};` :
+                styleInfo += widget.textcolor !== undefined ? `color:${widget.textcolor};` : "";
+                styleInfo += widget.color !== undefined ? `--item-color:${widget.color};` :
                     `--item-color:${defaultWidgetColor};`;
                 //TODO document.style.setproperty
                 return styleInfo + '"';
@@ -221,62 +209,48 @@ function grid() {
 
             // The basic template for a widget
             widget.widgetTemplate = function () {
-                // TODO types: custom elements + scalable (getTag() for example)
-                if (type === "clock")
-                    return `<div class="item he${this.settings.height} w${this.settings.width}">
-                                <div class="item-content"${this.colorInfo()}>
-                                    <div id="${this.id}" class="ctab-widget-body txt">
-                                    </div>
-                                </div>
-                             </div>`;
-                else if (type === "note") {
-                    let templateString = `<div class="item he${this.settings.height} w${this.settings.width}"> 
-                                <div class="item-content"  ${this.colorInfo()}> 
-                                    ${this.getHtmlControls()}
-                                    <div id="${this.id}" class="ctab-widget-body note">
-                                        <textarea id="note-${this.id}">${this.title}</textarea>
-                                    </div> 
-                                </div> 
-                            </div>`;
-                    return templateString;
-                } else if (type === "buienradar") {
-                    return `<div class="item he${this.settings.height} w${this.settings.width}">
-                                <div class="item-content"${this.colorInfo()}>
-                                    <div id="${this.id}" class="ctab-widget-body">
+                let template =
+                    `<div class="item he${widget.settings.height} w${widget.settings.width}" data-title="${widget.title}">
+                        <div class="item-content" ${widget.colorInfo()}>`;
+                switch (type) {
+                    case "clock" :
+                        template += `<div id="${widget.id}" class="ctab-widget-body ctab-item-clock"><span></span></div>`;
+                        break;
+                    case "note":
+                        template += `${widget.getHtmlControls()}
+                                    <div id="${widget.id}" class="ctab-widget-body ctab-item-note">
+                                        <textarea id="note-${widget.id}">${widget.title}</textarea>
+                                    </div>`;
+                        break;
+                    case "buienradar":
+                        template += `<div id="${widget.id}" class="ctab-widget-body">
                                         <IFRAME SRC="https://api.buienradar.nl/image/1.0/RadarMapNL?w=256&h=256" NORESIZE SCROLLING=NO HSPACE=0 VSPACE=0 FRAMEBORDER=0 MARGINHEIGHT=0 MARGINWIDTH=0 WIDTH=256 HEIGHT=256></IFRAME>
-                                    </div>
-                                </div>
-                             </div>`;
-                } else
-                    return `<div class="item he${this.settings.height} w${this.settings.width}"> 
-                                <div class="item-content" ${this.colorInfo()}> 
-                                    ${this.getHtmlControls()} 
-                                    <div id="${this.id}" class="ctab-widget-body"> 
-                                        ${this.getTag()} 
-                                    </div> 
-                                </div> 
-                            </div>`;
+                                    </div>`;
+                        break;
+                    case "link":
+                    default:
+                        template += `${widget.getHtmlControls()} 
+                                    <div id="${widget.id}" class="ctab-widget-body"> 
+                                        ${widget.getTag()} 
+                                    </div>`;
+                        break;
+                }
+                template += `</div></div>`;
+
+                return template;
             };
 
             widget.getConfig = function () {
                 return {
-                    title: this.title,
-                    settings: this.settings,
-                    contentUrl: this.contentUrl,
-                    color: this.color,
-                    textcolor: this.textcolor,
-                    type: this.type,
-                    id: this.id
+                    title: widget.title,
+                    settings: widget.settings,
+                    contentUrl: widget.contentUrl,
+                    color: widget.color,
+                    textcolor: widget.textcolor,
+                    type: widget.type,
+                    id: widget.id
                 };
             };
-
-            widget.toString = () => `{
-                Title: ${this.title},
-                settings: ${JSON.stringify(this.settings)},
-                contentUrl: ${this.contentUrl},
-                color: ${this.color},
-                textcolor: ${this.textcolor}
-            }`;
 
             return widget;
         };
@@ -302,12 +276,23 @@ function grid() {
     };
 
     service.setConfig = function (config) {
+        console.log(service.grid.getItems());
         if (typeof config !== 'string') {
             config = JSON.stringify(config);
         }
-        window.localStorage.setItem("CTabConfig", config);
-        // chrome.storage.sync.set({"CTabConfig": config}); // TODO: Too much data apparently, maybe save per widget? instead of whole json at once -> title can only occur once
+        if (config.length > 1)
+            window.localStorage.setItem("CTabConfig", config);
+        else {
+            console.log("config too small", config);
+        }
+        try {
+            // chrome.storage.sync.set({"CTabConfig": config}); // TODO: Too much data apparently, maybe save per widget? instead of whole json at once -> title can only occur once
+        } catch (e) {
+            console.log("could not save to chrome sync storage");
+            console.error(e);
+        }
     };
+    // Returns message if save call is executed or not
     service.saveGrid = function () {
         if (hasChanges()) {
             service.setConfig(service.getDashboardConfig());
@@ -374,7 +359,6 @@ function grid() {
 
     };
 
-
     service.debug = function (sampleConfig, addSampleWidgets) {
         console.log("debug:");
         if (sampleConfig) {
@@ -416,27 +400,19 @@ function grid() {
 
     // From w3 to add clock
     function startTime() {
-        let clocks = document.querySelectorAll('.txt');
+        let clocks = document.querySelectorAll('.ctab-item-clock');
         if (clocks.length > 0) {
-            let today = new Date();
-            const h = today.getHours();
-            let m = today.getMinutes();
-            let s = today.getSeconds();
-            m = checkTime(m);
-            s = checkTime(s);
-            clocks.forEach(a => a.innerHTML =
-                h + ":" + m + ":" + s);
+            let today = new Date().toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                timeZone: 'Europe/Amsterdam',
+                hour12: false
+            });
+            clocks.forEach(a => a.children[0].innerHTML = today);
             setTimeout(startTime, 500);
         }
     }
-
-    function checkTime(i) {
-        if (i < 10) {
-            i = "0" + i;
-        } // add zero in front of numbers < 10
-        return i;
-    }
-
 
     return service;
 }

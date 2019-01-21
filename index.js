@@ -10,6 +10,17 @@ window.chrome = (() => {
 
 // The toast box that can be used to show a message to the user.
 const toastBox = document.querySelector("#toast");
+const today = new Date();
+const weekdays = new Array(7);
+weekdays[0] = "Sunday";
+weekdays[1] = "Monday";
+weekdays[2] = "Tuesday";
+weekdays[3] = "Wednesday";
+weekdays[4] = "Thursday";
+weekdays[5] = "Friday";
+weekdays[6] = "Saturday";
+const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+document.querySelector('#currDate').innerText = `${weekdays[today.getDay()]} ${today.getDate()} ${months[today.getMonth()]} ${today.getFullYear()}`;
 
 function showToast(message) {
     toastBox.innerText = message;
