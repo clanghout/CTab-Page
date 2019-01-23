@@ -126,7 +126,6 @@ function grid() {
 
     // Update the mutable object in the model.widgets
     // two way binding
-
     // TODO: fix with muuri
     service.update = function (id, item) {
         let widget = service.widgets[id];

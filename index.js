@@ -159,7 +159,7 @@ function devSwitch(displayStyle) {
     document.querySelector(".devConfig").classList.remove("hidden");
     document.querySelector("#clearButton").style.display = displayStyle;
     document.querySelector("#debugButton").style.display = displayStyle;
-    document.querySelector("#widescreenButton").style.display = displayStyle;
+    // document.querySelector("#widescreenButton").style.display = displayStyle;
 }
 
 // disable dev mode by default

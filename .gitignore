@@ -1,3 +1,7 @@
 .idea/
 ignore/
 node_modules/
+
+tsconfig.json
+webpack.config.js
+sample-config.json
