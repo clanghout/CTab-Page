@@ -47,9 +47,9 @@ const widgetTypeChanger = document.querySelector("#typeDropdown");
 // Show or hide the title and url input fields in the simple add area.
 function widgetTypeFieldVisibilityControl(showTitle, showUrl) {
     const hiddenClassName = "hidden";
-    let title = document.querySelector("#simpleAddTitle").classList;
+    let title = document.querySelector("#addTitle").classList;
     let titleLabel = document.querySelector("#titleLabel").classList;
-    let url = document.querySelector("#simpleAddUrl").classList;
+    let url = document.querySelector("#addUrl").classList;
     let urlLabel = document.querySelector("#urlLabel").classList;
     if (showTitle) {
         title.remove(hiddenClassName);
@@ -82,6 +82,9 @@ widgetTypeChanger.addEventListener('change', () => {
     if (curVal === "note") {
         widgetTypeFieldVisibilityControl(true, false);
     }
+    if (curVal === "weather") {
+        widgetTypeFieldVisibilityControl(false, false);
+    }
 });
 
 
@@ -91,7 +94,7 @@ function addWidget() {
     let url = document.querySelector("#addUrl");
     let bgcolor = document.querySelector('#addBGC');
     let textcolor = document.querySelector('#addTC');
-    if (title.value !== "" || widgetTypeChanger.value === "clock") {
+    if (title.value !== "" || widgetTypeChanger.value === "clock" || widgetTypeChanger.value === "weather" || widgetTypeChanger.value === "buienradar") {
         CTabGrid.simpleAdd(title.value, url.value, bgcolor.value, textcolor.value, widgetTypeChanger.value);
         title.value = "";
         url.value = "";
