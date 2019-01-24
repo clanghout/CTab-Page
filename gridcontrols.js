@@ -165,12 +165,23 @@ function grid() {
             }
         }
 
-        service.widgets[service.count] = widget;
         widget.settings.autoPosition = !!autoPos;
         let itemElem = document.createElement('div');
         itemElem.innerHTML = widget.widgetTemplate();
         service.grid.add(itemElem.firstChild, {index: widget.id});
         widget.settings.autoPosition = false;
+        if (widget.type === 'weather') {
+            widget.settings.width = widget.settings.width > 1 ? widget.settings.width : 2;
+            widget.settings.height = widget.settings.height > 1 ? widget.settings.height : 2;
+            widget.settings.city = widget.settings.city ? widget.settings.city : "delft";
+            setTimeout(() => {
+                addWeatherListener(widget, widget.id);
+                document.getElementById(widget.id + '-cityInput').value = widget.settings.city;
+                getWeather(widget.id, widget.settings.city);
+            }, 100);
+        }
+
+        service.widgets[service.count] = widget;
     };
 
     function WidgetFactory() {
@@ -224,6 +235,14 @@ function grid() {
                     case "buienradar":
                         template += `<div id="${widget.id}" class="ctab-widget-body">
                                         <IFRAME SRC="https://api.buienradar.nl/image/1.0/RadarMapNL?w=256&h=256" NORESIZE SCROLLING=NO HSPACE=0 VSPACE=0 FRAMEBORDER=0 MARGINHEIGHT=0 MARGINWIDTH=0 WIDTH=256 HEIGHT=256></IFRAME>
+                                    </div>`;
+                        break;
+                    case "weather" :
+                        template += `<div id="${this.id}" class="ctab-widget-body">
+                                        <input type="text" id="${this.id}-cityInput" style="width: 60%;float:left;">
+                                        <button id="${this.id}-cityInputButton" data-id="${this.id}" style="font-size: 11px; width: 30%;float:left background-color: #eee; border-radius: 3px; border: 1px solid #ccc;">Change<br> city</button>
+                                    <br>
+                                        <span id="${this.id}-output"style="width: 100%; white-space: nowrap;">Loading weather</span>
                                     </div>`;
                         break;
                     case "link":
@@ -410,6 +429,84 @@ function grid() {
             });
             clocks.forEach(a => a.children[0].innerHTML = today);
             setTimeout(startTime, 500);
+        }
+    }
+
+    function checkTime(i) {
+        if (i < 10) {
+            i = "0" + i;
+        } // add zero in front of numbers < 10
+        return i;
+    };
+
+    const getWeather = (id, city) => {
+        let tempFormat = (data) => {
+            console.log("Weather type(s)", data.weather.reduce((acc,curr) => acc + " - " + curr.main, ""));
+            let curTemp = (data.main.temp - 273.15).toFixed(2);
+            let curWeather = data.weather.reduce((acc, weatherType) => {
+                if (weatherEmoji.hasOwnProperty(weatherType.main)) {
+                    return acc + weatherEmoji[weatherType.main];
+                }
+                return acc + weatherEmoji.Error;
+            }, "");
+            return `${curWeather} ${curTemp}°C`;
+        };
+
+        let knownWeather = window.localStorage.getItem('weatherInfo') || '{}';
+        knownWeather = JSON.parse(knownWeather);
+        let weatherEmoji = {
+            "Mist": "🌁",
+            "Haze" : "🌫️",
+            "Snow": "⛄",
+            "Rain": "☔",
+            "Clouds": "⛅",
+            "Thunderstorm": "⚡",
+            "Clear": "🌞",
+            "Moon": "🌜",
+            "Windy": "⛵",
+            "Drizzle": "🌦",
+            "Error" : "❌"
+        };
+        if (knownWeather && knownWeather.hasOwnProperty(city) && (new Date().getTime() - knownWeather[city].time) < 1000 * 60 * 15) {
+            document.getElementById(id + '-output').innerText = tempFormat(knownWeather[city]);
+        } else {
+            city = city === "" ? "delft" : city;
+            const apiKey = 'd587bab7acfc0bfc02fc860ae4ab9673';
+            fetch(`http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`).then(response =>
+                response.json().then(data => ({
+                        data: data,
+                        status: response.status
+                    })
+                ).then(res => {
+                    knownWeather[city] = res.data;
+                    knownWeather[city].time = new Date().getTime();
+                    window.localStorage.setItem('weatherInfo', JSON.stringify(knownWeather));
+                    document.getElementById(id + '-output').innerText = tempFormat(res.data);
+                })).catch((err) => {
+                    console.log(err);
+                    document.getElementById(id + '-output').innerText = "no info";});
+
+            // $.getJSON(`http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`, data => {
+            //
+            // }).success(function() { alert("second success"); })
+            //     .error(function() { alert("error"); })
+            //     .complete(function() { alert("complete"); });
+            //     // .error(function () { });
+        }
+
+    };
+
+
+    function addWeatherListener(widget, id) {
+        const cityButton = document.getElementById(id + '-cityInputButton');
+        if (cityButton) {
+            cityButton.addEventListener('click', () => {
+                let city = document.getElementById(id + '-cityInput').value;
+                widget.settings.city = city;
+                getWeather(id, city);
+            });
+        } else {
+            console.log("Could not find the 'change' button corresponding to widget", id);
         }
     }
 
