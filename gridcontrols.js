@@ -441,7 +441,7 @@ function grid() {
 
     const getWeather = (id, city) => {
         let tempFormat = (data) => {
-            console.log("Weather type(s)", data.weather.reduce((acc,curr) => acc + " - " + curr.main, ""));
+            console.log("Weather type(s)", data.weather.reduce((acc, curr) => acc + " - " + curr.main, ""));
             let curTemp = (data.main.temp - 273.15).toFixed(2);
             let curWeather = data.weather.reduce((acc, weatherType) => {
                 if (weatherEmoji.hasOwnProperty(weatherType.main)) {
@@ -454,9 +454,10 @@ function grid() {
 
         let knownWeather = window.localStorage.getItem('weatherInfo') || '{}';
         knownWeather = JSON.parse(knownWeather);
+
         let weatherEmoji = {
             "Mist": "🌁",
-            "Haze" : "🌫️",
+            "Haze": "🌫️",
             "Snow": "⛄",
             "Rain": "☔",
             "Clouds": "⛅",
@@ -465,8 +466,9 @@ function grid() {
             "Moon": "🌜",
             "Windy": "⛵",
             "Drizzle": "🌦",
-            "Error" : "❌"
+            "Error": "❌"
         };
+
         if (knownWeather && knownWeather.hasOwnProperty(city) && (new Date().getTime() - knownWeather[city].time) < 1000 * 60 * 15) {
             document.getElementById(id + '-output').innerText = tempFormat(knownWeather[city]);
         } else {
@@ -483,17 +485,10 @@ function grid() {
                     window.localStorage.setItem('weatherInfo', JSON.stringify(knownWeather));
                     document.getElementById(id + '-output').innerText = tempFormat(res.data);
                 })).catch((err) => {
-                    console.log(err);
-                    document.getElementById(id + '-output').innerText = "no info";});
-
-            // $.getJSON(`http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`, data => {
-            //
-            // }).success(function() { alert("second success"); })
-            //     .error(function() { alert("error"); })
-            //     .complete(function() { alert("complete"); });
-            //     // .error(function () { });
+                console.log(err);
+                document.getElementById(id + '-output').innerText = "no info";
+            });
         }
-
     };
 
 
