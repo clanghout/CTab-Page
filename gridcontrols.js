@@ -235,7 +235,7 @@ function grid() {
                                 <div class="grid-stack-item-content"${this.colorInfo()}>
                                     <div id="${this.id}" class="ctab-widget-body">
                                         <input type="text" id="${this.id}-cityInput" style="width: 60%;float:left; margin:5px;">
-                                        <button id="${this.id}-cityInputButton" data-id="${this.id}" style="font-size: 11px; width: 30%;float:left background-color: #eee; border-radius: 3px; border: 0;">Change<br> city</button>
+                                        <button id="${this.id}-cityInputButton" data-id="${this.id}" style="font-size: 11px; width: 30%;float:left background-color: #eee; border-radius: 3px; border: 1px solid #ccc;">Change<br> city</button>
                                     <br>
                                         <span id="${this.id}-output"style="width: 100%; white-space: nowrap;">Loading weather</span>
                                     </div>
