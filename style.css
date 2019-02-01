@@ -156,6 +156,7 @@ body {
     position: relative;
     overflow: hidden;
     opacity: 1;
+    background-color: red;
 }
 
 /*Invisible overlay containing the link*/

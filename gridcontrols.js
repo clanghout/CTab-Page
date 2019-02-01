@@ -1,5 +1,42 @@
 "use strict";
 
+const options = {
+    // Muuri options
+    dragEnabled: true,
+    layoutOnInit: false,
+    layout: {
+        fillGaps: false,
+        horizontal: false,
+        alignRight: false,
+        alignBottom: false,
+        rounding: false
+    },
+    sortData: {
+        id: function (item, element) {
+            return parseFloat(item._id);
+        },
+        title: function (item, element) {
+            const ctabBody = [].slice.call(element.children[0].children).filter(el => el.classList.contains("ctab-widget-body"))[0];
+            if (ctabBody.classList.contains('ctab-item-clock')) {
+                return "ZZZ";
+            }
+            if (ctabBody.classList.contains('ctab-item-note')) {
+                return "ZZZ";
+            }
+            return ctabBody.children[0].innerText.toUpperCase();
+        }
+    },
+    dragStartPredicate: {
+        handle: '.drag-handle'
+    }
+};
+
+function subgrid(widget_id, name) {
+    let properties = {};
+    properties.name = name;
+    properties.grid = new Muuri(`.grid_${widget_id}`, options);
+}
+
 function grid() {
     let service = {};
     service.count = 0;
@@ -7,45 +44,6 @@ function grid() {
     let widgetFactory = new WidgetFactory();
     let dirty = false;
 
-    const options = {
-        // Muuri options
-        dragEnabled: true,
-        layoutOnInit: false,
-        layout: {
-            fillGaps: false,
-            horizontal: false,
-            alignRight: false,
-            alignBottom: false,
-            rounding: false
-        },
-        sortData: {
-            id: function (item, element) {
-                return parseFloat(item._id);
-            },
-            title: function (item, element) {
-                const ctabBody = [].slice.call(element.children[0].children).filter(el => el.classList.contains("ctab-widget-body"))[0];
-                if (ctabBody.classList.contains('ctab-item-clock')) {
-                    return "ZZZ";
-                }
-                if (ctabBody.classList.contains('ctab-item-note')) {
-                    return "ZZZ";
-                }
-                return ctabBody.children[0].innerText.toUpperCase();
-            }
-        }
-        // items: document.querySelector(".grid").querySelectorAll('.item')
-
-
-        // Gridstack options:
-        // animate: true,
-        // cellHeight: 60,
-        // verticalMargin: 5,
-        // float: true,
-        // disableOneColumnMode: true,
-        // width: 12,
-        // removable: '.trash', // Trash area has to exist: div.trash is enough => with style to display
-        // removeTimeout: 100
-    };
     const defaultWidgetColor = "#fff";
 
     const noteChanged = () => {
@@ -180,6 +178,9 @@ function grid() {
                 getWeather(widget.id, widget.settings.city);
             }, 100);
         }
+        if (widget.type === 'subgrid') {
+            subgrid(widget.id, widget.title);
+        }
 
         service.widgets[service.count] = widget;
     };
@@ -220,36 +221,49 @@ function grid() {
             // The basic template for a widget
             widget.widgetTemplate = function () {
                 let template =
-                    `<div class="item he${widget.settings.height} w${widget.settings.width}" data-title="${widget.title}">
+                    `<div class="item he${widget.settings.height} w${widget.settings.width}" data-title="${widget.title} drag-handle">
                         <div class="item-content" ${widget.colorInfo()}>`;
                 switch (type) {
                     case "clock" :
-                        template += `<div id="${widget.id}" class="ctab-widget-body ctab-item-clock"><span></span></div>`;
+                        template += `<div id="${widget.id}" class="ctab-widget-body ctab-item-clock drag-handle"><span></span></div>`;
                         break;
                     case "note":
                         template += `${widget.getHtmlControls()}
-                                    <div id="${widget.id}" class="ctab-widget-body ctab-item-note">
+                                    <div id="${widget.id}" class="ctab-widget-body ctab-item-note drag-handle">
                                         <textarea id="note-${widget.id}">${widget.title}</textarea>
                                     </div>`;
                         break;
                     case "buienradar":
-                        template += `<div id="${widget.id}" class="ctab-widget-body">
+                        template += `<div id="${widget.id}" class="ctab-widget-body drag-handle">
                                         <IFRAME SRC="https://api.buienradar.nl/image/1.0/RadarMapNL?w=256&h=256" NORESIZE SCROLLING=NO HSPACE=0 VSPACE=0 FRAMEBORDER=0 MARGINHEIGHT=0 MARGINWIDTH=0 WIDTH=256 HEIGHT=256></IFRAME>
                                     </div>`;
                         break;
                     case "weather" :
-                        template += `<div id="${this.id}" class="ctab-widget-body">
+                        template += `<div id="${this.id}" class="ctab-widget-body drag-handle">
                                         <input type="text" id="${this.id}-cityInput" style="width: 60%;float:left;">
                                         <button id="${this.id}-cityInputButton" data-id="${this.id}" style="font-size: 11px; width: 30%;float:left background-color: #eee; border-radius: 3px; border: 1px solid #ccc;">Change<br> city</button>
                                     <br>
                                         <span id="${this.id}-output"style="width: 100%; white-space: nowrap;">Loading weather</span>
                                     </div>`;
                         break;
+                    case "subgrid" :
+                        template += `<div id="${widget.id}" class="ctab-widget-body"><div class="drag-handle">${widget.title}</div>
+                            <div class="grid_${widget.id}">
+                                
+                                
+                            </div>
+
+                        </div>`;
+
+
+
+
+                        break;
                     case "link":
                     default:
-                        template += `${widget.getHtmlControls()} 
-                                    <div id="${widget.id}" class="ctab-widget-body"> 
-                                        ${widget.getTag()} 
+                        template += `${widget.getHtmlControls()}
+                                    <div id="${widget.id}" class="ctab-widget-body drag-handle">
+                                        ${widget.getTag()}
                                     </div>`;
                         break;
                 }
