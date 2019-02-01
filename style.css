@@ -79,7 +79,7 @@ body {
 
 .item-content {
     right: 0 !important;
-    border: 2px solid dimgray;
+    border: 2px solid #222;
     border-radius: 4px;
     overflow: hidden;
 

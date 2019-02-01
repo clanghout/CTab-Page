@@ -1,5 +1,11 @@
 "use strict";
 
+let log = (el) => {
+    let nameObject = {el};
+    console.log(Object.keys(nameObject)[0] ,el);
+};
+
+
 function grid() {
     let service = {};
     service.count = 0;
@@ -56,6 +62,8 @@ function grid() {
     const hasChanges = () => {
         let saved = service.getConfig();
         let current = service.getDashboardConfig();
+        log(saved)
+        log(current)
         // compare strings since object compare is always different with ==
         if (JSON.stringify(saved) !== JSON.stringify(current)) {
             if (dirty) {
@@ -106,7 +114,7 @@ function grid() {
         // TODO: fix with muuri
         // Call to textfill library, calculate font sizes that make the text fit in the boxes.
         Object.keys(service.widgets).forEach(i => $('#' + i).textfill({
-            minFontPixels: 10,
+            minFontPixels: 12,
             allowOverflow: true,
         }));
         // Start clocks
@@ -203,7 +211,7 @@ function grid() {
             // TODO HTML and javascript need to be separated
             //  option: https://github.com/polymer/lit-element#minimal-example
             //  option: vue components
-            widget.getTag = () => `<span>${widget.title}</span><a href="${widget.contentUrl}" id="${widget.title}"><span class="ctab-widget-link"></span></a>`;
+            widget.getTag = () => `<span style="line-height: 100%;">${widget.title}</span><a href="${widget.contentUrl}" id="${widget.title}"><span class="ctab-widget-link"></span></a>`;
 
             widget.getHtmlControls = () => `<div class="ctab-widget-controls"><div class="deletebutton">${this.id}</div></div>`;
 
@@ -466,7 +474,8 @@ function grid() {
             "Moon": "🌜",
             "Windy": "⛵",
             "Drizzle": "🌦",
-            "Error": "❌"
+            "Error": "❌",
+            "Fog": "🌫️"
         };
 
         if (knownWeather && knownWeather.hasOwnProperty(city) && (new Date().getTime() - knownWeather[city].time) < 1000 * 60 * 15) {
