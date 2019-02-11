@@ -1,11 +1,8 @@
 "use strict";
 /* eslint-env node, browser, jquery */
-
-let log = (el) => {
-    let nameObject = {el};
-    console.log(Object.keys(nameObject)[0] ,el);
-};
-
+window.browser = (() => {
+    return window.browser || chrome || window.msBrowser;
+})();
 
 function grid() {
     let service = {};
@@ -63,8 +60,6 @@ function grid() {
     const hasChanges = () => {
         let saved = service.getConfig();
         let current = service.getDashboardConfig();
-        log(saved);
-        log(current);
         // compare strings since object compare is always different with ==
         if (JSON.stringify(saved) !== JSON.stringify(current)) {
             if (dirty) {
@@ -285,7 +280,7 @@ function grid() {
 
     service.getConfig = function () {
         try {
-            let chromeresult = chrome.storage.sync.get(['CTabConfig'], function (res) {
+            let chromeresult = window.browser.storage.sync.get(['CTabConfig'], function (res) {
                 return res;
             });
         } catch (error) {
