@@ -3,9 +3,10 @@
 // window.localStorage.setItem("CTabConfig", "[]");
 
 import {grid} from './gridcontrols.js';
+import './settingsMenu.js';
 
-window.chrome = (() => {
-    return window.browser || window.chrome || window.msBrowser;
+window.browser = (() => {
+    return window.browser || chrome || window.msBrowser;
 })();
 
 // The toast box that can be used to show a message to the user.
@@ -202,16 +203,16 @@ function prettyPrintConfig(config) {
 
 /// Chrome extension specific
 try {
-    chrome.commands.onCommand.addListener(saveGrid);
+    window.browser.commands.onCommand.addListener(saveGrid);
 
-    chrome.bookmarks.onCreated.addListener(function (id, bookmark) {
+    window.browser.bookmarks.onCreated.addListener(function (id, bookmark) {
         console.log("id", id);
         console.log("bookmark", bookmark);
         CTabGrid.simpleAdd(bookmark.title, bookmark.url, "#fff", "#000", "url");
 
     });
 
-    chrome.history.search({text: '', maxResults: 10}, function (data) {
+    window.browser.history.search({text: '', maxResults: 10}, function (data) {
         data.forEach(function (page) {
             //TODO add from history?
             // console.log(page.url);

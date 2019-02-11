@@ -1,4 +1,5 @@
 "use strict";
+/* eslint-env node, browser, jquery */
 
 let log = (el) => {
     let nameObject = {el};
@@ -62,8 +63,8 @@ function grid() {
     const hasChanges = () => {
         let saved = service.getConfig();
         let current = service.getDashboardConfig();
-        log(saved)
-        log(current)
+        log(saved);
+        log(current);
         // compare strings since object compare is always different with ==
         if (JSON.stringify(saved) !== JSON.stringify(current)) {
             if (dirty) {
@@ -439,13 +440,6 @@ function grid() {
             setTimeout(startTime, 500);
         }
     }
-
-    function checkTime(i) {
-        if (i < 10) {
-            i = "0" + i;
-        } // add zero in front of numbers < 10
-        return i;
-    };
 
     const getWeather = (id, city) => {
         let tempFormat = (data) => {
