@@ -11,8 +11,9 @@
     <link rel="stylesheet" href="node_modules/bootstrap/dist/css/bootstrap.css">
 </head>
 <body>
+<div class="background" id="background-div"></div>
 <img src=""
-     alt="background" id="background">
+     alt="background" id="background" class="background">
 
 <div class="trash"></div>
 <div class="top-bar">
@@ -55,6 +56,7 @@
 </div>
 
 <div class="settings-pane pane" id="settingsMenu">
+    <span style="grid-column: 1/3; font-weight: bold;">Background setting:</span>
     <input type="radio" name="background" id="background-random" value="random" checked>
     <label for="background-random">Random Background?</label>
     <input type="radio" name="background" value="file" id="background-file">
@@ -67,8 +69,13 @@
         <label for="background-url">background from url </label>
         <input type="text" id="background-url-value">
     </div>
+    <input type="radio" name="background" value="color" id="background-color">
+    <div>
+        <label for="background-color">single color</label>
+        <input type="text" id="background-color-value">
+    </div>
 
-    <button id="settings-save" style="grid-column: 2; width: min-content;">Save settings</button>
+    <button id="settings-save" style="grid-column: 2; ">Apply background setting</button>
 </div>
 
 <!--TODO types: auto?-->

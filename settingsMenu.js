@@ -1,6 +1,10 @@
 const settingsToggleButton = document.getElementById('settings-toggle');
 const settingsPaneDiv = document.getElementById('settingsMenu');
 const backgroundImg = document.getElementById('background');
+// const backgroundDiv = document.getElementById('background-div');
+const bgColVal = document.getElementById('background-color-value');
+const bgUrlVal = document.getElementById('background-url-value');
+
 let settingsActive = false;
 const settingsSaveButton = document.getElementById('settings-save');
 let currentSettings = JSON.parse(window.localStorage.getItem('CTab-settings')) || {};
@@ -8,11 +12,19 @@ let currentSettings = JSON.parse(window.localStorage.getItem('CTab-settings')) |
 
 function initialize() {
     backgroundImg.src = currentSettings.background;
+    backgroundImg.style.backgroundColor = currentSettings.backgroundColor;
     if (typeof currentSettings.backgroundRadioSelected === 'number') {
         document.getElementsByName('background')[currentSettings.backgroundRadioSelected].checked = true;
+        if (currentSettings.backgroundRadioSelected === 2) {
+            bgUrlVal.value = currentSettings.background;
+        }
+        if (currentSettings.backgroundRadioSelected === 3) {
+            bgColVal.value = currentSettings.backgroundColor;
+        }
     }
 
 }
+
 initialize();
 
 function getBackgroundSetting() {
@@ -46,8 +58,16 @@ function getBackgroundSetting() {
             }
             break;
         case 'url':
-            let backgroundUrlValue = document.getElementById('background-url-value').value;
+
+            let backgroundUrlValue = bgUrlVal.value;
             currentSettings.background = backgroundUrlValue;
+            break;
+        case 'color':
+            console.log('color');
+            currentSettings.background = "";
+            // backgroundDiv.style.backgroundColor = document.getElementById('background-color-value').value;
+            backgroundImg.style.backgroundColor = bgColVal.value;
+            currentSettings.backgroundColor = backgroundImg.style.backgroundColor;
             break;
         case 'random':
         default:
