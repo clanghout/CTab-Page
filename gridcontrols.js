@@ -1,8 +1,13 @@
 "use strict";
 /* eslint-env node, browser, jquery */
 window.browser = (() => {
-    return window.browser || chrome || window.msBrowser;
+    return window.browser || window.chrome || window.msBrowser;
 })();
+
+
+import {CTabSettings} from "./settingsMenu.js";
+
+const settings = CTabSettings();
 
 function grid() {
     let service = {};
@@ -467,7 +472,10 @@ function grid() {
             "Fog": "🌫️"
         };
 
-        if (knownWeather && knownWeather.hasOwnProperty(city) && (new Date().getTime() - knownWeather[city].time) < 1000 * 60 * 15) {
+        const defaultWeatherTimeout = 1000 * 60 * 15;
+        let weatherTimeout = settings.getWeatherTimeoutValue() || defaultWeatherTimeout;
+
+        if (knownWeather && knownWeather.hasOwnProperty(city) && (new Date().getTime() - knownWeather[city].time) < weatherTimeout) {
             document.getElementById(id + '-output').innerText = tempFormat(knownWeather[city]);
         } else {
             city = city === "" ? "delft" : city;

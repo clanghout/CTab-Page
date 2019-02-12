@@ -6,7 +6,7 @@ import {grid} from './gridcontrols.js';
 import './settingsMenu.js';
 
 window.browser = (() => {
-    return window.browser || chrome || window.msBrowser;
+    return window.browser || window.chrome || window.msBrowser;
 })();
 
 // The toast box that can be used to show a message to the user.

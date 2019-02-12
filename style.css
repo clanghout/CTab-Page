@@ -22,11 +22,22 @@
     left:0;
 }
 
+.settings-pane-background
+{
+    display: grid;
+    grid-template-columns: 20px 400px;
+}
+
+.setting{
+    width: 100%;
+    float: left;
+}
+
 .settings-pane{
     top: var(--topbar-height);
     right: 10px;
 
-    grid-template-columns: 20px 400px;
+    grid-template-columns: 400px 420px;
 }
 
 body {
@@ -267,7 +278,7 @@ body {
     padding: 5px;
     border: 1px solid #f00;
     border-radius: 3px;
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(255, 255, 255, 0.9);
     z-index: 4;
 }
 

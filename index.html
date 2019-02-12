@@ -12,7 +12,7 @@
 </head>
 <body>
 <img src=""
-     alt="background" id="background" class="background" />
+     alt="background" id="background" class="background"/>
 
 <div class="trash"></div>
 <div class="top-bar">
@@ -55,26 +55,51 @@
 </div>
 
 <div class="settings-pane pane hidden" id="settingsMenu">
-    <span style="grid-column: 1/3; font-weight: bold;">Background setting:</span>
-    <input type="radio" name="background" id="background-random" value="random" checked>
-    <label for="background-random">Random Background?</label>
-    <input type="radio" name="background" value="file" id="background-file">
-    <div>
-        <label for="background-file">Background from file</label>
-        <input type="file" id="background-file-value" accept=".jpg,.png,.gif">
-    </div>
-    <input type="radio" name="background" value="url" id="background-url">
-    <div>
-        <label for="background-url">background from url </label>
-        <input type="text" id="background-url-value">
-    </div>
-    <input type="radio" name="background" value="color" id="background-color">
-    <div>
-        <label for="background-color">single color</label>
-        <input type="text" id="background-color-value">
-    </div>
+    <div class="settings-pane-main">
+        <div class="setting">
+            <label>
+                Weather info expire time (seconds)
+                <input type="number" id="weather-timeout">
+            </label>
+        </div>
+        <div class="setting">
+            <label>
 
-    <button id="settings-save" style="grid-column: 2; ">Apply background setting</button>
+                <input type="color">
+            </label>
+        </div>
+        <div class="setting">
+            Setting 1
+        </div>
+        <div class="setting">
+            Setting 1
+        </div>
+        <div class="setting">
+            <button id="settings-main-save-button">Save settings</button>
+        </div>
+    </div>
+    <div class="settings-pane-background">
+        <span style="grid-column: 1/3; font-weight: bold;">Background setting:</span>
+        <input type="radio" name="background" id="background-random" value="random" checked>
+        <label for="background-random">Random Background?</label>
+        <input type="radio" name="background" value="file" id="background-file">
+        <div>
+            <label for="background-file">Background from file</label>
+            <input type="file" id="background-file-value" accept=".jpg,.png,.gif">
+        </div>
+        <input type="radio" name="background" value="url" id="background-url">
+        <div>
+            <label for="background-url">background from url </label>
+            <input type="text" id="background-url-value">
+        </div>
+        <input type="radio" name="background" value="color" id="background-color">
+        <div>
+            <label for="background-color">single color</label>
+            <input type="text" id="background-color-value">
+        </div>
+
+        <button id="settings-save" style="grid-column: 2; ">Apply background setting</button>
+    </div>
 </div>
 
 <!--TODO types: auto?-->
@@ -121,7 +146,7 @@
         </div>
         <button id="saveDevConfig">save dev config</button>
         <button id="backupButton">Save config to file</button>
-        <button id="loadBackupButton">Load config from file</button>
+        <label for="loadBackupButton">Load config from file</label><input id="loadBackupButton" type="file">
     </div>
 </div>
 
