@@ -55,6 +55,7 @@
 </div>
 
 <div class="settings-pane pane hidden" id="settingsMenu">
+    <div style="font-weight: bold; grid-column: 1/3;">Settings:</div>
     <div class="settings-pane-main">
         <div class="setting">
             <label>
@@ -63,10 +64,8 @@
             </label>
         </div>
         <div class="setting">
-            <label>
-
-                <input type="color">
-            </label>
+            <div class="left bold">widget border color:</div>
+            <div id="widget-border-color" class="vanilla-color-picker left">Click this</div>
         </div>
         <div class="setting">
             Setting 1
@@ -94,11 +93,15 @@
         </div>
         <input type="radio" name="background" value="color" id="background-color">
         <div>
-            <label for="background-color">single color</label>
-            <input type="text" id="background-color-value">
+            <div class="left">
+                single color
+            </div>
+            <div class="left vanilla-color-picker" id="background-color-picker">
+                Background
+            </div>
         </div>
 
-        <button id="settings-save" style="grid-column: 2; ">Apply background setting</button>
+        <button id="background-apply" style="grid-column: 2; ">Apply background setting</button>
     </div>
 </div>
 
@@ -158,6 +161,7 @@
 <!--Dynamic font-size changing script-->
 <script src="node_modules/jquery/dist/jquery.slim.min.js"></script>
 <script src="modules/jquery.textfill.min.js"></script>
+<script src="node_modules/vanilla-picker/dist/vanilla-picker.min.js"></script>
 
 <!--CTab script-->
 <script type=module src="index.js"></script>

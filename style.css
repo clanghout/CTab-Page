@@ -1,9 +1,11 @@
 :root {
     --ctab-widget-controls-width: 0;
     --topbar-height: 50px;
+    --widget-border-color: #222;
+    --background-color: #fff;
 }
 
-#settings-toggle{
+#settings-toggle {
     border: 1px solid lightslategrey;
     border-radius: 3px;
     background-color: lightblue;
@@ -13,27 +15,45 @@
     padding: 5px;
 }
 
-.background{
+.bold{
+    font-weight: bold;
+}
+
+#background {
     width: 100%;
     height: 100%;
     z-index: -1;
-    position:fixed;
-    top:0;
-    left:0;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: var(--background-color);
 }
 
-.settings-pane-background
-{
+#background-color-picker{
+    background-color: var(--background-color);
+}
+
+#widget-border-color {
+    background-color: var(--widget-border-color);
+}
+
+.vanilla-color-picker{
+    border: 2px solid #e5e5e5;
+    min-width: 15px;
+    width: max-content;
+}
+
+.settings-pane-background {
     display: grid;
     grid-template-columns: 20px 400px;
 }
 
-.setting{
+.setting {
     width: 100%;
     float: left;
 }
 
-.settings-pane{
+.settings-pane {
     top: var(--topbar-height);
     right: 10px;
 
@@ -101,7 +121,7 @@ body {
     z-index: 4;
 }
 
-.sortingDropdown{
+.sortingDropdown {
     padding-right: 40px;
     cursor: pointer;
     position: relative;
@@ -117,7 +137,7 @@ body {
 
 .item-content {
     right: 0 !important;
-    border: 2px solid #222;
+    border: 2px solid var(--widget-border-color);
     border-radius: 4px;
     overflow: hidden;
 
@@ -141,6 +161,11 @@ body {
     opacity: .5;
     /*--item-color will be defined dynamically within the item itself in gridcontrols.js*/
     background-color: var(--item-color);
+}
+
+.left{
+    float: left;
+    width: max-content;
 }
 
 #logo1 {
@@ -180,7 +205,7 @@ body {
     vertical-align: middle;
     overflow: hidden;
     opacity: 1;
-    padding:5px;
+    padding: 5px;
     float: left;
 }
 
@@ -242,7 +267,7 @@ body {
     text-align: right;
 }
 
-.clock, .date{
+.clock, .date {
     color: #ffffff;
     float: right;
     width: 100%;
@@ -270,8 +295,7 @@ body {
 }
 
 
-
-.pane{
+.pane {
     display: grid;
     width: min-content;
     position: fixed;

@@ -62,9 +62,9 @@ Maybe it is an idea to only check for bookmarks added to a specific folder. Then
 - extension button in bar to add to config
 - Switch between configurations and save on server -> able to add from one to the other (like spotify playlist idea)
 
-### Muuri
-
-https://github.com/haltu/muuri
+### Deps
+- https://github.com/haltu/muuri
+- https://www.cssscript.com/color-picker-alpha-selection/
 
 #### Widget sizes
 Changes to the size of widgets need to be made in `scripts/createSizeStyles.js`. Run `node createSizeStyles.js` after changing and make sure to push the recreated `sizeStyles.css` along.

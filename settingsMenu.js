@@ -1,32 +1,59 @@
+// import Picker from './node_modules/vanilla-picker/dist/vanilla-picker.mjs';
+
 let CTabSettings = () => {
     let settings = {};
     const settingsToggleButton = document.getElementById('settings-toggle');
     const settingsPaneDiv = document.getElementById('settingsMenu');
     const backgroundImg = document.getElementById('background');
-// const backgroundDiv = document.getElementById('background-div');
-    const bgColVal = document.getElementById('background-color-value');
     const bgUrlVal = document.getElementById('background-url-value');
 
     const weatherTimeoutInput = document.getElementById('weather-timeout');
 
     let settingsActive = false;
-    const settingsSaveButton = document.getElementById('settings-save');
+    const backgroundApplyButton = document.getElementById('background-apply');
+    const settingsMainSaveButton = document.getElementById('settings-main-save-button');
     let currentSettings = JSON.parse(window.localStorage.getItem('CTab-settings')) || {};
 
 
-    settings.initialize = function() {
+    settings.initialize = function () {
+        // Color pickers
+        new Picker({
+            parent: document.getElementById('widget-border-color'),
+            popup: 'bottom', // 'right'(default), 'left', 'top', 'bottom'
+            editor: true,
+            color: currentSettings.borderColor,
+            onChange: (newCol) => {
+                document.documentElement.style.setProperty('--widget-border-color', newCol.rgbaString);
+                currentSettings.borderColor = newCol.rgbaString;
+            },
+            onDone: (newCol) => {
+                currentSettings.borderColor = newCol.rgbaString;
+            }
+        });
+
+        new Picker({
+            parent: document.getElementById('background-color-picker'),
+            popup: 'bottom', // 'right'(default), 'left', 'top', 'bottom'
+            editor: true,
+            color: currentSettings.backgroundColor,
+            onChange: (newCol) => {
+                document.documentElement.style.setProperty('--background-color', newCol.rgbaString);
+                currentSettings.backgroundColor = newCol.rgbaString;
+            },
+            onDone: (newCol) => {
+                currentSettings.backgroundColor = newCol.rgbaString;
+            }
+        });
+
+        document.documentElement.style.setProperty('--widget-border-color', currentSettings.borderColor);
+
         backgroundImg.src = currentSettings.background;
-        backgroundImg.style.backgroundColor = currentSettings.backgroundColor;
         if (typeof currentSettings.backgroundRadioSelected === 'number') {
             document.getElementsByName('background')[currentSettings.backgroundRadioSelected].checked = true;
             if (currentSettings.backgroundRadioSelected === 2) {
                 bgUrlVal.value = currentSettings.background;
             }
-            if (currentSettings.backgroundRadioSelected === 3) {
-                bgColVal.value = currentSettings.backgroundColor;
-            }
         }
-
 
         // weather timeout
         weatherTimeoutInput.value = currentSettings.weatherTimeout || 60 * 15;
@@ -70,9 +97,6 @@ let CTabSettings = () => {
                 break;
             case 'color':
                 currentSettings.background = "";
-                // backgroundDiv.style.backgroundColor = document.getElementById('background-color-value').value;
-                backgroundImg.style.backgroundColor = bgColVal.value;
-                currentSettings.backgroundColor = backgroundImg.style.backgroundColor;
                 break;
             case 'random':
             default:
@@ -83,9 +107,11 @@ let CTabSettings = () => {
     }
 
 
-    settingsSaveButton.addEventListener('click', () => {
-        getBackgroundSetting();
+    settingsMainSaveButton.addEventListener('click', () => {
         window.localStorage.setItem('CTab-settings', JSON.stringify(currentSettings));
+    });
+    backgroundApplyButton.addEventListener('click', () => {
+        getBackgroundSetting();
         // reload to let gridcontrols use new settings;
     });
 
