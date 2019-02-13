@@ -12,6 +12,9 @@ let CTabSettings = () => {
     let settingsActive = false;
     const backgroundApplyButton = document.getElementById('background-apply');
     const settingsMainSaveButton = document.getElementById('settings-main-save-button');
+    const unsavedChangesWarningCheckbox = document.getElementById('unsaved-changes-warning');
+    const openInNewTabCheckbox = document.getElementById('link-new-tab');
+    const weatherAPIKeyInput = document.getElementById('weather-API-key');
     let currentSettings = JSON.parse(window.localStorage.getItem('CTab-settings')) || {};
 
 
@@ -28,6 +31,7 @@ let CTabSettings = () => {
             },
             onDone: (newCol) => {
                 currentSettings.borderColor = newCol.rgbaString;
+                save();
             }
         });
 
@@ -42,6 +46,7 @@ let CTabSettings = () => {
             },
             onDone: (newCol) => {
                 currentSettings.backgroundColor = newCol.rgbaString;
+                save();
             }
         });
 
@@ -55,8 +60,31 @@ let CTabSettings = () => {
             }
         }
 
+        unsavedChangesWarningCheckbox.checked = currentSettings.unsavedChangesWarningEnabled || false;
+        unsavedChangesWarningCheckbox.addEventListener('click', () => {
+            currentSettings.unsavedChangesWarningEnabled = unsavedChangesWarningCheckbox.checked;
+            save();
+        });
+
+        openInNewTabCheckbox.checked = currentSettings.openInNewTab || false;
+        openInNewTabCheckbox.addEventListener('click', () => {
+            currentSettings.openInNewTab = openInNewTabCheckbox.checked;
+            save();
+        });
+
+        weatherAPIKeyInput.value = currentSettings.weatherAPIKey || "";
+        weatherAPIKeyInput.addEventListener('change', () => {
+            currentSettings.weatherAPIKey = weatherAPIKeyInput.value;
+            save();
+        });
+
+
         // weather timeout
         weatherTimeoutInput.value = currentSettings.weatherTimeout || 60 * 15;
+        weatherTimeoutInput.addEventListener('change', () => {
+            currentSettings.weatherTimeout = weatherTimeoutInput.value;
+            save();
+        });
     };
 
     settings.initialize();
@@ -104,11 +132,16 @@ let CTabSettings = () => {
                 break;
         }
         backgroundImg.src = currentSettings.background;
+        save();
+    }
+
+    function save() {
+        window.localStorage.setItem('CTab-settings', JSON.stringify(currentSettings));
     }
 
 
     settingsMainSaveButton.addEventListener('click', () => {
-        window.localStorage.setItem('CTab-settings', JSON.stringify(currentSettings));
+        save();
     });
     backgroundApplyButton.addEventListener('click', () => {
         getBackgroundSetting();
@@ -125,6 +158,18 @@ let CTabSettings = () => {
 
     settings.getWeatherTimeoutValue = function () {
         return currentSettings.weatherTimeout * 1000;
+    };
+
+    settings.getWeatherAPIKey = function () {
+        return currentSettings.weatherAPIKey;
+    };
+
+    settings.getShowUnsavedWarning = function () {
+        return currentSettings.unsavedChangesWarningEnabled;
+    };
+
+    settings.getNewTab = function () {
+        return currentSettings.openInNewTab;
     };
 
     return settings;

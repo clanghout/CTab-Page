@@ -7,7 +7,7 @@ window.browser = (() => {
 
 import {CTabSettings} from "./settingsMenu.js";
 
-const settings = CTabSettings();
+const cTabSettings = CTabSettings();
 
 function grid() {
     let service = {};
@@ -86,8 +86,8 @@ function grid() {
         window.onbeforeunload = function () {
             // dirty state is implemented loosely (did not care much before, dirty in the probability of change)
             // so an extra check is also added comparing the current state to the saved state
-            if (hasChanges()) {
-                // return "You have unsaved changes on this page. Do you want to leave this page and discard your changes or stay on this page?";
+            if (hasChanges() && cTabSettings.getShowUnsavedWarning()) {
+                return "You have unsaved changes on this page. Do you want to leave this page and discard your changes or stay on this page?";
             }
             // service.saveGrid(); // Disabled to enable dev edit
         };
@@ -205,6 +205,8 @@ function grid() {
             widget.type = type;
             widget.id = id;
 
+            const newTab = cTabSettings.getNewTab();
+
             // set default values
             widget.settings.width = settings.width ? settings.width : 1;
             widget.settings.height = settings.height ? settings.height : 1;
@@ -212,7 +214,7 @@ function grid() {
             // TODO HTML and javascript need to be separated
             //  option: https://github.com/polymer/lit-element#minimal-example
             //  option: vue components
-            widget.getTag = () => `<span style="line-height: 100%;">${widget.title}</span><a href="${widget.contentUrl}" id="${widget.title}"><span class="ctab-widget-link"></span></a>`;
+            widget.getTag = () => `<span style="line-height: 100%;">${widget.title}</span><a href="${widget.contentUrl}" ${newTab ? 'target="_blank"' : ""} id="${widget.title}"><span class="ctab-widget-link"></span></a>`;
 
             widget.getHtmlControls = () => `<div class="ctab-widget-controls"><div class="deletebutton">${this.id}</div></div>`;
 
@@ -443,15 +445,18 @@ function grid() {
 
     const getWeather = (id, city) => {
         let tempFormat = (data) => {
-            console.log("Weather type(s)", data.weather.reduce((acc, curr) => acc + " - " + curr.main, ""));
-            let curTemp = (data.main.temp - 273.15).toFixed(2);
-            let curWeather = data.weather.reduce((acc, weatherType) => {
-                if (weatherEmoji.hasOwnProperty(weatherType.main)) {
-                    return acc + weatherEmoji[weatherType.main];
-                }
-                return acc + weatherEmoji.Error;
-            }, "");
-            return `${curWeather} ${curTemp}°C`;
+            if (data.weather) {
+                console.log("Weather type(s)", data.weather.reduce((acc, curr) => acc + " - " + curr.main, ""));
+                let curTemp = (data.main.temp - 273.15).toFixed(2);
+                let curWeather = data.weather.reduce((acc, weatherType) => {
+                    if (weatherEmoji.hasOwnProperty(weatherType.main)) {
+                        return acc + weatherEmoji[weatherType.main];
+                    }
+                    return acc + weatherEmoji.Error;
+                }, "");
+                return `${curWeather} ${curTemp}°C`;
+            }
+            return "invalid key";
         };
 
         let knownWeather = window.localStorage.getItem('weatherInfo') || '{}';
@@ -473,13 +478,12 @@ function grid() {
         };
 
         const defaultWeatherTimeout = 1000 * 60 * 15;
-        let weatherTimeout = settings.getWeatherTimeoutValue() || defaultWeatherTimeout;
-
+        let weatherTimeout = cTabSettings.getWeatherTimeoutValue() || defaultWeatherTimeout;
         if (knownWeather && knownWeather.hasOwnProperty(city) && (new Date().getTime() - knownWeather[city].time) < weatherTimeout) {
             document.getElementById(id + '-output').innerText = tempFormat(knownWeather[city]);
         } else {
             city = city === "" ? "delft" : city;
-            const apiKey = 'd587bab7acfc0bfc02fc860ae4ab9673';
+            const apiKey = cTabSettings.getWeatherAPIKey();
             fetch(`http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`).then(response =>
                 response.json().then(data => ({
                         data: data,
@@ -492,7 +496,7 @@ function grid() {
                     document.getElementById(id + '-output').innerText = tempFormat(res.data);
                 })).catch((err) => {
                 console.log(err);
-                document.getElementById(id + '-output').innerText = "no info";
+                document.getElementById(id + '-output').innerText = weatherEmoji.Error + "no (valid) key";
             });
         }
     };

@@ -59,6 +59,12 @@
     <div class="settings-pane-main">
         <div class="setting">
             <label>
+                Weather API key (<a href="https://openweathermap.org/appid" target="_blank">openweathermap</a>)
+                <input type="text" name="weather-API-key" id="weather-API-key">
+            </label>
+        </div>
+        <div class="setting">
+            <label>
                 Weather info expire time (seconds)
                 <input type="number" id="weather-timeout">
             </label>
@@ -68,10 +74,16 @@
             <div id="widget-border-color" class="vanilla-color-picker left">Click this</div>
         </div>
         <div class="setting">
-            Setting 1
+            <label>
+                <input type="checkbox" id="unsaved-changes-warning">
+                Warning before leaving the page with unsaved changes
+            </label>
         </div>
         <div class="setting">
-            Setting 1
+            <label>
+                <input type="checkbox" name="link-new-tab" id="link-new-tab">
+                Open clicked links in new tab
+            </label>
         </div>
         <div class="setting">
             <button id="settings-main-save-button">Save settings</button>
