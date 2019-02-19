@@ -431,12 +431,13 @@ function grid() {
     function startTime() {
         let clocks = document.querySelectorAll('.ctab-item-clock');
         if (clocks.length > 0) {
-            let todayDate = new Date();
-            let today = todayDate.toLocaleTimeString('en-US', {
+            const todayDate = new Date();
+            const timezone = cTabSettings.getTimezone();
+            const today = todayDate.toLocaleTimeString('en-US', {
                 hour: '2-digit',
                 minute: '2-digit',
                 second: '2-digit',
-                timeZone: cTabSettings.getTimezone(),
+                timeZone: timezone,
                 hour12: false
             });
             clocks.forEach(a => a.children[0].innerHTML = today);

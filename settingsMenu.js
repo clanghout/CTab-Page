@@ -90,7 +90,7 @@ let CTabSettings = () => {
         });
 
         // Timezone
-        timezoneSelect.selectedIndex = currentSettings.timezoneIndex || 0;
+        timezoneSelect.selectedIndex = currentSettings.timezoneIndex || 421; //default to Europe/Amsterdam
         timezoneSelect.addEventListener('change', () => {
             currentSettings.timezone = timezoneSelect.options[timezoneSelect.selectedIndex].innerText;
             currentSettings.timezoneIndex = timezoneSelect.selectedIndex;
