@@ -15,6 +15,9 @@ let CTabSettings = () => {
     const unsavedChangesWarningCheckbox = document.getElementById('unsaved-changes-warning');
     const openInNewTabCheckbox = document.getElementById('link-new-tab');
     const weatherAPIKeyInput = document.getElementById('weather-API-key');
+    const timezoneSelect = document.getElementById('timezone-select');
+
+
     let currentSettings = JSON.parse(window.localStorage.getItem('CTab-settings')) || {};
 
 
@@ -85,6 +88,16 @@ let CTabSettings = () => {
             currentSettings.weatherTimeout = weatherTimeoutInput.value;
             save();
         });
+
+        // Timezone
+        timezoneSelect.selectedIndex = currentSettings.timezoneIndex || 0;
+        timezoneSelect.addEventListener('change', () => {
+            currentSettings.timezone = timezoneSelect.options[timezoneSelect.selectedIndex].innerText;
+            currentSettings.timezoneIndex = timezoneSelect.selectedIndex;
+            save();
+        });
+
+
     };
 
     settings.initialize();
@@ -158,6 +171,10 @@ let CTabSettings = () => {
 
     settings.getWeatherTimeoutValue = function () {
         return currentSettings.weatherTimeout * 1000;
+    };
+
+    settings.getTimezone = function () {
+        return currentSettings.timezone;
     };
 
     settings.getWeatherAPIKey = function () {
