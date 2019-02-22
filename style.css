@@ -15,11 +15,11 @@
     padding: 5px;
 }
 
-.bold{
+.bold {
     font-weight: bold;
 }
 
-.note{
+.note {
     font-size: .8em;
     font-style: italic;
 }
@@ -34,7 +34,7 @@
     background-color: var(--background-color);
 }
 
-#background-color-picker{
+#background-color-picker {
     background-color: var(--background-color);
 }
 
@@ -42,7 +42,7 @@
     background-color: var(--widget-border-color);
 }
 
-.vanilla-color-picker{
+.vanilla-color-picker {
     border: 2px solid #e5e5e5;
     min-width: 15px;
     width: max-content;
@@ -51,7 +51,7 @@
 .settings-pane-background {
     display: grid;
     grid-template-columns: 20px 400px;
-    grid-template-rows: repeat(2,30px) 50px repeat(3,30px);
+    grid-template-rows: repeat(2, 30px) 50px repeat(3, 30px);
 }
 
 .setting {
@@ -170,7 +170,7 @@ body {
     background-color: var(--item-color);
 }
 
-.left{
+.left {
     float: left;
     width: max-content;
 }
@@ -182,7 +182,7 @@ body {
     font-weight: bold;
 }
 
-#logo1 > a:hover{
+#logo1 > a:hover {
     text-decoration: none;
 }
 
