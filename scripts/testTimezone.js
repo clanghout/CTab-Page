@@ -595,11 +595,11 @@ const timezones = [
 console.log(timezones.filter(tz => {
     try {
         new Date().toLocaleTimeString('en-US', {timeZone:tz});
-        return false;
-    }
-    catch (e) {
         return true;
     }
-}));
+    catch (e) {
+        return false;
+    }
+}).reduce((acc,timezone) => acc + `<option>${timezone}</option>\n`,""));
 
 
