@@ -1,5 +1,5 @@
 {
-  "name": "CTab-Page",
+  "name": "ctab-page",
   "version": "1.0.0",
   "main": "index.html",
   "repository": "https://github.com/clanghout/CTab-Page",
@@ -9,6 +9,7 @@
   "dependencies": {
     "bootstrap": "3",
     "jquery": "^3.3.1",
-    "muuri": "^0.7.1"
+    "muuri": "^0.7.1",
+    "vanilla-picker": "^2.7.2"
   }
 }

@@ -3,23 +3,17 @@
 // window.localStorage.setItem("CTabConfig", "[]");
 
 import {grid} from './gridcontrols.js';
+import './settingsMenu.js';
 
-window.chrome = (() => {
+window.browser = (() => {
     return window.browser || window.chrome || window.msBrowser;
 })();
 
 // The toast box that can be used to show a message to the user.
 const toastBox = document.querySelector("#toast");
 const today = new Date();
-const weekdays = new Array(7);
-weekdays[0] = "Sunday";
-weekdays[1] = "Monday";
-weekdays[2] = "Tuesday";
-weekdays[3] = "Wednesday";
-weekdays[4] = "Thursday";
-weekdays[5] = "Friday";
-weekdays[6] = "Saturday";
-const months = ['January','February','March','April','May','June','July','August','September','October','November','December'];
+const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 document.querySelector('#currDate').innerText = `${weekdays[today.getDay()]} ${today.getDate()} ${months[today.getMonth()]} ${today.getFullYear()}`;
 
 function showToast(message) {
@@ -202,16 +196,16 @@ function prettyPrintConfig(config) {
 
 /// Chrome extension specific
 try {
-    chrome.commands.onCommand.addListener(saveGrid);
+    window.browser.commands.onCommand.addListener(saveGrid);
 
-    chrome.bookmarks.onCreated.addListener(function (id, bookmark) {
+    window.browser.bookmarks.onCreated.addListener(function (id, bookmark) {
         console.log("id", id);
         console.log("bookmark", bookmark);
         CTabGrid.simpleAdd(bookmark.title, bookmark.url, "#fff", "#000", "url");
 
     });
 
-    chrome.history.search({text: '', maxResults: 10}, function (data) {
+    window.browser.history.search({text: '', maxResults: 10}, function (data) {
         data.forEach(function (page) {
             //TODO add from history?
             // console.log(page.url);

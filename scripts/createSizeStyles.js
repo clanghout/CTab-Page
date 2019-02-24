@@ -5,7 +5,7 @@ let computedStyle = "/* GENERATED STYLES, make changes using the 'scripts/create
 
 for (let i = 1; i <= 12; i++) {
     computedStyle +=
-`
+        `
 .w${i} {
     width: ${i * 150 + (i - 1) * 10}px;
 }

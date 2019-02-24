@@ -1,5 +1,70 @@
 :root {
     --ctab-widget-controls-width: 0;
+    --topbar-height: 50px;
+    --widget-border-color: #222;
+    --background-color: #fff;
+}
+
+#settings-toggle {
+    border: 1px solid lightslategrey;
+    border-radius: 3px;
+    background-color: lightblue;
+    font-weight: bold;
+    z-index: 6;
+    margin: 10px 2px 0;
+    padding: 5px;
+}
+
+.bold {
+    font-weight: bold;
+}
+
+.note {
+    font-size: .8em;
+    font-style: italic;
+}
+
+#background {
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: var(--background-color);
+}
+
+#background-color-picker {
+    background-color: var(--background-color);
+}
+
+#widget-border-color {
+    background-color: var(--widget-border-color);
+}
+
+.vanilla-color-picker {
+    border: 2px solid #e5e5e5;
+    min-width: 15px;
+    width: max-content;
+}
+
+.settings-pane-background {
+    display: grid;
+    grid-template-columns: 20px 400px;
+    grid-template-rows: repeat(2, 30px) 50px repeat(3, 30px);
+}
+
+.setting {
+    width: 100%;
+    float: left;
+    margin-bottom: 5px;
+}
+
+.settings-pane {
+    top: var(--topbar-height);
+    right: 10px;
+
+    grid-template-columns: 400px 420px;
 }
 
 body {
@@ -57,13 +122,13 @@ body {
     position: fixed;
     top: 0;
     left: 0;
-    height: 50px;
+    height: var(--topbar-height);
     width: 100%;
     background-color: #000000;
     z-index: 4;
 }
 
-.sortingDropdown{
+.sortingDropdown {
     padding-right: 40px;
     cursor: pointer;
     position: relative;
@@ -79,7 +144,7 @@ body {
 
 .item-content {
     right: 0 !important;
-    border: 2px solid dimgray;
+    border: 2px solid var(--widget-border-color);
     border-radius: 4px;
     overflow: hidden;
 
@@ -105,11 +170,20 @@ body {
     background-color: var(--item-color);
 }
 
+.left {
+    float: left;
+    width: max-content;
+}
+
 #logo1 {
     color: #ffffff;
     font-size: 3em;
     margin-top: 4px;
     font-weight: bold;
+}
+
+#logo1 > a:hover {
+    text-decoration: none;
 }
 
 .grid-stack-item > .ui-resizable-se {
@@ -131,8 +205,6 @@ body {
 }
 
 body {
-    background: url("https://source.unsplash.com/random/1920x1080");
-    background-size: cover;
 }
 
 .ctab-widget-body {
@@ -144,7 +216,7 @@ body {
     vertical-align: middle;
     overflow: hidden;
     opacity: 1;
-    padding:5px;
+    padding: 5px;
     float: left;
 }
 
@@ -173,6 +245,7 @@ body {
     border-radius: 3px;
     background-color: lightblue;
     font-weight: bold;
+    z-index: 6;
     margin: 5px 2px 10px;
 }
 
@@ -198,13 +271,14 @@ body {
     border-radius: 3px;
     background-color: rgba(255, 255, 255, 0.5);
     max-width: 80%;
+    z-index: 6;
 }
 
 .clockdate {
     text-align: right;
 }
 
-.clock, .date{
+.clock, .date {
     color: #ffffff;
     float: right;
     width: 100%;
@@ -220,24 +294,30 @@ body {
     background: rgba(255, 0, 0, 0.8);
     border: 2px solid #ff0000;
     border-radius: 50%;
+    z-index: 6;
 }
 
-.add {
-    position: fixed;
+.add-pane {
     bottom: 25px;
     right: 25px;
-    display: grid;
+
     grid-template-columns: 120px 150px;
     grid-template-rows: repeat(2, 20px);
+}
+
+
+.pane {
+    display: grid;
     width: min-content;
+    position: fixed;
     padding: 5px;
     border: 1px solid #f00;
     border-radius: 3px;
-    background-color: rgba(255, 255, 255, 0.8);
+    background-color: rgba(255, 255, 255, 0.9);
     z-index: 4;
 }
 
-.add > label, .add > button {
+.pane > label, .pane > button {
     display: inline-block;
     font-weight: bolder;
     vertical-align: middle;
@@ -247,8 +327,8 @@ body {
 /*The plus sign in the add button*/
 .addSign {
     position: absolute;
-    top: 32px;
-    left: 20px;
+    top: calc(50% - 3px);
+    left: calc(50% - 15px);
     height: 6px;
     width: 30px;
     border-radius: 3px;

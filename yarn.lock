@@ -2,10 +2,20 @@
 # yarn lockfile v1
 
 
+"@sphinxxxx/color-conversion@^2.2.1":
+  version "2.2.1"
+  resolved "https://registry.yarnpkg.com/@sphinxxxx/color-conversion/-/color-conversion-2.2.1.tgz#88e94a50fa79f48bb0d1490bb716df8d506941dd"
+  integrity sha512-5+ofCE09lF6C7DPSVyvQ2Nf0oaue3Cl+SosT45DYy5nhgUXsOq3TetArC1q8mVfAOjhG0WReQPPFBdc4xXVNkg==
+
 bootstrap@3:
   version "3.4.0"
   resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-3.4.0.tgz#f8d77540dd3062283d2ae7687e21c1e691961640"
   integrity sha512-F1yTDO9OHKH0xjl03DsOe8Nu1OWBIeAugGMhy3UTIYDdbbIPesQIhCEbj+HEr6wqlwweGAlP8F3OBC6kEuhFuw==
+
+drag-tracker@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/drag-tracker/-/drag-tracker-1.0.0.tgz#9bd33d380bc3056db69bd5b3cf6e062fec58bd64"
+  integrity sha1-m9M9OAvDBW22m9Wzz24GL+xYvWQ=
 
 jquery@^3.3.1:
   version "3.3.1"
@@ -16,3 +26,11 @@ muuri@^0.7.1:
   version "0.7.1"
   resolved "https://registry.yarnpkg.com/muuri/-/muuri-0.7.1.tgz#775858c81c1cc753fbe9f6e1cd2bfd08d9ba1509"
   integrity sha512-p4G7QdQIZtyDXjrs2hdiUeDkeWZODHmqsO0IWq6ZpmS/sCgUCJe5onKHAopaMOYYVAvTGT46psxJF6hZ0QnJrg==
+
+vanilla-picker@^2.7.2:
+  version "2.7.2"
+  resolved "https://registry.yarnpkg.com/vanilla-picker/-/vanilla-picker-2.7.2.tgz#aa495b6267355496d78a6fd1a1a1108ef31745e1"
+  integrity sha512-CCqQ2oex7yNyKURwHtTnjQepKkLd4X+tS+4o8XMuel9QQSZZmNpbT1JGq9VdeXoTBtTq4orE2XhIZP1MrgQ5Vg==
+  dependencies:
+    "@sphinxxxx/color-conversion" "^2.2.1"
+    drag-tracker "^1.0.0"
