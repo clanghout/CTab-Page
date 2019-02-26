@@ -12,7 +12,13 @@ const cTabSettings = CTabSettings();
 function grid() {
     let service = {};
     service.count = 0;
-    service.widgets = {};
+    service.widgets = [];
+    service.widgetColorPickerOpen = false;
+
+    const toggleWidgetColorPicker = (isOpen) => {
+        service.widgetColorPickerOpen = isOpen;
+    };
+
     let widgetFactory = new WidgetFactory();
     let dirty = false;
 
@@ -112,19 +118,18 @@ function grid() {
             }
         });
 
-        // TODO: fix with muuri
         // Call to textfill library, calculate font sizes that make the text fit in the boxes.
-        Object.keys(service.widgets).forEach(i => $('#' + i).textfill({
+        service.widgets.forEach(i => $('#' + i.id).textfill({
             minFontPixels: 12,
             allowOverflow: true,
         }));
         // Start clocks
         startTime();
-        // Set dirty to false, since note widgets might have set the state to dirty
         document.querySelectorAll(".ctab-item-note").forEach(note => {
             note.addEventListener('change', noteChanged);
             note.addEventListener('keyup', noteChanged);
         });
+        // Set dirty to false, since note widgets might have set the state to dirty
         dirty = false;
 
         $('.ctab-item-clock').textfill({
@@ -153,13 +158,12 @@ function grid() {
 
     // TODO: fix with muuri; check if necessary for deterministic saving and loading
     service.getSortedWidgets = function () {
-        return Object.keys(service.widgets);
+        return service.widgets;
     };
 
-
-    // TODO: fix with muuri; muuri call is here but check where to call this and how id should be
     service.removeWidget = function (id) {
-        service.grid.remove(document.getElementById(id), {removeElements: true});
+        console.log('deleting??');
+        service.grid.remove([document.getElementById(id)], {removeElements: true, layout: true});
     };
 
     service.addWidgetToGrid = function (widget, id, autoPos) {
@@ -174,10 +178,63 @@ function grid() {
             }
         }
 
+
         widget.settings.autoPosition = !!autoPos;
         let itemElem = document.createElement('div');
         itemElem.innerHTML = widget.widgetTemplate();
+
+        let textColOpen = false;
+
+        itemElem.firstChild.addEventListener('mouseover', () => {
+            if (!service.widgetColorPickerOpen) {
+                const controlPanel = document.getElementById(`controls-${widget.id}`);
+                const biggerZIndex = "4";
+
+                controlPanel.classList.remove('hidden');
+                controlPanel.style.zIndex = biggerZIndex;
+                controlPanel.parentElement.style.zIndex = biggerZIndex;
+                controlPanel.parentElement.parentElement.style.zIndex = biggerZIndex;
+            }
+        });
+
+
+        itemElem.firstChild.addEventListener('mouseout', () => {
+            if (!textColOpen) {
+                const controlPanel = document.getElementById(`controls-${widget.id}`);
+                const smallerZIndex = "1";
+                controlPanel.style.zIndex = smallerZIndex;
+                controlPanel.parentElement.style.zIndex = smallerZIndex;
+                controlPanel.parentElement.parentElement.style.zIndex = smallerZIndex;
+                controlPanel.classList.add('hidden');
+            }
+        });
         service.grid.add(itemElem.firstChild, {index: widget.id});
+
+        new Picker({
+            parent: document.getElementById(`${widget.id}-text-color`),
+            popup: 'right', // 'right'(default), 'left', 'top', 'bottom'
+            editor: false,
+            color: widget.textcolor || '#000000',
+            onChange: (newCol) => {
+                document.documentElement.style.setProperty(`--${widget.id}-textcolor`, newCol.rgbaString);
+                widget.textcolor = newCol.rgbaString;
+            },
+            onDone: (newCol) => {
+                widget.textcolor = newCol.rgbaString;
+            },
+            onOpen: (nc) => {
+                toggleWidgetColorPicker(true);
+                textColOpen = true;
+            },
+            onClose: (nc) => {
+                toggleWidgetColorPicker(false);
+                textColOpen = false;
+            }
+        });
+
+        document.getElementById(`delete-${widget.id}`).addEventListener('click', () => service.removeWidget(widget.id));
+
+
         widget.settings.autoPosition = false;
         if (widget.type === 'weather') {
             widget.settings.width = widget.settings.width > 1 ? widget.settings.width : 2;
@@ -216,12 +273,19 @@ function grid() {
             //  option: vue components
             widget.getTag = () => `<span style="line-height: 100%;">${widget.title}</span><a href="${widget.contentUrl}" ${newTab ? 'target="_blank"' : ""} id="${widget.title}"><span class="ctab-widget-link"></span></a>`;
 
-            widget.getHtmlControls = () => `<div class="ctab-widget-controls"><div class="deletebutton">${this.id}</div></div>`;
+            widget.getHtmlControls = () =>
+                `<div class="ctab-widget-controls hidden" id="controls-${widget.id}">
+    <div class="deletebutton">
+        <button id="delete-${widget.id}" style="padding: 0; border: 0; background: transparent;">❌</button>
+        <div class="vanilla-color-picker" id="${widget.id}-text-color">tc</div>
+        <div class="vanilla-color-picker" id="${widget.id}-background-color">bgc</div>
+    </div>
+</div>`;
 
 
             widget.colorInfo = function () {
                 let styleInfo = 'style="';
-                styleInfo += widget.textcolor !== undefined ? `color:${widget.textcolor};` : "";
+                styleInfo += `color: var(--${widget.id}-textcolor);`;
                 styleInfo += widget.color !== undefined ? `--item-color:${widget.color};` :
                     `--item-color:${defaultWidgetColor};`;
                 //TODO document.style.setproperty
@@ -232,14 +296,14 @@ function grid() {
             widget.widgetTemplate = function () {
                 let template =
                     `<div class="item he${widget.settings.height} w${widget.settings.width}" data-title="${widget.title}">
-                        <div class="item-content" ${widget.colorInfo()}>`;
+                        <div class="item-content" ${widget.colorInfo()}>
+${widget.getHtmlControls()}`;
                 switch (type) {
                     case "clock" :
                         template += `<div id="${widget.id}" class="ctab-widget-body ctab-item-clock"><span></span></div>`;
                         break;
                     case "note":
-                        template += `${widget.getHtmlControls()}
-                                    <div id="${widget.id}" class="ctab-widget-body ctab-item-note">
+                        template += `<div id="${widget.id}" class="ctab-widget-body ctab-item-note">
                                         <textarea id="note-${widget.id}">${widget.title}</textarea>
                                     </div>`;
                         break;
@@ -258,8 +322,7 @@ function grid() {
                         break;
                     case "link":
                     default:
-                        template += `${widget.getHtmlControls()} 
-                                    <div id="${widget.id}" class="ctab-widget-body"> 
+                        template += `<div id="${widget.id}" class="ctab-widget-body"> 
                                         ${widget.getTag()} 
                                     </div>`;
                         break;
@@ -334,9 +397,8 @@ function grid() {
 
     service.getDashboardConfig = function () {
         let configuration = [];
-        let ids = service.getSortedWidgets();
-        for (let i = 0; i < ids.length; i++) {
-            let w = service.widgets[ids[i]];
+        for (let i = 0; i < service.widgets.length; i++) {
+            let w = service.widgets[i];
             let wc = w.getConfig();
             if (w.type === 'note') {
                 // save internals of node objects
@@ -359,7 +421,7 @@ function grid() {
 
     service.loadModel = function () {
         let widgetData = service.getConfig();
-        service.widgets = {};
+        service.widgets = [];
         widgetData = Array.isArray(widgetData) ? widgetData : [];
 
         for (let i = 0; i < widgetData.length; i++) {

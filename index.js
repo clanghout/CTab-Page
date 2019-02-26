@@ -222,4 +222,3 @@ try {
     // not on chrome
     console.log("Did not execute chrome extension specific code");
 }
-
