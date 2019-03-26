@@ -305,8 +305,8 @@ function grid() {
                     <div class="deletebutton">
                         <button id="delete-${widget.id}" style="padding: 0; border: 0; background: transparent;">❌</button>
                     </div>
-                    <div class="vanilla-color-picker widget-control-picker" id="${widget.id}-text-color" style="color:var(--${widget.id}-text-color);">tc</div>
-                    <div class="vanilla-color-picker widget-control-picker" id="${widget.id}-background-color" style="background-color: var(--${widget.id}-background-color);">bg</div>
+                    <div class="vanilla-color-picker widget-control-picker" id="${widget.id}-text-color" style="color:var(--${widget.id}-text-color); border-color: var(--${widget.id}-text-color); background-color: rgba(255,255,255,.8)">tc</div>
+                    <div class="vanilla-color-picker widget-control-picker" id="${widget.id}-background-color" style="background-color: var(--${widget.id}-background-color); border-color: var(--${widget.id}-background-color);">bg</div>
                 </div>`;
 
 
