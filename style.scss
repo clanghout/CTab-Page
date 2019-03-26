@@ -50,7 +50,9 @@
 }
 
 .widget-control-picker {
-
+  width: 100%;
+  height: 100%;
+  line-height: 15px;
 }
 
 .settings-pane-background {
@@ -70,6 +72,10 @@
   right: 10px;
 
   grid-template-columns: 400px 420px;
+
+  div {
+    overflow-y: hidden;
+  }
 }
 
 body {
@@ -155,18 +161,6 @@ body {
   TODO: Not sure yet if this is too ugly*/
   -webkit-text-stroke-width: 1px;
   -webkit-text-stroke-color: rgba(255, 255, 255, 0.2);
-
-  //&:before {
-  //  content: "";
-  //  display: block;
-  //  position: absolute;
-  //  z-index: -1;
-  //  width: 100%;
-  //  height: 100%;
-  //  opacity: .5;
-  //  /*--item-backgroundColor will be defined dynamically within the item itself in gridcontrols.js*/
-  //  background-color: var(--item-background-color);
-  //}
 }
 
 .left {
@@ -221,6 +215,10 @@ body {
   position: absolute;
   background: rgba(0, 0, 0, .4);
   z-index: 2;
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: 1fr 1fr 1fr;
+
 }
 
 /*Invisible overlay containing the link*/

@@ -173,12 +173,10 @@ function grid() {
         if (typeof id === 'undefined') {
             service.count++;
             widget.id = service.count;
+        } else if (typeof id === "number") {
+            widget.id = id;
         } else {
-            if (typeof id === "number") {
-                widget.id = id;
-            } else {
-                widget.id = parseInt(id);
-            }
+            widget.id = parseInt(id);
         }
 
 
@@ -277,8 +275,6 @@ function grid() {
                 getWeather(widget.id, widget.settings.city);
             }, 100);
         }
-
-        service.widgets[service.count] = widget;
     };
 
     function WidgetFactory() {
@@ -306,12 +302,12 @@ function grid() {
 
             widget.getHtmlControls = () =>
                 `<div class="ctab-widget-controls hidden" id="controls-${widget.id}">
-    <div class="deletebutton">
-        <button id="delete-${widget.id}" style="padding: 0; border: 0; background: transparent;">❌</button>
-        <div class="vanilla-color-picker widget-control-picker" id="${widget.id}-text-color">tc</div>
-        <div class="vanilla-color-picker widget-control-picker" id="${widget.id}-background-color">bgc</div>
-    </div>
-</div>`;
+                    <div class="deletebutton">
+                        <button id="delete-${widget.id}" style="padding: 0; border: 0; background: transparent;">❌</button>
+                    </div>
+                    <div class="vanilla-color-picker widget-control-picker" id="${widget.id}-text-color" style="color:var(--${widget.id}-text-color);">tc</div>
+                    <div class="vanilla-color-picker widget-control-picker" id="${widget.id}-background-color" style="background-color: var(--${widget.id}-background-color);">bg</div>
+                </div>`;
 
 
             widget.colorInfo = function () {
