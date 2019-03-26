@@ -49,6 +49,10 @@
   opacity: 1;
 }
 
+.widget-control-picker {
+
+}
+
 .settings-pane-background {
   display: grid;
   grid-template-columns: 20px 400px;
@@ -152,17 +156,17 @@ body {
   -webkit-text-stroke-width: 1px;
   -webkit-text-stroke-color: rgba(255, 255, 255, 0.2);
 
-  &:before {
-    content: "";
-    display: block;
-    position: absolute;
-    z-index: -1;
-    width: 100%;
-    height: 100%;
-    opacity: .5;
-    /*--item-color will be defined dynamically within the item itself in gridcontrols.js*/
-    background-color: var(--item-color);
-  }
+  //&:before {
+  //  content: "";
+  //  display: block;
+  //  position: absolute;
+  //  z-index: -1;
+  //  width: 100%;
+  //  height: 100%;
+  //  opacity: .5;
+  //  /*--item-backgroundColor will be defined dynamically within the item itself in gridcontrols.js*/
+  //  background-color: var(--item-background-color);
+  //}
 }
 
 .left {
@@ -200,7 +204,7 @@ body {
 
 .ctab-widget-body {
   position: relative;
-  width: 100%;//calc(100% - var(--ctab-widget-controls-width));
+  width: 100%; //calc(100% - var(--ctab-widget-controls-width));
   height: 100%;
   text-align: center;
   vertical-align: middle;
@@ -215,7 +219,7 @@ body {
   right: 0;
   width: var(--ctab-widget-controls-width);
   position: absolute;
-  background: rgba(0,0,0,.4);
+  background: rgba(0, 0, 0, .4);
   z-index: 2;
 }
 

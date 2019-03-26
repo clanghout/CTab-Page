@@ -5,6 +5,9 @@ window.browser = (() => {
 })();
 
 
+let styleElem = document.head.appendChild(document.createElement('style'));
+
+
 import {CTabSettings} from "./settingsMenu.js";
 
 const cTabSettings = CTabSettings();
@@ -61,7 +64,7 @@ function grid() {
         // removable: '.trash', // Trash area has to exist: div.trash is enough => with style to display
         // removeTimeout: 100
     };
-    const defaultWidgetColor = "#fff";
+    const defaultWidgetColor = "rgba(255,255,255,0.5)";
 
     const noteChanged = () => {
         dirty = true;
@@ -214,13 +217,13 @@ function grid() {
             parent: document.getElementById(`${widget.id}-text-color`),
             popup: 'right', // 'right'(default), 'left', 'top', 'bottom'
             editor: false,
-            color: widget.textcolor || '#000000',
+            color: widget.textColor || '#000000',
             onChange: (newCol) => {
-                document.documentElement.style.setProperty(`--${widget.id}-textcolor`, newCol.rgbaString);
-                widget.textcolor = newCol.rgbaString;
+                document.documentElement.style.setProperty(`--${widget.id}-text-color`, newCol.rgbaString);
+                widget.textColor = newCol.rgbaString;
             },
             onDone: (newCol) => {
-                widget.textcolor = newCol.rgbaString;
+                widget.textColor = newCol.rgbaString;
             },
             onOpen: (nc) => {
                 toggleWidgetColorPicker(true);
@@ -231,6 +234,34 @@ function grid() {
                 textColOpen = false;
             }
         });
+        new Picker({
+            parent: document.getElementById(`${widget.id}-background-color`),
+            popup: 'right', // 'right'(default), 'left', 'top', 'bottom'
+            editor: false,
+            color: widget.backgroundColor || '#000000',
+            onChange: (newCol) => {
+                document.documentElement.style.setProperty(`--${widget.id}-background-color`, newCol.rgbaString);
+
+                let widgetElement = document.getElementById(`${widget.id}`);
+                if (widgetElement) {
+                    widgetElement.style.setProperty(`--item-background-color`, newCol.rgbaString);
+                    styleElem.innerHTML = `#${widget.id}:before {background-color: ${newCol.rgbaString}`;
+                }
+                widget.backgroundColor = newCol.rgbaString;
+            },
+            onDone: (newCol) => {
+                widget.backgroundColor = newCol.rgbaString;
+            },
+            onOpen: (nc) => {
+                toggleWidgetColorPicker(true);
+                textColOpen = true;
+            },
+            onClose: (nc) => {
+                toggleWidgetColorPicker(false);
+                textColOpen = false;
+            }
+        });
+
 
         document.getElementById(`delete-${widget.id}`).addEventListener('click', () => service.removeWidget(widget.id));
 
@@ -251,14 +282,14 @@ function grid() {
     };
 
     function WidgetFactory() {
-        this.createWidget = function (title, contentUrl, settings, id, color, textcolor, type) {
+        this.createWidget = function (title, contentUrl, settings, id, backgroundColor, textColor, type) {
             let widget = function () {
             };
             widget.settings = settings;
             widget.title = title;
             widget.contentUrl = contentUrl;
-            widget.color = color;
-            widget.textcolor = textcolor;
+            widget.backgroundColor = backgroundColor;
+            widget.textColor = textColor;
             widget.type = type;
             widget.id = id;
 
@@ -277,17 +308,18 @@ function grid() {
                 `<div class="ctab-widget-controls hidden" id="controls-${widget.id}">
     <div class="deletebutton">
         <button id="delete-${widget.id}" style="padding: 0; border: 0; background: transparent;">❌</button>
-        <div class="vanilla-color-picker" id="${widget.id}-text-color">tc</div>
-        <div class="vanilla-color-picker" id="${widget.id}-background-color">bgc</div>
+        <div class="vanilla-color-picker widget-control-picker" id="${widget.id}-text-color">tc</div>
+        <div class="vanilla-color-picker widget-control-picker" id="${widget.id}-background-color">bgc</div>
     </div>
 </div>`;
 
 
             widget.colorInfo = function () {
                 let styleInfo = 'style="';
-                styleInfo += `color: var(--${widget.id}-textcolor);`;
-                styleInfo += widget.color !== undefined ? `--item-color:${widget.color};` :
-                    `--item-color:${defaultWidgetColor};`;
+                styleInfo += `color: var(--${widget.id}-text-color);`;
+                styleInfo += `background-color: var(--${widget.id}-background-color);`;
+                styleInfo += widget.backgroundColor !== undefined ? `--item-background-color:${widget.backgroundColor};` :
+                    `--item-background-color:${defaultWidgetColor};`;
                 //TODO document.style.setproperty
                 return styleInfo + '"';
             };
@@ -337,8 +369,8 @@ ${widget.getHtmlControls()}`;
                     title: widget.title,
                     settings: widget.settings,
                     contentUrl: widget.contentUrl,
-                    color: widget.color,
-                    textcolor: widget.textcolor,
+                    backgroundColor: widget.backgroundColor,
+                    textColor: widget.textColor,
                     type: widget.type,
                     id: widget.id
                 };
@@ -428,10 +460,10 @@ ${widget.getHtmlControls()}`;
             let title = widgetData[i].title;
             let settings = widgetData[i].settings;
             let contentUrl = widgetData[i].contentUrl;
-            let color = widgetData[i].color;
-            let textcolor = widgetData[i].textcolor;
+            let backgroundColor = widgetData[i].backgroundColor;
+            let textColor = widgetData[i].textColor;
             let type = widgetData[i].type;
-            let widget = widgetFactory.createWidget(title, contentUrl, settings, i, color, textcolor, type);
+            let widget = widgetFactory.createWidget(title, contentUrl, settings, i, backgroundColor, textColor, type);
             widget.prototype.id = service.count;
             service.widgets[service.count] = widget;
             service.count++;
@@ -482,10 +514,10 @@ ${widget.getHtmlControls()}`;
         }
     };
 
-    service.simpleAdd = function (title, url, color, textcolor, type) {
+    service.simpleAdd = function (title, url, backgroundColor, textColor, type) {
         service.addWidgetToGrid(widgetFactory.createWidget(title, url, {
             autoPosition: true,
-        }, service.count + 1, color, textcolor, type), service.count, true);
+        }, service.count + 1, backgroundColor, textColor, type), service.count, true);
         service.count++;
     };
 

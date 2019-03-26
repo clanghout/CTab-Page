@@ -143,17 +143,6 @@ body {
   -webkit-text-stroke-width: 1px;
   -webkit-text-stroke-color: rgba(255, 255, 255, 0.2);
 }
-.item-content:before {
-  content: "";
-  display: block;
-  position: absolute;
-  z-index: -1;
-  width: 100%;
-  height: 100%;
-  opacity: 0.5;
-  /*--item-color will be defined dynamically within the item itself in gridcontrols.js*/
-  background-color: var(--item-color);
-}
 
 .left {
   float: left;
