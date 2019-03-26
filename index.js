@@ -182,7 +182,7 @@ document.querySelector("#saveDevConfig").addEventListener('click', () => {
 });
 document.querySelector("#opacityButton").addEventListener('click', () => {
     let config = configField.value;
-    configField.value = config.replace(/((?<=backgroundColor":"rgba\()[0-9]+,[0-9]+,[0-9]+,)([0-9]+)((?=\)"))/gm,"$1 0.5$3");
+    configField.value = config.replace(/(backgroundColor":"rgba\([0-9]+,[0-9]+,[0-9]+,)([0-9.]+)((?=\)"))/gm,"$1 0.5$3");
 
 });
 

@@ -219,6 +219,28 @@ body {
   display: grid;
   grid-template-columns: 100%;
   grid-template-rows: 18px 20px 20px;
+}
+
+.ctab-widget-drag-handle {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 18px;
+  height: 18px;
+  margin: 3px;
+  line-height: 11px;
+  z-index: 8;
+  cursor: grab;
+  :active {
+    cursor: grabbing;
+  }
+
+  span{
+    position: absolute;
+    color: black;
+    font-weight: bold;
+    background-color: rgba(255,255,255,0.5);
+  }
 
 }
 

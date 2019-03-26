@@ -28,6 +28,11 @@ function grid() {
     const options = {
         // Muuri options
         dragEnabled: true,
+        dragStartPredicate: {
+            distance: 0,
+            delay: 0,
+            handle: '.ctab-widget-drag-handle'
+        },
         layoutOnInit: false,
         layout: {
             fillGaps: false,
@@ -189,9 +194,11 @@ function grid() {
         itemElem.firstChild.addEventListener('mouseover', () => {
             if (!service.widgetColorPickerOpen) {
                 const controlPanel = document.getElementById(`controls-${widget.id}`);
+                const controlDragHandle = document.getElementById(`drag-handle-${widget.id}`);
                 const biggerZIndex = "4";
 
                 controlPanel.classList.remove('hidden');
+                controlDragHandle.classList.remove('hidden');
                 controlPanel.style.zIndex = biggerZIndex;
                 controlPanel.parentElement.style.zIndex = biggerZIndex;
                 controlPanel.parentElement.parentElement.style.zIndex = biggerZIndex;
@@ -202,11 +209,13 @@ function grid() {
         itemElem.firstChild.addEventListener('mouseout', () => {
             if (!textColOpen) {
                 const controlPanel = document.getElementById(`controls-${widget.id}`);
+                const controlDragHandle = document.getElementById(`drag-handle-${widget.id}`);
                 const smallerZIndex = "1";
                 controlPanel.style.zIndex = smallerZIndex;
                 controlPanel.parentElement.style.zIndex = smallerZIndex;
                 controlPanel.parentElement.parentElement.style.zIndex = smallerZIndex;
                 controlPanel.classList.add('hidden');
+                controlDragHandle.classList.add('hidden');
             }
         });
         service.grid.add(itemElem.firstChild, {index: widget.id});
@@ -325,7 +334,13 @@ function grid() {
                 let template =
                     `<div class="item he${widget.settings.height} w${widget.settings.width}" data-title="${widget.title}">
                         <div class="item-content" ${widget.colorInfo()}>
-${widget.getHtmlControls()}`;
+${widget.getHtmlControls()}
+<div class="ctab-widget-drag-handle hidden" id="drag-handle-${widget.id}">
+<span style="top:0; left: 0;">&#8598</span>
+<span style="top:0; right: 0;">&#8599</span>
+<span style="bottom:0; right: 0;">&#8600</span>
+<span style="bottom:0; left: 0;">&#8601</span>
+</div>`;
                 switch (type) {
                     case "clock" :
                         template += `<div id="${widget.id}" class="ctab-widget-body ctab-item-clock"><span></span></div>`;
