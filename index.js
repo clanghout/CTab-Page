@@ -138,7 +138,7 @@ addCancelButton.addEventListener('click', () => {
 });
 
 // Accept the 'Enter' key as alternative to clicking on the 'Add' button with the mouse, when interacting with the 'addMenu'.
-// Doesn't work for the background/text color selectors as the browser seems to override the 'Enter' key for it (i.e. opens the color palette).
+// Doesn't work for the background/text backgroundColor selectors as the browser seems to override the 'Enter' key for it (i.e. opens the backgroundColor palette).
 ['#typeDropdown', '#addTitle', '#addUrl', '#widgetAddButton'].forEach((item) => {
     document.querySelector(item).addEventListener('keydown', (e) => {
         if (e.key === "Enter") {
@@ -156,6 +156,7 @@ function devSwitch(displayStyle) {
     document.querySelector(".devConfig").classList.remove("hidden");
     document.querySelector("#clearButton").style.display = displayStyle;
     document.querySelector("#debugButton").style.display = displayStyle;
+
     // document.querySelector("#widescreenButton").style.display = displayStyle;
 }
 
@@ -171,15 +172,32 @@ document.querySelector("#devEnabled").addEventListener('change', (a) => {
         devSwitch('none');
     }
 });
+
+const configField = document.querySelector("#configFieldInput");
+
 document.querySelector("#saveDevConfig").addEventListener('click', () => {
-    let config = document.querySelector("#configFieldInput").value;
+    let config = configField.value;
     config = JSON.parse(config);
     CTabGrid.setConfig(config);
 });
+document.querySelector("#opacityButton").addEventListener('click', () => {
+    let config = configField.value;
+    configField.value = config.replace(/(backgroundColor":"rgba\([0-9]+,[0-9]+,[0-9]+,)([0-9.]+)((?=\)"))/gm,"$1 0.5$3");
+
+});
+
 document.querySelector("#configFieldInput").value = prettyPrintConfig(CTabGrid.getConfig());
+const loadBackupButton = document.querySelector('#loadBackupButton');
 
 function saveCurrentConfig() {
-    console.log(JSON.stringify(CTabGrid.getConfig()));
+    const fileStream = streamSaver.createWriteStream('config.json');
+    const writer = fileStream.getWriter();
+    const encoder = new TextEncoder;
+    let data = JSON.stringify(CTabGrid.getConfig());
+    let uint8array = encoder.encode(data + "\n\n");
+
+    writer.write(uint8array);
+    writer.close();
 }
 
 function prettyPrintConfig(config) {
@@ -215,4 +233,3 @@ try {
     // not on chrome
     console.log("Did not execute chrome extension specific code");
 }
-

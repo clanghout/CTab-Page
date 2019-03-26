@@ -20,7 +20,7 @@
 }
 
 .note {
-  font-size: 0.8em;
+  font-size: .8em;
   font-style: italic;
 }
 
@@ -71,10 +71,12 @@
 .settings-pane {
   top: var(--topbar-height);
   right: 10px;
+
   grid-template-columns: 400px 420px;
-}
-.settings-pane div {
-  overflow-y: hidden;
+
+  div {
+    overflow-y: hidden;
+  }
 }
 
 body {
@@ -84,6 +86,10 @@ body {
 .hidden {
   display: none !important;
 }
+
+.grid-stack {
+}
+
 
 /*Muuri styles*/
 .grid {
@@ -116,6 +122,8 @@ body {
 }
 
 /*End Muuri style*/
+
+
 .top-bar {
   position: fixed;
   top: 0;
@@ -147,7 +155,9 @@ body {
   right: 0 !important;
   border: 2px solid var(--widget-border-color);
   border-radius: 4px;
+
   display: inline-block;
+
   /*Set a barely visible text stroke so dark text on dark background is somewhat readable
   TODO: Not sure yet if this is too ugly*/
   -webkit-text-stroke-width: 1px;
@@ -164,9 +174,10 @@ body {
   font-size: 3em;
   margin-top: 4px;
   font-weight: bold;
-}
-#logo1 a:hover {
-  text-decoration: none;
+
+  a:hover {
+    text-decoration: none;
+  }
 }
 
 /*Trash can styles*/
@@ -183,9 +194,12 @@ body {
   background-size: 37px;
 }
 
+body {
+}
+
 .ctab-widget-body {
   position: relative;
-  width: 100%;
+  width: 100%; //calc(100% - var(--ctab-widget-controls-width));
   height: 100%;
   text-align: center;
   vertical-align: middle;
@@ -194,12 +208,13 @@ body {
   float: left;
 }
 
+
 .ctab-widget-controls {
   height: 100%;
   right: 0;
   width: var(--ctab-widget-controls-width);
   position: absolute;
-  background: rgba(0, 0, 0, 0.4);
+  background: rgba(0, 0, 0, .4);
   z-index: 2;
   display: grid;
   grid-template-columns: 100%;
@@ -216,15 +231,17 @@ body {
   line-height: 11px;
   z-index: 8;
   cursor: grab;
-}
-.ctab-widget-drag-handle :active {
-  cursor: grabbing;
-}
-.ctab-widget-drag-handle span {
-  position: absolute;
-  color: black;
-  font-weight: bold;
-  background-color: rgba(255, 255, 255, 0.5);
+  :active {
+    cursor: grabbing;
+  }
+
+  span{
+    position: absolute;
+    color: black;
+    font-weight: bold;
+    background-color: rgba(255,255,255,0.5);
+  }
+
 }
 
 /*Invisible overlay containing the link*/
@@ -281,6 +298,7 @@ body {
   width: 100%;
 }
 
+
 .addButton {
   position: fixed;
   bottom: 25px;
@@ -296,9 +314,11 @@ body {
 .add-pane {
   bottom: 25px;
   right: 25px;
+
   grid-template-columns: 120px 150px;
   grid-template-rows: repeat(2, 20px);
 }
+
 
 .pane {
   display: grid;
@@ -309,12 +329,13 @@ body {
   border-radius: 3px;
   background-color: rgba(255, 255, 255, 0.9);
   z-index: 4;
-}
-.pane label, .pane button {
-  display: inline-block;
-  font-weight: bolder;
-  vertical-align: middle;
-  line-height: 23px;
+
+  label, button {
+    display: inline-block;
+    font-weight: bolder;
+    vertical-align: middle;
+    line-height: 23px;
+  }
 }
 
 /*The plus sign in the add button*/
@@ -325,11 +346,11 @@ body {
   height: 6px;
   width: 30px;
   border-radius: 3px;
-  background: white;
+  background: rgba(255, 255, 255, 1);
 }
 
 .addSign:before {
-  content: "";
+  content: '';
   z-index: -1;
   position: absolute;
   height: 6px;
@@ -356,8 +377,7 @@ body {
 
 #toast {
   min-width: 250px;
-  margin-left: -125px;
-  /* half of min-width*/
+  margin-left: -125px; /* half of min-width*/
   background-color: #333333;
   color: #ffffff;
   text-align: center;
@@ -368,5 +388,3 @@ body {
   left: 50%;
   top: 30px;
 }
-
-/*# sourceMappingURL=style.css.map */

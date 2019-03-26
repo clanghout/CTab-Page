@@ -5,6 +5,9 @@ window.browser = (() => {
 })();
 
 
+let styleElem = document.head.appendChild(document.createElement('style'));
+
+
 import {CTabSettings} from "./settingsMenu.js";
 
 const cTabSettings = CTabSettings();
@@ -12,13 +15,24 @@ const cTabSettings = CTabSettings();
 function grid() {
     let service = {};
     service.count = 0;
-    service.widgets = {};
+    service.widgets = [];
+    service.widgetColorPickerOpen = false;
+
+    const toggleWidgetColorPicker = (isOpen) => {
+        service.widgetColorPickerOpen = isOpen;
+    };
+
     let widgetFactory = new WidgetFactory();
     let dirty = false;
 
     const options = {
         // Muuri options
         dragEnabled: true,
+        dragStartPredicate: {
+            distance: 0,
+            delay: 0,
+            handle: '.ctab-widget-drag-handle'
+        },
         layoutOnInit: false,
         layout: {
             fillGaps: false,
@@ -55,7 +69,7 @@ function grid() {
         // removable: '.trash', // Trash area has to exist: div.trash is enough => with style to display
         // removeTimeout: 100
     };
-    const defaultWidgetColor = "#fff";
+    const defaultWidgetColor = "rgba(255,255,255,0.5)";
 
     const noteChanged = () => {
         dirty = true;
@@ -112,19 +126,18 @@ function grid() {
             }
         });
 
-        // TODO: fix with muuri
         // Call to textfill library, calculate font sizes that make the text fit in the boxes.
-        Object.keys(service.widgets).forEach(i => $('#' + i).textfill({
+        service.widgets.forEach(i => $('#' + i.id).textfill({
             minFontPixels: 12,
             allowOverflow: true,
         }));
         // Start clocks
         startTime();
-        // Set dirty to false, since note widgets might have set the state to dirty
         document.querySelectorAll(".ctab-item-note").forEach(note => {
             note.addEventListener('change', noteChanged);
             note.addEventListener('keyup', noteChanged);
         });
+        // Set dirty to false, since note widgets might have set the state to dirty
         dirty = false;
 
         $('.ctab-item-clock').textfill({
@@ -153,31 +166,113 @@ function grid() {
 
     // TODO: fix with muuri; check if necessary for deterministic saving and loading
     service.getSortedWidgets = function () {
-        return Object.keys(service.widgets);
+        return service.widgets;
     };
 
-
-    // TODO: fix with muuri; muuri call is here but check where to call this and how id should be
     service.removeWidget = function (id) {
-        service.grid.remove(document.getElementById(id), {removeElements: true});
+        console.log('deleting??');
+        service.grid.remove([document.getElementById(id)], {removeElements: true, layout: true});
     };
 
     service.addWidgetToGrid = function (widget, id, autoPos) {
         if (typeof id === 'undefined') {
             service.count++;
             widget.id = service.count;
+        } else if (typeof id === "number") {
+            widget.id = id;
         } else {
-            if (typeof id === "number") {
-                widget.id = id;
-            } else {
-                widget.id = parseInt(id);
-            }
+            widget.id = parseInt(id);
         }
+
 
         widget.settings.autoPosition = !!autoPos;
         let itemElem = document.createElement('div');
         itemElem.innerHTML = widget.widgetTemplate();
+
+        let textColOpen = false;
+
+        itemElem.firstChild.addEventListener('mouseover', () => {
+            if (!service.widgetColorPickerOpen) {
+                const controlPanel = document.getElementById(`controls-${widget.id}`);
+                const controlDragHandle = document.getElementById(`drag-handle-${widget.id}`);
+                const biggerZIndex = "4";
+
+                controlPanel.classList.remove('hidden');
+                controlDragHandle.classList.remove('hidden');
+                controlPanel.style.zIndex = biggerZIndex;
+                controlPanel.parentElement.style.zIndex = biggerZIndex;
+                controlPanel.parentElement.parentElement.style.zIndex = biggerZIndex;
+            }
+        });
+
+
+        itemElem.firstChild.addEventListener('mouseout', () => {
+            if (!textColOpen) {
+                const controlPanel = document.getElementById(`controls-${widget.id}`);
+                const controlDragHandle = document.getElementById(`drag-handle-${widget.id}`);
+                const smallerZIndex = "1";
+                controlPanel.style.zIndex = smallerZIndex;
+                controlPanel.parentElement.style.zIndex = smallerZIndex;
+                controlPanel.parentElement.parentElement.style.zIndex = smallerZIndex;
+                controlPanel.classList.add('hidden');
+                controlDragHandle.classList.add('hidden');
+            }
+        });
         service.grid.add(itemElem.firstChild, {index: widget.id});
+
+        new Picker({
+            parent: document.getElementById(`${widget.id}-text-color`),
+            popup: 'right', // 'right'(default), 'left', 'top', 'bottom'
+            editor: false,
+            color: widget.textColor || '#000000',
+            onChange: (newCol) => {
+                document.documentElement.style.setProperty(`--${widget.id}-text-color`, newCol.rgbaString);
+                widget.textColor = newCol.rgbaString;
+            },
+            onDone: (newCol) => {
+                widget.textColor = newCol.rgbaString;
+            },
+            onOpen: (nc) => {
+                toggleWidgetColorPicker(true);
+                textColOpen = true;
+            },
+            onClose: (nc) => {
+                toggleWidgetColorPicker(false);
+                textColOpen = false;
+            }
+        });
+        new Picker({
+            parent: document.getElementById(`${widget.id}-background-color`),
+            popup: 'right', // 'right'(default), 'left', 'top', 'bottom'
+            editor: false,
+            color: widget.backgroundColor || '#000000',
+            onChange: (newCol) => {
+                document.documentElement.style.setProperty(`--${widget.id}-background-color`, newCol.rgbaString);
+
+                let widgetElement = document.getElementById(`${widget.id}`);
+                if (widgetElement) {
+                    widgetElement.style.setProperty(`--item-background-color`, newCol.rgbaString);
+                    styleElem.innerHTML = `#${widget.id}:before {background-color: ${newCol.rgbaString}`;
+                }
+                widget.backgroundColor = newCol.rgbaString;
+            },
+            onDone: (newCol) => {
+                widget.backgroundColor = newCol.rgbaString;
+            },
+            onOpen: (nc) => {
+                toggleWidgetColorPicker(true);
+                textColOpen = true;
+            },
+            onClose: (nc) => {
+                toggleWidgetColorPicker(false);
+                textColOpen = false;
+            }
+        });
+
+
+        document.getElementById(`delete-${widget.id}`).addEventListener('click', () => service.removeWidget(widget.id));
+
+
         widget.settings.autoPosition = false;
         if (widget.type === 'weather') {
             widget.settings.width = widget.settings.width > 1 ? widget.settings.width : 2;
@@ -189,19 +284,17 @@ function grid() {
                 getWeather(widget.id, widget.settings.city);
             }, 100);
         }
-
-        service.widgets[service.count] = widget;
     };
 
     function WidgetFactory() {
-        this.createWidget = function (title, contentUrl, settings, id, color, textcolor, type) {
+        this.createWidget = function (title, contentUrl, settings, id, backgroundColor, textColor, type) {
             let widget = function () {
             };
             widget.settings = settings;
             widget.title = title;
             widget.contentUrl = contentUrl;
-            widget.color = color;
-            widget.textcolor = textcolor;
+            widget.backgroundColor = backgroundColor;
+            widget.textColor = textColor;
             widget.type = type;
             widget.id = id;
 
@@ -216,14 +309,22 @@ function grid() {
             //  option: vue components
             widget.getTag = () => `<span style="line-height: 100%;">${widget.title}</span><a href="${widget.contentUrl}" ${newTab ? 'target="_blank"' : ""} id="${widget.title}"><span class="ctab-widget-link"></span></a>`;
 
-            widget.getHtmlControls = () => `<div class="ctab-widget-controls"><div class="deletebutton">${this.id}</div></div>`;
+            widget.getHtmlControls = () =>
+                `<div class="ctab-widget-controls hidden" id="controls-${widget.id}">
+                    <div class="deletebutton">
+                        <button id="delete-${widget.id}" style="padding: 0; border: 0; background: transparent;">❌</button>
+                    </div>
+                    <div class="vanilla-color-picker widget-control-picker" id="${widget.id}-text-color" style="color:var(--${widget.id}-text-color); border-color: var(--${widget.id}-text-color); background-color: rgba(255,255,255,.8)">tc</div>
+                    <div class="vanilla-color-picker widget-control-picker" id="${widget.id}-background-color" style="background-color: var(--${widget.id}-background-color); border-color: var(--${widget.id}-background-color);">bg</div>
+                </div>`;
 
 
             widget.colorInfo = function () {
                 let styleInfo = 'style="';
-                styleInfo += widget.textcolor !== undefined ? `color:${widget.textcolor};` : "";
-                styleInfo += widget.color !== undefined ? `--item-color:${widget.color};` :
-                    `--item-color:${defaultWidgetColor};`;
+                styleInfo += `color: var(--${widget.id}-text-color);`;
+                styleInfo += `background-color: var(--${widget.id}-background-color);`;
+                styleInfo += widget.backgroundColor !== undefined ? `--item-background-color:${widget.backgroundColor};` :
+                    `--item-background-color:${defaultWidgetColor};`;
                 //TODO document.style.setproperty
                 return styleInfo + '"';
             };
@@ -232,14 +333,20 @@ function grid() {
             widget.widgetTemplate = function () {
                 let template =
                     `<div class="item he${widget.settings.height} w${widget.settings.width}" data-title="${widget.title}">
-                        <div class="item-content" ${widget.colorInfo()}>`;
+                        <div class="item-content" ${widget.colorInfo()}>
+${widget.getHtmlControls()}
+<div class="ctab-widget-drag-handle hidden" id="drag-handle-${widget.id}">
+<span style="top:0; left: 0;">&#8598</span>
+<span style="top:0; right: 0;">&#8599</span>
+<span style="bottom:0; right: 0;">&#8600</span>
+<span style="bottom:0; left: 0;">&#8601</span>
+</div>`;
                 switch (type) {
                     case "clock" :
                         template += `<div id="${widget.id}" class="ctab-widget-body ctab-item-clock"><span></span></div>`;
                         break;
                     case "note":
-                        template += `${widget.getHtmlControls()}
-                                    <div id="${widget.id}" class="ctab-widget-body ctab-item-note">
+                        template += `<div id="${widget.id}" class="ctab-widget-body ctab-item-note">
                                         <textarea id="note-${widget.id}">${widget.title}</textarea>
                                     </div>`;
                         break;
@@ -258,8 +365,7 @@ function grid() {
                         break;
                     case "link":
                     default:
-                        template += `${widget.getHtmlControls()} 
-                                    <div id="${widget.id}" class="ctab-widget-body"> 
+                        template += `<div id="${widget.id}" class="ctab-widget-body"> 
                                         ${widget.getTag()} 
                                     </div>`;
                         break;
@@ -274,8 +380,8 @@ function grid() {
                     title: widget.title,
                     settings: widget.settings,
                     contentUrl: widget.contentUrl,
-                    color: widget.color,
-                    textcolor: widget.textcolor,
+                    backgroundColor: widget.backgroundColor,
+                    textColor: widget.textColor,
                     type: widget.type,
                     id: widget.id
                 };
@@ -334,9 +440,8 @@ function grid() {
 
     service.getDashboardConfig = function () {
         let configuration = [];
-        let ids = service.getSortedWidgets();
-        for (let i = 0; i < ids.length; i++) {
-            let w = service.widgets[ids[i]];
+        for (let i = 0; i < service.widgets.length; i++) {
+            let w = service.widgets[i];
             let wc = w.getConfig();
             if (w.type === 'note') {
                 // save internals of node objects
@@ -359,17 +464,17 @@ function grid() {
 
     service.loadModel = function () {
         let widgetData = service.getConfig();
-        service.widgets = {};
+        service.widgets = [];
         widgetData = Array.isArray(widgetData) ? widgetData : [];
 
         for (let i = 0; i < widgetData.length; i++) {
             let title = widgetData[i].title;
             let settings = widgetData[i].settings;
             let contentUrl = widgetData[i].contentUrl;
-            let color = widgetData[i].color;
-            let textcolor = widgetData[i].textcolor;
+            let backgroundColor = widgetData[i].backgroundColor;
+            let textColor = widgetData[i].textColor;
             let type = widgetData[i].type;
-            let widget = widgetFactory.createWidget(title, contentUrl, settings, i, color, textcolor, type);
+            let widget = widgetFactory.createWidget(title, contentUrl, settings, i, backgroundColor, textColor, type);
             widget.prototype.id = service.count;
             service.widgets[service.count] = widget;
             service.count++;
@@ -420,10 +525,10 @@ function grid() {
         }
     };
 
-    service.simpleAdd = function (title, url, color, textcolor, type) {
+    service.simpleAdd = function (title, url, backgroundColor, textColor, type) {
         service.addWidgetToGrid(widgetFactory.createWidget(title, url, {
             autoPosition: true,
-        }, service.count + 1, color, textcolor, type), service.count, true);
+        }, service.count + 1, backgroundColor, textColor, type), service.count, true);
         service.count++;
     };
 
