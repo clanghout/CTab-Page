@@ -170,8 +170,17 @@ function grid() {
     };
 
     service.removeWidget = function (id) {
-        console.log('deleting??');
-        service.grid.remove([document.getElementById(id)], {removeElements: true, layout: true});
+        // Get the outer muuri cell
+        let innerId = document.getElementById(id);
+        let cell = innerId.parentElement.parentElement;
+
+        if (cell) {
+            // remove from the grid (ui only)
+            service.grid.remove([cell], {removeElements: true, layout: true});
+
+            // also remove from widgets, otherwise no changes will be detected on saving.
+            delete service.widgets[id];
+        }
     };
 
     service.addWidgetToGrid = function (widget, id, autoPos) {
@@ -442,15 +451,17 @@ ${widget.getHtmlControls()}
         let configuration = [];
         for (let i = 0; i < service.widgets.length; i++) {
             let w = service.widgets[i];
-            let wc = w.getConfig();
-            if (w.type === 'note') {
-                // save internals of node objects
-                let innerText = document.querySelector('#note-' + wc.id).value;
-                if (innerText.replace(/\s/g, '').length !== 0) {
-                    wc.title = innerText.trim();
+            if (w) {
+                let wc = w.getConfig();
+                if (w.type === 'note') {
+                    // save internals of node objects
+                    let innerText = document.querySelector('#note-' + wc.id).value;
+                    if (innerText.replace(/\s/g, '').length !== 0) {
+                        wc.title = innerText.trim();
+                    }
                 }
+                configuration = configuration.concat(wc);
             }
-            configuration = configuration.concat(wc);
         }
         return configuration;
     };
