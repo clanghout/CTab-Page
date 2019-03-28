@@ -656,7 +656,7 @@
 <div class="others">
     <input type="checkbox" id="devEnabled"/>
     <label for="devEnabled">Developer mode</label>
-    <div class="devConfig hidden">
+    <div id="devConfig" class="hidden">
         <div id="configField">
             <textarea name="configFieldInput" id="configFieldInput" cols="30" rows="10"></textarea>
         </div>
@@ -673,14 +673,11 @@
 <script defer src="node_modules/muuri/dist/muuri.min.js"></script>
 
 <!--Dynamic font-size changing script-->
-<script defer src="node_modules/jquery/dist/jquery.slim.min.js"></script>
-<script defer src="modules/jquery.textfill.min.js"></script>
-<script defer src="node_modules/vanilla-picker/dist/vanilla-picker.min.js"></script>
 <script defer src="node_modules/streamsaver/StreamSaver.js"></script>
 <!-- load before streams polyfill to detect support -->
 
 
 <!--CTab script-->
-<script defer type=module src="index.js"></script>
+<script defer type=module src="bundle.js"></script>
 </body>
 </html>

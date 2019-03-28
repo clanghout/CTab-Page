@@ -210,9 +210,12 @@ body {
 
 
 .ctab-widget-controls {
-  height: 100%;
+  height: calc(100% + 4px);
   right: 0;
+  margin-right: calc(-.5 * var(--ctab-widget-controls-width));
+  margin-top: -2px;
   width: var(--ctab-widget-controls-width);
+  border: 2px solid black;
   position: absolute;
   background: rgba(0, 0, 0, .4);
   z-index: 2;

@@ -1,60 +1,49 @@
-// import Picker from './node_modules/vanilla-picker/dist/vanilla-picker.mjs';
-
+import Picker from 'vanilla-picker';
 let CTabSettings = () => {
-    let settings = {};
-    const settingsToggleButton = document.getElementById('settings-toggle');
-    const settingsPaneDiv = document.getElementById('settingsMenu');
-    const backgroundImg = document.getElementById('background');
-    const bgUrlVal = document.getElementById('background-url-value');
-
-    const weatherTimeoutInput = document.getElementById('weather-timeout');
-
+    const settingsToggleButton = document.querySelector('#settings-toggle');
+    const settingsPaneDiv = document.querySelector('#settingsMenu');
+    const backgroundImg = document.querySelector('#background');
+    const bgUrlVal = document.querySelector('#background-url-value');
+    const weatherTimeoutInput = document.querySelector('#weather-timeout');
     let settingsActive = false;
-    const backgroundApplyButton = document.getElementById('background-apply');
-    const settingsMainSaveButton = document.getElementById('settings-main-save-button');
-    const unsavedChangesWarningCheckbox = document.getElementById('unsaved-changes-warning');
-    const openInNewTabCheckbox = document.getElementById('link-new-tab');
-    const weatherAPIKeyInput = document.getElementById('weather-API-key');
-    const timezoneSelect = document.getElementById('timezone-select');
-
-
+    const backgroundApplyButton = document.querySelector('#background-apply');
+    const settingsMainSaveButton = document.querySelector('#settings-main-save-button');
+    const unsavedChangesWarningCheckbox = document.querySelector('#unsaved-changes-warning');
+    const openInNewTabCheckbox = document.querySelector('#link-new-tab');
+    const weatherAPIKeyInput = document.querySelector('#weather-API-key');
+    const timezoneSelect = document.querySelector('#timezone-select');
     let currentSettings = JSON.parse(window.localStorage.getItem('CTab-settings')) || {};
-
-
-    settings.initialize = function () {
+    const initialize = function () {
         // Color pickers
         new Picker({
             parent: document.getElementById('widget-border-color'),
-            popup: 'bottom', // 'right'(default), 'left', 'top', 'bottom'
+            popup: 'bottom',
             editor: true,
             color: currentSettings.borderColor,
-            onChange: (newCol) => {
-                document.documentElement.style.setProperty('--widget-border-color', newCol.rgbaString);
-                currentSettings.borderColor = newCol.rgbaString;
+            onChange: (newColor) => {
+                document.documentElement.style.setProperty('--widget-border-color', newColor.rgbaString);
+                currentSettings.borderColor = newColor.rgbaString;
             },
-            onDone: (newCol) => {
-                currentSettings.borderColor = newCol.rgbaString;
+            onDone: (newColor) => {
+                currentSettings.borderColor = newColor.rgbaString;
                 save();
             }
         });
-
         new Picker({
             parent: document.getElementById('background-color-picker'),
-            popup: 'bottom', // 'right'(default), 'left', 'top', 'bottom'
+            popup: 'bottom',
             editor: true,
             color: currentSettings.backgroundColor,
-            onChange: (newCol) => {
-                document.documentElement.style.setProperty('--background-color', newCol.rgbaString);
-                currentSettings.backgroundColor = newCol.rgbaString;
+            onChange: (newColor) => {
+                document.documentElement.style.setProperty('--background-color', newColor.rgbaString);
+                currentSettings.backgroundColor = newColor.rgbaString;
             },
-            onDone: (newCol) => {
-                currentSettings.backgroundColor = newCol.rgbaString;
+            onDone: (newColor) => {
+                currentSettings.backgroundColor = newColor.rgbaString;
                 save();
             }
         });
-
         document.documentElement.style.setProperty('--widget-border-color', currentSettings.borderColor);
-
         backgroundImg.src = currentSettings.background;
         if (typeof currentSettings.backgroundRadioSelected === 'number') {
             document.getElementsByName('background')[currentSettings.backgroundRadioSelected].checked = true;
@@ -62,33 +51,27 @@ let CTabSettings = () => {
                 bgUrlVal.value = currentSettings.background;
             }
         }
-
         unsavedChangesWarningCheckbox.checked = currentSettings.unsavedChangesWarningEnabled || false;
         unsavedChangesWarningCheckbox.addEventListener('click', () => {
             currentSettings.unsavedChangesWarningEnabled = unsavedChangesWarningCheckbox.checked;
             save();
         });
-
         openInNewTabCheckbox.checked = currentSettings.openInNewTab || false;
         openInNewTabCheckbox.addEventListener('click', () => {
             currentSettings.openInNewTab = openInNewTabCheckbox.checked;
             save();
         });
-
         weatherAPIKeyInput.value = currentSettings.weatherAPIKey || "";
         weatherAPIKeyInput.addEventListener('change', () => {
             currentSettings.weatherAPIKey = weatherAPIKeyInput.value;
             save();
         });
-
-
         // weather timeout
         weatherTimeoutInput.value = currentSettings.weatherTimeout || 60 * 15;
         weatherTimeoutInput.addEventListener('change', () => {
             currentSettings.weatherTimeout = weatherTimeoutInput.value;
             save();
         });
-
         // Timezone
         timezoneSelect.selectedIndex = currentSettings.timezoneIndex || 421; //default to Europe/Amsterdam
         timezoneSelect.addEventListener('change', () => {
@@ -96,14 +79,9 @@ let CTabSettings = () => {
             currentSettings.timezoneIndex = timezoneSelect.selectedIndex;
             save();
         });
-
-
     };
-
-    settings.initialize();
-
     function getBackgroundSetting() {
-        let selectedBackgroundOption;
+        let selectedBackgroundOption = "";
         let backgroundOptions = document.getElementsByName('background');
         for (let i = 0, length = backgroundOptions.length; i < length; i++) {
             if (backgroundOptions[i].checked) {
@@ -112,21 +90,20 @@ let CTabSettings = () => {
                 break;
             }
         }
-
         switch (selectedBackgroundOption) {
             case 'file':
-                File.prototype.convertToBase64 = function (callback) {
+                const convertToBase64 = function (file, callback) {
                     let reader = new FileReader();
-                    reader.onloadend = function (e) {
-                        callback(e.target.result, e.target.error);
+                    reader.onloadend = function () {
+                        callback(reader.result, reader.error);
                     };
-                    reader.readAsDataURL(this);
+                    reader.readAsDataURL(file);
                 };
-
-                let selectedFile = document.getElementById("background-file-value").files[0];
+                const backgroundFileInput = document.querySelector("#background-file-value");
+                let selectedFile = backgroundFileInput.files[0];
                 // check if a file is selected
                 if (selectedFile) {
-                    selectedFile.convertToBase64(function (base64) {
+                    convertToBase64(selectedFile, function (base64) {
                         currentSettings.background = base64;
                         backgroundImg.src = currentSettings.background;
                     });
@@ -147,12 +124,9 @@ let CTabSettings = () => {
         backgroundImg.src = currentSettings.background;
         save();
     }
-
     function save() {
         window.localStorage.setItem('CTab-settings', JSON.stringify(currentSettings));
     }
-
-
     settingsMainSaveButton.addEventListener('click', () => {
         save();
     });
@@ -160,36 +134,34 @@ let CTabSettings = () => {
         getBackgroundSetting();
         // reload to let gridcontrols use new settings;
     });
-
     settingsToggleButton.addEventListener('click', () => settingsToggle());
-
-
     function settingsToggle() {
         settingsActive = !settingsActive;
         settingsActive ? settingsPaneDiv.classList.remove('hidden') : settingsPaneDiv.classList.add('hidden');
     }
-
-    settings.getWeatherTimeoutValue = function () {
+    const getWeatherTimeoutValue = function () {
         return currentSettings.weatherTimeout * 1000;
     };
-
-    settings.getTimezone = function () {
+    const getTimezone = function () {
         return currentSettings.timezone;
     };
-
-    settings.getWeatherAPIKey = function () {
+    const getWeatherAPIKey = function () {
         return currentSettings.weatherAPIKey;
     };
-
-    settings.getShowUnsavedWarning = function () {
+    const getShowUnsavedWarning = function () {
         return currentSettings.unsavedChangesWarningEnabled;
     };
-
-    settings.getNewTab = function () {
+    const getNewTab = function () {
         return currentSettings.openInNewTab;
     };
-
-    return settings;
+    return {
+        initialize: initialize,
+        getWeatherTimeoutValue: getWeatherTimeoutValue,
+        getTimezone: getTimezone,
+        getWeatherAPIKey: getWeatherAPIKey,
+        getShowUnsavedWarning: getShowUnsavedWarning,
+        getNewTab: getNewTab
+    };
 };
-
-export {CTabSettings};
+export default CTabSettings();
+//# sourceMappingURL=settingsMenu.js.map

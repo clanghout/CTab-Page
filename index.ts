@@ -1,16 +1,21 @@
 import grid from './gridControls';
 import './settingsMenu';
-window.browser = (() => {
-    return window.browser || window.chrome || window.msBrowser;
+import * as CtabWidgetTypes from './cTabWidgetType';
+
+(<any>window).browser = (() => {
+    return (<any>window).browser || (<any>window).chrome || (<any>window).msBrowser;
 })();
+
+
 // The toast box that can be used to show a message to the user.
-const toastBox = document.querySelector("#toast");
+const toastBox: HTMLElement | null = document.querySelector("#toast");
 const today = new Date();
 const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-const dateField = document.querySelector('#currDate');
-dateField.innerText = `${weekdays[today.getDay()]} ${today.getDate()} ${months[today.getMonth()]} ${today.getFullYear()}`;
-function showToast(message) {
+const dateField: HTMLElement = document.querySelector('#currDate') as HTMLElement;
+    dateField.innerText = `${weekdays[today.getDay()]} ${today.getDate()} ${months[today.getMonth()]} ${today.getFullYear()}`;
+
+function showToast(message: string): void {
     if (toastBox !== null) {
         toastBox.innerText = message;
         toastBox.classList.remove('hidden');
@@ -19,19 +24,27 @@ function showToast(message) {
         }, 2000);
     }
 }
+
+
 let CTabGrid = grid();
 CTabGrid.initialize();
+
 // Save the grid and show the result to user using toastBox.
-function saveGrid() {
+function saveGrid(): void {
     const saveResult = CTabGrid.saveGrid();
     showToast(saveResult);
 }
-const saveButton = document.querySelector("#saveButton");
-saveButton.addEventListener('click', saveGrid);
+
+
+const saveButton: HTMLButtonElement = document.querySelector("#saveButton") as HTMLButtonElement;
+    saveButton.addEventListener('click', saveGrid);
+
+
 /// Adding Widgets
-const widgetTypeChanger = document.querySelector("#typeDropdown");
+const widgetTypeChanger: HTMLSelectElement = document.querySelector("#typeDropdown") as HTMLSelectElement;
+
 // Show or hide the title and url input fields in the simple add area.
-function widgetTypeFieldVisibilityControl(showTitle, showUrl) {
+function widgetTypeFieldVisibilityControl(showTitle: boolean, showUrl: boolean): void {
     const hiddenClassName = "hidden";
     let title = document.querySelector("#addTitle");
     let titleLabel = document.querySelector("#titleLabel");
@@ -45,24 +58,25 @@ function widgetTypeFieldVisibilityControl(showTitle, showUrl) {
         if (showTitle) {
             titleClassList.remove(hiddenClassName);
             titleLabelClassList.remove(hiddenClassName);
-        }
-        else {
+        } else {
             titleClassList.add(hiddenClassName);
             titleLabelClassList.add(hiddenClassName);
         }
         if (showUrl) {
             urlClassList.remove(hiddenClassName);
             urlLabelClassList.remove(hiddenClassName);
-        }
-        else {
+        } else {
             urlClassList.add(hiddenClassName);
             urlLabelClassList.add(hiddenClassName);
         }
     }
 }
+
+
 if (widgetTypeChanger !== null) {
     widgetTypeChanger.addEventListener('change', () => {
         const curVal = widgetTypeChanger.value;
+
         if (curVal === "link") {
             widgetTypeFieldVisibilityControl(true, true);
         }
@@ -80,30 +94,34 @@ if (widgetTypeChanger !== null) {
         }
     });
 }
+
 // New Add button
-const addMenu = document.querySelector('#addMenu');
-const floatingAddButton = document.querySelector('#floatingAddButton');
-const addCancelButton = document.querySelector('#addCancelButton');
-const widgetAddButton = document.querySelector('#widgetAddButton');
+const addMenu: HTMLElement | null = document.querySelector('#addMenu');
+const floatingAddButton: HTMLButtonElement | null = document.querySelector('#floatingAddButton');
+const addCancelButton: HTMLButtonElement | null = document.querySelector('#addCancelButton');
+const widgetAddButton: HTMLButtonElement | null = document.querySelector('#widgetAddButton');
+
 // Add the configured widget to the dashboard
-function addWidget() {
-    let title = document.querySelector("#addTitle");
-    let url = document.querySelector("#addUrl");
-    let bgcolor = document.querySelector('#addBGC');
-    let textcolor = document.querySelector('#addTC');
+function addWidget(): void {
+    let title: HTMLInputElement | null = document.querySelector("#addTitle");
+    let url: HTMLInputElement | null = document.querySelector("#addUrl");
+    let bgcolor: HTMLInputElement | null = document.querySelector('#addBGC');
+    let textcolor: HTMLInputElement | null = document.querySelector('#addTC');
+
     if (title !== null && url !== null && bgcolor !== null && textcolor !== null && widgetTypeChanger !== null && (title.value !== "" || widgetTypeChanger.value === "clock" || widgetTypeChanger.value === "weather" || widgetTypeChanger.value === "buienradar")) {
-        CTabGrid.simpleAdd(widgetTypeChanger.value, { width: 1, height: 1 }, bgcolor.value, textcolor.value);
+        CTabGrid.simpleAdd(widgetTypeChanger.value, {width: 1, height: 1}, bgcolor.value, textcolor.value);
         title.value = "";
         url.value = "";
+
         // Trigger hiding of the add window
         if (addCancelButton !== null) {
             addCancelButton.click();
         }
-    }
-    else {
+    } else {
         showToast("Unable to add widget: A title is required.");
     }
 }
+
 if (addMenu !== null) {
     addMenu.classList.add('hidden');
 }
@@ -118,10 +136,11 @@ if (widgetAddButton !== null && floatingAddButton !== null && addMenu !== null &
         addMenu.classList.add('hidden');
     });
 }
+
 // Accept the 'Enter' key as alternative to clicking on the 'Add' button with the mouse, when interacting with the 'addMenu'.
 // Doesn't work for the background/text backgroundColor selectors as the browser seems to override the 'Enter' key for it (i.e. opens the backgroundColor palette).
 ['#typeDropdown', '#addTitle', '#addUrl', '#widgetAddButton'].forEach((item) => {
-    const itemElem = document.querySelector(item);
+    const itemElem: HTMLElement | null = document.querySelector(item);
     if (itemElem !== null) {
         itemElem.addEventListener('keydown', (e) => {
             if (e.key === "Enter") {
@@ -130,18 +149,21 @@ if (widgetAddButton !== null && floatingAddButton !== null && addMenu !== null &
         });
     }
 });
+
+
 /// Dev mode
-const devConfigBox = document.querySelector("#devConfig");
-const clearButton = document.querySelector("#clearButton");
-const debugButton = document.querySelector("#debugButton");
-const backupButton = document.querySelector("#backupButton");
-const devEnabledCheckbox = document.querySelector("#devEnabled");
-const devOpacityButton = document.querySelector("#opacityButton");
-const configField = document.querySelector("#configFieldInput");
-const devSaveButton = document.querySelector("#saveDevConfig");
+const devConfigBox: HTMLDivElement | null = document.querySelector("#devConfig");
+const clearButton: HTMLButtonElement | null = document.querySelector("#clearButton");
+const debugButton: HTMLButtonElement | null = document.querySelector("#debugButton");
+const backupButton: HTMLButtonElement | null = document.querySelector("#backupButton");
+const devEnabledCheckbox: HTMLInputElement | null = document.querySelector("#devEnabled");
+const devOpacityButton: HTMLButtonElement | null = document.querySelector("#opacityButton");
+const configField: HTMLInputElement | null = document.querySelector("#configFieldInput");
+const devSaveButton: HTMLButtonElement | null = document.querySelector("#saveDevConfig");
 //TODO: const loadBackupButton: HTMLButtonElement | null = document.querySelector('#loadBackupButton');
+
 // Show or hide developer mode specific buttons
-function devSwitch(displayStyle) {
+function devSwitch(displayStyle: string): void {
     if (devConfigBox && clearButton && debugButton) {
         devConfigBox.style.display = displayStyle;
         devConfigBox.classList.remove("hidden");
@@ -150,40 +172,48 @@ function devSwitch(displayStyle) {
     }
     // document.querySelector("#widescreenButton").style.display = displayStyle;
 }
+
+
 // disable dev mode by default
 devSwitch('none');
-clearButton.addEventListener('click', () => CTabGrid.debug(true, false));
-debugButton.addEventListener('click', () => CTabGrid.debug(false, true));
-backupButton.addEventListener('click', saveCurrentConfig);
-devEnabledCheckbox.addEventListener('change', (a) => {
-    if (a !== null && a.srcElement !== null)
-        if (a.srcElement.checked) {
-            devSwitch('block');
-        }
-        else {
-            devSwitch('none');
-        }
-});
-devSaveButton.addEventListener('click', () => {
-    let config = JSON.parse(configField.value);
+    clearButton!.addEventListener('click', () => CTabGrid.debug(true, false));
+    debugButton!.addEventListener('click', () => CTabGrid.debug(false, true));
+    backupButton!.addEventListener('click', saveCurrentConfig);
+    devEnabledCheckbox!.addEventListener('change', (a) => {
+        if (a !== null && a.srcElement !== null)
+            if ((<HTMLInputElement>a.srcElement).checked) {
+                devSwitch('block');
+            } else {
+                devSwitch('none');
+            }
+    });
+
+devSaveButton!.addEventListener('click', () => {
+    let config = JSON.parse(configField!.value);
     CTabGrid.setConfig(config);
 });
-devOpacityButton.addEventListener('click', () => {
-    let config = configField.value;
-    configField.value = config.replace(/(backgroundColor":"rgba\([0-9]+,[0-9]+,[0-9]+,)([0-9.]+)((?=\)"))/gm, "$1 0.5$3");
+devOpacityButton!.addEventListener('click', () => {
+    let config = configField!.value;
+    configField!.value = config.replace(/(backgroundColor":"rgba\([0-9]+,[0-9]+,[0-9]+,)([0-9.]+)((?=\)"))/gm, "$1 0.5$3");
+
 });
-configField.value = prettyPrintConfig(CTabGrid.getConfig());
-const streamSaver = window.steamSaver;
+
+configField!.value = prettyPrintConfig(CTabGrid.getConfig());
+
+const streamSaver = (window as any).steamSaver;
+
 function saveCurrentConfig() {
     const fileStream = streamSaver.createWriteStream('config.json');
     const writer = fileStream.getWriter();
     const encoder = new TextEncoder;
     let data = JSON.stringify(CTabGrid.getConfig());
     let uint8array = encoder.encode(data + "\n\n");
+
     writer.write(uint8array);
     writer.close();
 }
-function prettyPrintConfig(config) {
+
+function prettyPrintConfig(config: any): string {
     if (config) {
         let result = "[";
         for (let i = 0; i < config.length; i++) {
@@ -194,17 +224,19 @@ function prettyPrintConfig(config) {
     }
     return "";
 }
+
+
 /// Chrome extension specific
 try {
-    window.browser.commands.onCommand.addListener(saveGrid);
-    window.browser.bookmarks.onCreated.addListener(function (id, bookmark) {
+    (<any>window).browser.commands.onCommand.addListener(saveGrid);
+
+    (<any>window).browser.bookmarks.onCreated.addListener(function (id: any, bookmark: any) {
         console.log("id", id);
         console.log("bookmark", bookmark);
-        CTabGrid.simpleAdd("LinkWidget", { width: 1, height: 1, title: bookmark.title, url: bookmark.url }, "#fff", "#000");
+        CTabGrid.simpleAdd("LinkWidget", {width: 1, height: 1, title: (bookmark.title as string), url: (bookmark.url as string)} as CtabWidgetTypes.linkSettings,"#fff", "#000");
+
     });
-}
-catch (e) {
+} catch (e) {
     // not on chrome
     console.log("Did not execute chrome extension specific code");
 }
-//# sourceMappingURL=index.js.map
