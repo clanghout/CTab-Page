@@ -5,9 +5,6 @@ window.browser = (() => {
 const styleElem = document.head.appendChild(document.createElement('style'));
 import CTabSettings from "./settingsMenu";
 import * as CTabWidgetTypes from './cTabWidgetType';
-import Picker from 'vanilla-picker';
-import 'modules/jquery.textfill.min.js';
-import * as $ from 'jquery';
 import * as weatherEl from './weatherControls';
 function grid() {
     let grid;

@@ -2,6 +2,32 @@
 /* eslint-env node, browser, jquery */
 import {baseSettings} from "./cTabWidgetType";
 
+interface PickerColor {
+    rgbaString: string;
+    rgbString: string;
+    rgba: number[];
+    hsla: number[];
+    hslString: string;
+    hslaString: string;
+    hex: string;
+}
+
+declare class Picker {
+    constructor(settings: {
+        parent?: HTMLElement;
+        popup?: "top" | "bottom" | "left" | "right";
+        template?: string;
+        alpha?: boolean;
+        editor?: boolean;
+        editorFormat?: 'hex' | 'hsl' | 'rgb';
+        color?: string;
+        onChange?: (color: PickerColor) => void;
+        onDone?: (color: PickerColor) => void;
+        onOpen?: (color: PickerColor) => void;
+        onClose?: (color: PickerColor) => void;
+    });
+}
+
 (<any>window).browser = (() => {
     return (<any>window).browser || (<any>window).chrome || (<any>window).msBrowser;
 })();
@@ -11,9 +37,6 @@ const styleElem = (<any>document).head.appendChild(document.createElement('style
 
 import CTabSettings from "./settingsMenu";
 import * as CTabWidgetTypes from './cTabWidgetType';
-import Picker from 'vanilla-picker';
-import 'modules/jquery.textfill.min.js';
-import * as $ from 'jquery';
 import * as weatherEl from './weatherControls';
 
 

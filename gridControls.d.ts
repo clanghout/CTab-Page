@@ -1,5 +1,4 @@
 import { baseSettings } from "./cTabWidgetType";
-import 'modules/jquery.textfill.min.js';
 interface CTabGrid {
     initialize: () => void;
     saveGrid: () => string;

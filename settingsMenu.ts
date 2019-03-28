@@ -1,4 +1,31 @@
-import Picker from 'vanilla-picker';
+// @ts-ignore
+import Picker from './node_modules/vanilla-picker/dist/vanilla-picker.js';
+interface PickerColor {
+    rgbaString: string;
+    rgbString: string;
+    rgba: number[];
+    hsla: number[];
+    hslString: string;
+    hslaString: string;
+    hex: string;
+}
+
+declare class Picker {
+    constructor(settings: {
+        parent?: HTMLElement;
+        popup?: "top" | "bottom" | "left" | "right";
+        template?: string;
+        alpha?: boolean;
+        editor?: boolean;
+        editorFormat?: 'hex' | 'hsl' | 'rgb';
+        color?: string;
+        onChange?: (color: PickerColor) => void;
+        onDone?: (color: PickerColor) => void;
+        onOpen?: (color: PickerColor) => void;
+        onClose?: (color: PickerColor) => void;
+    });
+}
+
 
 interface CTabSettingsMenu {
     initialize: () => void;
@@ -30,6 +57,7 @@ let CTabSettings = (): CTabSettingsMenu => {
 
     const initialize = function (): void {
         // Color pickers
+
         new Picker({
             parent: document.getElementById('widget-border-color')!,
             popup: 'bottom', // 'right'(default), 'left', 'top', 'bottom'

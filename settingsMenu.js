@@ -1,4 +1,3 @@
-import Picker from 'vanilla-picker';
 let CTabSettings = () => {
     const settingsToggleButton = document.querySelector('#settings-toggle');
     const settingsPaneDiv = document.querySelector('#settingsMenu');
