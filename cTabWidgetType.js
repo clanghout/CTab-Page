@@ -148,6 +148,7 @@ export class NoteWidget extends TitleWidget {
     }
 }
 export const cTabTypeMap = [BuienradarWidget, NoteWidget, ClockWidget, LinkWidget, WeatherWidget].reduce((acc, curr) => {
-    return acc[curr.name] = curr;
+    acc[curr.name] = curr;
+    return acc;
 }, {});
 //# sourceMappingURL=cTabWidgetType.js.map

@@ -169,7 +169,8 @@
         }
         exports.NoteWidget = NoteWidget;
         exports.cTabTypeMap = [BuienradarWidget, NoteWidget, ClockWidget, LinkWidget, WeatherWidget].reduce((acc, curr) => {
-            return acc[curr.name] = curr;
+            acc[curr.name] = curr;
+            return acc;
         }, {});
     });
     define("settingsMenu", ["require", "exports"], function (require, exports) {
@@ -692,6 +693,7 @@
                         weatherEl.getWeather(widget.id, widget.settings.city);
                     }, 100);
                 }
+                widgets.push(widget);
             };
             const getDashboardConfig = function () {
                 return widgets.map(widget => widget.getConfig());
@@ -705,7 +707,10 @@
                 let widgetData = service.getConfig();
                 widgets = [];
                 widgetData = Array.isArray(widgetData) ? widgetData : [];
-                widgets = widgetData.map((widget) => new CTabWidgetTypes.cTabTypeMap[widget.type](widget.id, widget.settings, widget.backgroundColor, widget.textColor));
+                widgets = widgetData.map((widget) => {
+                    // what if widget does not have a type
+                    return new CTabWidgetTypes.cTabTypeMap[widget.type](widget.id, widget.settings, widget.backgroundColor, widget.textColor);
+                });
             };
             const loadGrid = function () {
                 // add the widgets to the grid

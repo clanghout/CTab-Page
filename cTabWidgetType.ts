@@ -167,5 +167,6 @@ interface WidgetConstructor {
 }
 
 export const cTabTypeMap: { [name: string]:  WidgetConstructor } = [BuienradarWidget, NoteWidget, ClockWidget, LinkWidget, WeatherWidget].reduce((acc, curr) => {
-    return acc[curr.name] = curr;
+    acc[curr.name] = curr;
+    return acc;
 }, {} as any);

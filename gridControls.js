@@ -267,6 +267,7 @@ function grid() {
                 weatherEl.getWeather(widget.id, widget.settings.city);
             }, 100);
         }
+        widgets.push(widget);
     };
     const getDashboardConfig = function () {
         return widgets.map(widget => widget.getConfig());
@@ -280,7 +281,10 @@ function grid() {
         let widgetData = service.getConfig();
         widgets = [];
         widgetData = Array.isArray(widgetData) ? widgetData : [];
-        widgets = widgetData.map((widget) => new CTabWidgetTypes.cTabTypeMap[widget.type](widget.id, widget.settings, widget.backgroundColor, widget.textColor));
+        widgets = widgetData.map((widget) => {
+            // what if widget does not have a type
+            return new CTabWidgetTypes.cTabTypeMap[widget.type](widget.id, widget.settings, widget.backgroundColor, widget.textColor);
+        });
     };
     const loadGrid = function () {
         // add the widgets to the grid

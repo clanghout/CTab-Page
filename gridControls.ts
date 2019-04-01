@@ -155,7 +155,7 @@ function grid(): CTabGrid {
         return config;
     };
 
-    const setConfig = (config: any[]) =>  {
+    const setConfig = (config: any[]) => {
         if (config.length >= 1)
             window.localStorage.setItem("CTabConfig", JSON.stringify(config));
         else {
@@ -173,7 +173,7 @@ function grid(): CTabGrid {
         }
     };
 
-    const debug = (sampleConfig: boolean, addSampleWidgets: boolean) =>  {
+    const debug = (sampleConfig: boolean, addSampleWidgets: boolean) => {
         console.log("debug:");
         if (sampleConfig) {
             console.log("using sample config");
@@ -194,6 +194,7 @@ function grid(): CTabGrid {
     };
 
     const simpleAdd = function (type: string, settings: baseSettings, backgroundColor: string, textColor: string) {
+
         addWidgetToGrid(
             new CTabWidgetTypes.cTabTypeMap[type](widgets.length, settings, backgroundColor, textColor));
     };
@@ -342,8 +343,9 @@ function grid(): CTabGrid {
                 weatherEl.getWeather(widget.id, widget.settings.city);
             }, 100);
         }
-    };
 
+        widgets.push(widget);
+    };
 
 
     const getDashboardConfig = function () {
@@ -363,7 +365,10 @@ function grid(): CTabGrid {
         widgets = [];
         widgetData = Array.isArray(widgetData) ? widgetData : [];
 
-        widgets = widgetData.map((widget: any) => new CTabWidgetTypes.cTabTypeMap[widget.type](widget.id, widget.settings, widget.backgroundColor, widget.textColor));
+        widgets = widgetData.map((widget: any) => {
+            // what if widget does not have a type
+            return new CTabWidgetTypes.cTabTypeMap[widget.type](widget.id, widget.settings, widget.backgroundColor, widget.textColor)
+        });
 
     };
 
