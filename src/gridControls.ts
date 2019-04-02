@@ -1,11 +1,13 @@
 "use strict";
 /* eslint-env node, browser, jquery */
-import {baseSettings} from "./cTabWidgetType";
 // import * as $ from 'jquery';
 // import '../modules/jquery.textfill.min.js';
 declare const $: any;
 import Picker from 'vanilla-picker';
 
+import CTabSettings from "./settingsMenu";
+import * as CTabWidgetTypes from './cTabWidgetType';
+import * as weatherEl from './weatherControls';
 
 
 (window as any).browser = (() => {
@@ -14,17 +16,11 @@ import Picker from 'vanilla-picker';
 
 const styleElem = document.head.appendChild(document.createElement('style'));
 
-
-import CTabSettings from "./settingsMenu";
-import * as CTabWidgetTypes from './cTabWidgetType';
-import * as weatherEl from './weatherControls';
-
-
 // grid return object
 interface CTabGrid {
     initialize: () => void;
     saveGrid: () => string;
-    simpleAdd: (type: string, settings: baseSettings, backgroundColor: string, textColor: string) => void;
+    simpleAdd: (type: string, settings: CTabWidgetTypes.baseSettings, backgroundColor: string, textColor: string) => void;
     debug: (sampleConfig: boolean, addSampleWidgets: boolean) => void;
 
     // todo define config as type
@@ -173,7 +169,7 @@ function grid(): CTabGrid {
         }
     };
 
-    const simpleAdd = function (type: string, settings: baseSettings, backgroundColor: string, textColor: string) {
+    const simpleAdd = function (type: string, settings: CTabWidgetTypes.baseSettings, backgroundColor: string, textColor: string) {
 
         addWidgetToGrid(
             new CTabWidgetTypes.cTabTypeMap[type](widgets.length, settings, backgroundColor, textColor));
