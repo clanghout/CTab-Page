@@ -16,7 +16,7 @@ for (let i = 1; i <= 12; i++) {
 `;
 }
 
-fs.writeFile('sizeStyles.css', computedStyle, function (err) {
+fs.writeFile('dist/sizeStyles.css', computedStyle, function (err) {
     if (err) throw err;
     console.log("saved");
 });

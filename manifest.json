@@ -15,7 +15,7 @@
     "tabs"
   ],
   "chrome_url_overrides" : {
-    "newtab" : "index.html"
+    "newtab" : "dist/index.html"
   },
   "commands":{
     "save_configuration":{

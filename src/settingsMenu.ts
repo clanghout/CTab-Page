@@ -79,7 +79,7 @@ let CTabSettings = (): CTabSettingsMenu => {
             editor: true,
             color: currentSettings.backgroundColor,
             onChange: (newColor) => {
-                (<any>document).documentElement.style.setProperty('--background-color', newColor.rgbaString);
+                document.documentElement.style.setProperty('--background-color', newColor.rgbaString);
                 currentSettings.backgroundColor = newColor.rgbaString;
             },
             onDone: (newColor) => {
@@ -88,7 +88,7 @@ let CTabSettings = (): CTabSettingsMenu => {
             }
         });
 
-        (<any>document).documentElement.style.setProperty('--widget-border-color', currentSettings.borderColor);
+        document.documentElement.style.setProperty('--widget-border-color', currentSettings.borderColor);
 
         backgroundImg!.src = currentSettings.background;
         if (typeof currentSettings.backgroundRadioSelected === 'number') {

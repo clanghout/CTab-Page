@@ -1,19 +1,33 @@
 {
   "name": "ctab-page",
   "version": "1.0.0",
-  "main": "index.html",
+  "main": "dist/index.html",
   "repository": "https://github.com/clanghout/CTab-Page",
   "author": "clanghout",
   "license": "MIT",
   "private": true,
   "dependencies": {
     "@types/jquery": "^3.3.29",
-    "awesome-typescript-loader": "^5.2.1",
     "bootstrap": "3",
     "jquery": "^3.3.1",
     "muuri": "^0.7.1",
-    "source-map-loader": "^0.2.4",
     "streamsaver": "^1.2.0",
     "vanilla-picker": "^2.7.2"
+  },
+  "devDependencies": {
+    "awesome-typescript-loader": "^5.2.1",
+    "css-loader": "^2.1.1",
+    "mini-css-extract-plugin": "^0.5.0",
+    "node-sass": "^4.11.0",
+    "sass-loader": "^7.1.0",
+    "source-map-loader": "^0.2.4",
+    "style-loader": "^0.23.1",
+    "ts-loader": "^5.3.3",
+    "typescript": "^3.4.1",
+    "webpack": "^4.29.6",
+    "webpack-cli": "^3.3.0"
+  },
+  "scripts": {
+    "build": "node scripts/createSizeStyles.js && webpack"
   }
 }
