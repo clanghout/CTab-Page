@@ -1,5 +1,4 @@
 import grid from './gridControls';
-import './settingsMenu';
 import * as CtabWidgetTypes from './cTabWidgetType';
 
 (<any>window).browser = (() => {
@@ -181,7 +180,7 @@ devSwitch('none');
     backupButton!.addEventListener('click', saveCurrentConfig);
     devEnabledCheckbox!.addEventListener('change', (a) => {
         if (a !== null && a.srcElement !== null)
-            if ((<HTMLInputElement>a.srcElement).checked) {
+            if ((a.srcElement as HTMLInputElement).checked) {
                 devSwitch('block');
             } else {
                 devSwitch('none');
@@ -228,9 +227,9 @@ function prettyPrintConfig(config: any): string {
 
 /// Chrome extension specific
 try {
-    (<any>window).browser.commands.onCommand.addListener(saveGrid);
+    (window as any).browser.commands.onCommand.addListener(saveGrid);
 
-    (<any>window).browser.bookmarks.onCreated.addListener(function (id: any, bookmark: any) {
+    (window as any).browser.bookmarks.onCreated.addListener(function (id: any, bookmark: any) {
         console.log("id", id);
         console.log("bookmark", bookmark);
         CTabGrid.simpleAdd("LinkWidget", {width: 1, height: 1, title: (bookmark.title as string), url: (bookmark.url as string)} as CtabWidgetTypes.linkSettings,"#fff", "#000");

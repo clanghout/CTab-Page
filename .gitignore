@@ -6,7 +6,5 @@ out/*
 dist/*
 !dist/index.html
 
-tsconfig.json
-webpack.config.js
 sample-config.json
 *.map

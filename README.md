@@ -4,9 +4,10 @@
 
 ## Get to work(Install)
 1. clone the repo
-1. yarn / npm install
+1. run `yarn` or `npm install`
+1. run `yarn run build` or `npm run build`
 1. see Add as new tab section
-    - or navigate to the index.html file (might cause issues with script loading)
+    - or navigate to the dist/index.html file (might cause issues with script loading)
 
 
 ## Add as new tab page
@@ -81,7 +82,5 @@ Changes to the size of widgets need to be made in `scripts/createSizeStyles.js`.
 
 
 - Add sub-grids to act as folders
-- Add trash area to remove widgets
-    - Add recently deleted area
-
+- 
 

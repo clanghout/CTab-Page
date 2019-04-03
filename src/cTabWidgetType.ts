@@ -21,7 +21,7 @@ ${this.getHtmlControls()}
         template += `</div></div>`;
         return template;
     };
-    getConfig = () => {
+    getConfig = (): CtabWidgetSerialized => {
         return {
             settings: this.settings,
             backgroundColor: this.backgroundColor,
@@ -52,7 +52,7 @@ export abstract class TitleWidget extends CTabWidget {
         super(id, settings, backgroundColor, textColor);
     };
 
-    getConfig = () => {
+    getConfig = (): CtabWidgetSerialized => {
 
         this.settings.title = (document.querySelector('#note-' + this.id) as HTMLTextAreaElement).value.replace(/\s/g, '').trim();
         return {
@@ -98,7 +98,7 @@ export class LinkWidget extends TitleWidget {
                                     </div>`;
     };
 
-    getConfig = () => {
+    getConfig = (): CtabWidgetSerialized => {
         return {
             settings: this.settings,
             backgroundColor: this.backgroundColor,
@@ -148,6 +148,14 @@ export class NoteWidget extends TitleWidget {
 export interface baseSettings {
     width: number;
     height: number;
+}
+
+export interface CtabWidgetSerialized {
+    id: number;
+    settings: baseSettings;
+    backgroundColor: string;
+    textColor: string;
+    type: string;
 }
 
 export interface weatherSettings extends baseSettings {

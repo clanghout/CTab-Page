@@ -9,7 +9,6 @@ import CTabSettings from "./settingsMenu";
 import * as CTabWidgetTypes from './cTabWidgetType';
 import * as weatherEl from './weatherControls';
 
-
 (window as any).browser = (() => {
     return (window as any).browser || (window as any).chrome || (window as any).msBrowser;
 })();
@@ -62,13 +61,11 @@ function grid(): CTabGrid {
     };
 
     const initialize = function (): void {
+        CTabSettings.initialize();
         const muuriCopy = (window as any).Muuri;
         grid = new muuriCopy(".grid", options);
         load();
 
-
-        // Save whenever you leave the screen
-        // TODO: fix with muuri
         // @ts-ignore - no return for not showing a before-unload alert
         window.onbeforeunload = function () {
             // dirty state is implemented loosely (did not care much before, dirty in the probability of change)
@@ -78,26 +75,6 @@ function grid(): CTabGrid {
             }
             // service.saveGrid(); // Disabled to enable dev edit
         };
-
-
-        // TODO: fix with muuri
-        // service.grid.on("change", function (event, items) {
-        //     dirty = true;
-        //     // When you change the title of a widget, a gridstack onChange event is retrieved with
-        //     // items === 'undefined'.
-        //     if (typeof items !== 'undefined') {
-        //         for (let i = 0; i < items.length; i++) {
-        //             if (items[i].id in service.widgets) {
-        //                 service.update(items[i].id, items[i]);
-        //                 // Call to textfill library, dynamically adapting the font size
-        //                 $('#' + items[i].id).textfill({
-        //                     minFontPixels: 10,
-        //                     allowOverflow: true,
-        //                 });
-        //             }
-        //         }
-        //     }
-        // });
 
         // Call to textfill library, calculate font sizes that make the text fit in the boxes.
         widgets.forEach(i => ($('#' + i.id) as any).textfill({
@@ -121,7 +98,7 @@ function grid(): CTabGrid {
 
     const getConfig = () => {
         let lsConfig = window.localStorage.getItem("CTabConfig") || "{}";
-        let config = [];
+        let config: CTabWidgetTypes.CtabWidgetSerialized[] = [];
         try {
             config = JSON.parse(lsConfig);
         } catch (error) {
@@ -131,12 +108,8 @@ function grid(): CTabGrid {
         return config;
     };
 
-    const setConfig = (config: any[]) => {
-        if (config.length >= 1)
-            window.localStorage.setItem("CTabConfig", JSON.stringify(config));
-        else {
-            console.log("config too small", config);
-        }
+    const setConfig = (config: CTabWidgetTypes.CtabWidgetSerialized[]) => {
+        window.localStorage.setItem("CTabConfig", JSON.stringify(config));
     };
     // Returns message if save call is executed or not
     const saveGrid = () => {
@@ -332,7 +305,6 @@ function grid(): CTabGrid {
     // Loads the user configuration in the dashboard
     const load = function () {
         loadModel();
-        loadGrid();
     };
 
 
@@ -341,21 +313,10 @@ function grid(): CTabGrid {
         widgets = [];
         widgetData = Array.isArray(widgetData) ? widgetData : [];
 
-        widgets = widgetData.map((widget: any) => {
+        widgetData.forEach((widget: any) => {
             // what if widget does not have a type
-            return new CTabWidgetTypes.cTabTypeMap[widget.type](widget.id, widget.settings, widget.backgroundColor, widget.textColor)
+            addWidgetToGrid(new CTabWidgetTypes.cTabTypeMap[widget.type](widget.id, widget.settings, widget.backgroundColor, widget.textColor));
         });
-
-    };
-
-    const loadGrid = function () {
-        // add the widgets to the grid
-        for (let key in widgets) {
-            if (widgets.hasOwnProperty(key)) {
-                let widget = widgets[key];
-                addWidgetToGrid(widget);
-            }
-        }
 
     };
 
