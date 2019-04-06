@@ -2,7 +2,7 @@
 
 import {baseSettings, CTabWidget, CTabWidgetSerialized} from "./cTabWidgetTypeBase";
 import * as CTabWidgetTypes from './cTabWidgetType';
-import {cTabTypeMap} from "./cTabWidgetTypeHelper";
+import {cTabTypeMap, widgetNameList} from "./cTabWidgetTypeHelper";
 
 
 declare const $: any;
@@ -128,7 +128,13 @@ function grid(): CTabGrid {
         if (sampleConfig) {
             console.log("using sample config");
             let sampleConfiguration = [
-                {"settings":{"width":1,"height":1},"backgroundColor":"rgba(0,0,0,1)","textColor":"rgba(209,20,20,1)","id":0,"type":"ClockWidget"}];
+                {
+                    "settings": {"width": 1, "height": 1},
+                    "backgroundColor": "rgba(0,0,0,1)",
+                    "textColor": "rgba(209,20,20,1)",
+                    "id": 0,
+                    "type": "ClockWidget"
+                }];
             service.setConfig(sampleConfiguration);
         }
         if (addSampleWidgets) {
@@ -305,7 +311,15 @@ function grid(): CTabGrid {
 
         widgetData.forEach((widget: any) => {
             // what if widget does not have a type
-            addWidgetToGrid(new cTabTypeMap[widget.type](widget.id, widget.settings, widget.backgroundColor, widget.textColor));
+            try {
+                addWidgetToGrid(new cTabTypeMap[widget.type](widget.id, widget.settings, widget.backgroundColor, widget.textColor));
+            } catch (e) {
+                if (widget) {
+                    console.log(`Widget type ${widget.type} does not exist.`);
+                }
+                console.log(`Existing types are:`, widgetNameList);
+                console.error(e);
+            }
         });
 
     };

@@ -27,7 +27,7 @@ ${this.getHtmlControls()}
             backgroundColor: this.backgroundColor,
             textColor: this.textColor,
             id: this.id,
-            type: this.constructor.name
+            type: this.constructor.name.replace("cTabWidgetType_","")
         };
     };
 
@@ -60,7 +60,7 @@ export abstract class TitleWidget extends CTabWidget {
             backgroundColor: this.backgroundColor,
             id: this.id,
             textColor: this.textColor,
-            type: this.constructor.name
+            type: this.constructor.name.replace("cTabWidgetType_","")
         };
     };
 }

@@ -43,10 +43,10 @@ saveButton.addEventListener('click', saveGrid);
 /// Adding Widgets
 const widgetTypeChanger: HTMLSelectElement = document.querySelector("#typeDropdown") as HTMLSelectElement;
 widgetNameList.forEach((widget) => {
-   let option: HTMLOptionElement = document.createElement('option');
-   option.innerText = widget.replace("Widget","");
-   option.value = widget;
-   widgetTypeChanger.add(option);
+    let option: HTMLOptionElement = document.createElement('option');
+    option.innerText = widget.replace("Widget", "");
+    option.value = widget;
+    widgetTypeChanger.add(option);
 });
 
 // Show or hide the title and url input fields in the simple add area.
@@ -77,6 +77,7 @@ function widgetTypeFieldVisibilityControl(showTitle: boolean, showUrl: boolean):
         }
     }
 }
+widgetTypeFieldVisibilityControl(false, false);
 
 
 if (widgetTypeChanger !== null) {
@@ -86,16 +87,7 @@ if (widgetTypeChanger !== null) {
         if (curVal === "LinkWidget") {
             widgetTypeFieldVisibilityControl(true, true);
         }
-        if (curVal === "BuienradarWidget") {
-            widgetTypeFieldVisibilityControl(false, false);
-        }
-        if (curVal === "ClockWidget") {
-            widgetTypeFieldVisibilityControl(false, false);
-        }
-        if (curVal === "NoteWidget") {
-            widgetTypeFieldVisibilityControl(true, false);
-        }
-        if (curVal === "WeatherWidget") {
+        else {
             widgetTypeFieldVisibilityControl(false, false);
         }
     });
@@ -118,7 +110,7 @@ function addWidget(): void {
     let errorList: string[] = [];
     switch (widgetTypeChanger.value) {
         case "BuienradarWidget":
-            settings.width = 3;
+            settings.width = 2;
             settings.height = 4;
             break;
         case "WeatherWidget":
@@ -141,7 +133,7 @@ function addWidget(): void {
         case "NoteWidget":
             settings.width = 2;
             settings.height = 2;
-            (settings as titleSettings).title = title ? title.value : "";
+            (settings as titleSettings).title = "";
             break;
         case "ClockWidget":
             break;

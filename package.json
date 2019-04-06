@@ -29,7 +29,7 @@
     "webpack-cli": "^3.3.0"
   },
   "scripts": {
-    "build": "rm dist/index.html && ln src/index.html dist/index.html && node scripts/createSizeStyles.js && sass src/style.scss dist/style.css && webpack --config webpack.development.js",
+    "build": "rm -f dist/index.html && ln src/index.html dist/index.html && node scripts/createSizeStyles.js && sass src/style.scss dist/style.css && webpack --config webpack.development.js",
     "deploy": "rm -r dist && mkdir dist && cp src/index.html dist/index.html && node scripts/createSizeStyles.js && sass src/style.scss dist/style.css --no-source-map && webpack --config webpack.production.js"
   }
 }
