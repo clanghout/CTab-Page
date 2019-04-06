@@ -1,5 +1,6 @@
 import grid from './gridControls';
-import * as CtabWidgetTypes from './cTabWidgetType';
+import {baseSettings, linkSettings, titleSettings} from "./cTabWidgetTypeBase";
+import {widgetNameList} from "./cTabWidgetTypeHelper";
 
 (<any>window).browser = (() => {
     return (<any>window).browser || (<any>window).chrome || (<any>window).msBrowser;
@@ -12,7 +13,7 @@ const today = new Date();
 const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
 const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const dateField: HTMLElement = document.querySelector('#currDate') as HTMLElement;
-    dateField.innerText = `${weekdays[today.getDay()]} ${today.getDate()} ${months[today.getMonth()]} ${today.getFullYear()}`;
+dateField.innerText = `${weekdays[today.getDay()]} ${today.getDate()} ${months[today.getMonth()]} ${today.getFullYear()}`;
 
 function showToast(message: string): void {
     if (toastBox !== null) {
@@ -36,11 +37,17 @@ function saveGrid(): void {
 
 
 const saveButton: HTMLButtonElement = document.querySelector("#saveButton") as HTMLButtonElement;
-    saveButton.addEventListener('click', saveGrid);
+saveButton.addEventListener('click', saveGrid);
 
 
 /// Adding Widgets
 const widgetTypeChanger: HTMLSelectElement = document.querySelector("#typeDropdown") as HTMLSelectElement;
+widgetNameList.forEach((widget) => {
+   let option: HTMLOptionElement = document.createElement('option');
+   option.innerText = widget.replace("Widget","");
+   option.value = widget;
+   widgetTypeChanger.add(option);
+});
 
 // Show or hide the title and url input fields in the simple add area.
 function widgetTypeFieldVisibilityControl(showTitle: boolean, showUrl: boolean): void {
@@ -76,19 +83,19 @@ if (widgetTypeChanger !== null) {
     widgetTypeChanger.addEventListener('change', () => {
         const curVal = widgetTypeChanger.value;
 
-        if (curVal === "link") {
+        if (curVal === "LinkWidget") {
             widgetTypeFieldVisibilityControl(true, true);
         }
-        if (curVal === "buienradar") {
+        if (curVal === "BuienradarWidget") {
             widgetTypeFieldVisibilityControl(false, false);
         }
-        if (curVal === "clock") {
+        if (curVal === "ClockWidget") {
             widgetTypeFieldVisibilityControl(false, false);
         }
-        if (curVal === "note") {
+        if (curVal === "NoteWidget") {
             widgetTypeFieldVisibilityControl(true, false);
         }
-        if (curVal === "weather") {
+        if (curVal === "WeatherWidget") {
             widgetTypeFieldVisibilityControl(false, false);
         }
     });
@@ -107,17 +114,52 @@ function addWidget(): void {
     let bgcolor: HTMLInputElement | null = document.querySelector('#addBGC');
     let textcolor: HTMLInputElement | null = document.querySelector('#addTC');
 
-    if (title !== null && url !== null && bgcolor !== null && textcolor !== null && widgetTypeChanger !== null && (title.value !== "" || widgetTypeChanger.value === "clock" || widgetTypeChanger.value === "weather" || widgetTypeChanger.value === "buienradar")) {
-        CTabGrid.simpleAdd(widgetTypeChanger.value, {width: 1, height: 1}, bgcolor.value, textcolor.value);
-        title.value = "";
-        url.value = "";
+    let settings: baseSettings = {width: 1, height: 1};
+    let errorList: string[] = [];
+    switch (widgetTypeChanger.value) {
+        case "BuienradarWidget":
+            settings.width = 3;
+            settings.height = 4;
+            break;
+        case "WeatherWidget":
+            settings.width = 2;
+            settings.height = 2;
+            break;
+        case "LinkWidget":
+            if (title && title.value !== "") {
+                if (url && url.value !== "") {
+                    (settings as linkSettings).title = title.value;
+                    (settings as linkSettings).url = url.value;
+                } else {
+                    // link widgets without link were originally used as notes, but since note widgets exist, this is no longer necessary.
+                    errorList.push("url is missing");
+                }
+            } else {
+                errorList.push("title is missing");
+            }
+            break;
+        case "NoteWidget":
+            settings.width = 2;
+            settings.height = 2;
+            (settings as titleSettings).title = title ? title.value : "";
+            break;
+        case "ClockWidget":
+            break;
+        default:
+            errorList.push("Type missing");
+            break;
+    }
+    if (errorList.length > 0) {
+
+        showToast(`Unable to add widget:${errorList.reduce((acc, curr) => " " + acc + curr, "")}.`);
+    } else {
+
+        CTabGrid.simpleAdd(widgetTypeChanger.value, settings, bgcolor!.value, textcolor!.value);
+        title!.value = "";
+        url!.value = "";
 
         // Trigger hiding of the add window
-        if (addCancelButton !== null) {
-            addCancelButton.click();
-        }
-    } else {
-        showToast("Unable to add widget: A title is required.");
+        addCancelButton!.click();
     }
 }
 
@@ -175,17 +217,17 @@ function devSwitch(displayStyle: string): void {
 
 // disable dev mode by default
 devSwitch('none');
-    clearButton!.addEventListener('click', () => CTabGrid.debug(true, false));
-    debugButton!.addEventListener('click', () => CTabGrid.debug(false, true));
-    backupButton!.addEventListener('click', saveCurrentConfig);
-    devEnabledCheckbox!.addEventListener('change', (a) => {
-        if (a !== null && a.srcElement !== null)
-            if ((a.srcElement as HTMLInputElement).checked) {
-                devSwitch('block');
-            } else {
-                devSwitch('none');
-            }
-    });
+clearButton!.addEventListener('click', () => CTabGrid.debug(true, false));
+debugButton!.addEventListener('click', () => CTabGrid.debug(false, true));
+backupButton!.addEventListener('click', saveCurrentConfig);
+devEnabledCheckbox!.addEventListener('change', (a) => {
+    if (a !== null && a.srcElement !== null)
+        if ((a.srcElement as HTMLInputElement).checked) {
+            devSwitch('block');
+        } else {
+            devSwitch('none');
+        }
+});
 
 devSaveButton!.addEventListener('click', () => {
     let config = JSON.parse(configField!.value);
@@ -232,7 +274,12 @@ try {
     (window as any).browser.bookmarks.onCreated.addListener(function (id: any, bookmark: any) {
         console.log("id", id);
         console.log("bookmark", bookmark);
-        CTabGrid.simpleAdd("LinkWidget", {width: 1, height: 1, title: (bookmark.title as string), url: (bookmark.url as string)} as CtabWidgetTypes.linkSettings,"#fff", "#000");
+        CTabGrid.simpleAdd("LinkWidget", {
+            width: 1,
+            height: 1,
+            title: (bookmark.title as string),
+            url: (bookmark.url as string)
+        } as linkSettings, "#fff", "#000");
 
     });
 } catch (e) {

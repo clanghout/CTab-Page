@@ -1,9 +1,14 @@
 "use strict";
+
+import {baseSettings, CTabWidget, CTabWidgetSerialized} from "./cTabWidgetTypeBase";
+import * as CTabWidgetTypes from './cTabWidgetType';
+import {cTabTypeMap} from "./cTabWidgetTypeHelper";
+
+
 declare const $: any;
 import Picker from 'vanilla-picker';
 
 import CTabSettings from "./settingsMenu";
-import * as CTabWidgetTypes from './cTabWidgetType';
 import * as weatherEl from './weatherControls';
 
 (window as any).browser = (() => {
@@ -16,16 +21,16 @@ const styleElem = document.head.appendChild(document.createElement('style'));
 interface CTabGrid {
     initialize: () => void;
     saveGrid: () => string;
-    simpleAdd: (type: string, settings: CTabWidgetTypes.baseSettings, backgroundColor: string, textColor: string) => void;
+    simpleAdd: (type: string, settings: baseSettings, backgroundColor: string, textColor: string) => void;
     debug: (sampleConfig: boolean, addSampleWidgets: boolean) => void;
 
-    setConfig: (config: CTabWidgetTypes.CTabWidgetSerialized[]) => void;
-    getConfig: () => CTabWidgetTypes.CTabWidgetSerialized[];
+    setConfig: (config: CTabWidgetSerialized[]) => void;
+    getConfig: () => CTabWidgetSerialized[];
 }
 
 function grid(): CTabGrid {
     let grid: any;
-    let widgets: CTabWidgetTypes.CTabWidget[] = [];
+    let widgets: CTabWidget[] = [];
     let widgetColorPickerOpen: boolean = false;
     let dirty: boolean = false;
     const options = {
@@ -92,9 +97,9 @@ function grid(): CTabGrid {
         });
     };
 
-    const getConfig = (): CTabWidgetTypes.CTabWidgetSerialized[] => {
+    const getConfig = (): CTabWidgetSerialized[] => {
         let lsConfig = window.localStorage.getItem("CTabConfig") || "{}";
-        let config: CTabWidgetTypes.CTabWidgetSerialized[] = [];
+        let config: CTabWidgetSerialized[] = [];
         try {
             config = JSON.parse(lsConfig);
         } catch (error) {
@@ -104,7 +109,7 @@ function grid(): CTabGrid {
         return config;
     };
 
-    const setConfig = (config: CTabWidgetTypes.CTabWidgetSerialized[]) => {
+    const setConfig = (config: CTabWidgetSerialized[]) => {
         window.localStorage.setItem("CTabConfig", JSON.stringify(config));
     };
     // Returns message if save call is executed or not
@@ -135,10 +140,10 @@ function grid(): CTabGrid {
         }
     };
 
-    const simpleAdd = function (type: string, settings: CTabWidgetTypes.baseSettings, backgroundColor: string, textColor: string) {
+    const simpleAdd = function (type: string, settings: baseSettings, backgroundColor: string, textColor: string) {
 
         addWidgetToGrid(
-            new CTabWidgetTypes.cTabTypeMap[type](widgets.length, settings, backgroundColor, textColor));
+            new cTabTypeMap[type](widgets.length, settings, backgroundColor, textColor));
     };
 
     // Define return object
@@ -300,7 +305,7 @@ function grid(): CTabGrid {
 
         widgetData.forEach((widget: any) => {
             // what if widget does not have a type
-            addWidgetToGrid(new CTabWidgetTypes.cTabTypeMap[widget.type](widget.id, widget.settings, widget.backgroundColor, widget.textColor));
+            addWidgetToGrid(new cTabTypeMap[widget.type](widget.id, widget.settings, widget.backgroundColor, widget.textColor));
         });
 
     };
