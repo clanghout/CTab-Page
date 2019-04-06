@@ -1,7 +1,4 @@
 "use strict";
-/* eslint-env node, browser, jquery */
-// import * as $ from 'jquery';
-// import '../modules/jquery.textfill.min.js';
 declare const $: any;
 import Picker from 'vanilla-picker';
 
@@ -22,9 +19,8 @@ interface CTabGrid {
     simpleAdd: (type: string, settings: CTabWidgetTypes.baseSettings, backgroundColor: string, textColor: string) => void;
     debug: (sampleConfig: boolean, addSampleWidgets: boolean) => void;
 
-    // todo define config as type
-    setConfig: (config: any[]) => void;
-    getConfig: () => object[];
+    setConfig: (config: CTabWidgetTypes.CTabWidgetSerialized[]) => void;
+    getConfig: () => CTabWidgetTypes.CTabWidgetSerialized[];
 }
 
 function grid(): CTabGrid {
@@ -64,7 +60,7 @@ function grid(): CTabGrid {
         CTabSettings.initialize();
         const muuriCopy = (window as any).Muuri;
         grid = new muuriCopy(".grid", options);
-        load();
+        loadModel();
 
         // @ts-ignore - no return for not showing a before-unload alert
         window.onbeforeunload = function () {
@@ -96,9 +92,9 @@ function grid(): CTabGrid {
         });
     };
 
-    const getConfig = () => {
+    const getConfig = (): CTabWidgetTypes.CTabWidgetSerialized[] => {
         let lsConfig = window.localStorage.getItem("CTabConfig") || "{}";
-        let config: CTabWidgetTypes.CtabWidgetSerialized[] = [];
+        let config: CTabWidgetTypes.CTabWidgetSerialized[] = [];
         try {
             config = JSON.parse(lsConfig);
         } catch (error) {
@@ -108,7 +104,7 @@ function grid(): CTabGrid {
         return config;
     };
 
-    const setConfig = (config: CTabWidgetTypes.CtabWidgetSerialized[]) => {
+    const setConfig = (config: CTabWidgetTypes.CTabWidgetSerialized[]) => {
         window.localStorage.setItem("CTabConfig", JSON.stringify(config));
     };
     // Returns message if save call is executed or not
@@ -126,11 +122,8 @@ function grid(): CTabGrid {
         console.log("debug:");
         if (sampleConfig) {
             console.log("using sample config");
-            let sampleConfiguration = [{
-                settings: {"width": 2, "height": 2, title: "github"},
-                contentUrl: 'https://www.github.com',
-                newTab: CTabSettings.getNewTab()
-            }];
+            let sampleConfiguration = [
+                {"settings":{"width":1,"height":1},"backgroundColor":"rgba(0,0,0,1)","textColor":"rgba(209,20,20,1)","id":0,"type":"ClockWidget"}];
             service.setConfig(sampleConfiguration);
         }
         if (addSampleWidgets) {
@@ -296,17 +289,9 @@ function grid(): CTabGrid {
         widgets.push(widget);
     };
 
-
     const getDashboardConfig = function () {
         return widgets.map(widget => widget.getConfig());
     };
-
-
-    // Loads the user configuration in the dashboard
-    const load = function () {
-        loadModel();
-    };
-
 
     const loadModel = function () {
         let widgetData: any = service.getConfig();

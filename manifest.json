@@ -3,7 +3,7 @@
 
   "name": "CTab-Page",
   "description": "This extension creates a custom new tab page where the user can freely modify what page links are present on the page.",
-  "version": "1.0",
+  "version": "0.3",
 
   "permissions": [
     "activeTab",

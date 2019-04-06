@@ -47,6 +47,8 @@
   min-width: 15px;
   width: max-content;
   opacity: 1;
+  z-index: 15;
+  overflow: visible !important;
 }
 
 .widget-control-picker {

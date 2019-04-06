@@ -4,7 +4,5 @@ node_modules/
 
 out/*
 dist/*
-!dist/index.html
 
 sample-config.json
-*.map
