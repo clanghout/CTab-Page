@@ -1,4 +1,6 @@
 const path = require('path');
+const { CheckerPlugin } = require('awesome-typescript-loader')
+
 
 const typescriptLoader = {
     entry: './src/index.ts',
@@ -9,9 +11,7 @@ const typescriptLoader = {
                 test: /\.(ts)$/,
                 include: path.resolve(__dirname, 'src'),
                 exclude: /node_modules/,
-                use: {
-                    loader: 'ts-loader'
-                }
+                loader: 'awesome-typescript-loader'
             }
         ]
     },
@@ -25,7 +25,10 @@ const typescriptLoader = {
     },
     optimization: {
         minimize: false
-    }
+    },
+    plugins: [
+        new CheckerPlugin()
+    ]
 };
 
 
