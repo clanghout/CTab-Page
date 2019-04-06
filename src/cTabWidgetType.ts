@@ -54,7 +54,7 @@ export abstract class TitleWidget extends CTabWidget {
 
     getConfig = (): CTabWidgetSerialized => {
 
-        this.settings.title = (document.querySelector('#note-' + this.id) as HTMLTextAreaElement).value.replace(/\s/g, '').trim();
+        this.settings.title = (document.querySelector('#note-' + this.id) as HTMLTextAreaElement).value.replace(/\s\s/g, '\s');
         return {
             settings: this.settings,
             backgroundColor: this.backgroundColor,
