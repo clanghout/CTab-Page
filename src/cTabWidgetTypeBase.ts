@@ -45,6 +45,7 @@ ${this.getHtmlControls()}
                     <div class="vanilla-color-picker widget-control-picker" id="${this.id}-text-color" style="color:var(--${this.id}-text-color); border-color: var(--${this.id}-text-color); background-color: rgba(255,255,255,.8)">tc</div>
                     <div class="vanilla-color-picker widget-control-picker" id="${this.id}-background-color" style="background-color: var(--${this.id}-background-color); border-color: var(--${this.id}-background-color);">bg</div>
                 </div>`;
+    getType = this.constructor.name.replace("cTabWidgetType_","");
 }
 
 export abstract class TitleWidget extends CTabWidget {

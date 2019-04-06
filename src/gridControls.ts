@@ -3,13 +3,12 @@
 import {baseSettings, CTabWidget, CTabWidgetSerialized} from "./cTabWidgetTypeBase";
 import * as CTabWidgetTypes from './cTabWidgetType';
 import {cTabTypeMap, widgetNameList} from "./cTabWidgetTypeHelper";
+import Picker from 'vanilla-picker';
+import CTabSettings from "./settingsMenu";
+import * as weatherEl from './weatherControls';
 
 
 declare const $: any;
-import Picker from 'vanilla-picker';
-
-import CTabSettings from "./settingsMenu";
-import * as weatherEl from './weatherControls';
 
 (window as any).browser = (() => {
     return (window as any).browser || (window as any).chrome || (window as any).msBrowser;
@@ -36,6 +35,11 @@ function grid(): CTabGrid {
     const options = {
         // Muuri options
         dragEnabled: true,
+        dragStartPredicate: {
+            distance: 0,
+            delay: 0,
+            handle: '.ctab-widget-drag-handle'
+        },
         layoutOnInit: false,
         layout: {
             fillGaps: false,
@@ -285,8 +289,7 @@ function grid(): CTabGrid {
 
         document.getElementById(`delete-${widget.id}`)!.addEventListener('click', () => removeWidget(widget.id));
 
-
-        if (widget.type === 'weather') {
+        if (widget.getType === 'WeatherWidget') {
             widget.settings.width = widget.settings.width > 1 ? widget.settings.width : 2;
             widget.settings.height = widget.settings.height > 1 ? widget.settings.height : 2;
             widget.settings.city = widget.settings.city ? widget.settings.city : "delft";

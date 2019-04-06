@@ -86,7 +86,7 @@ export const getWeather = (id: number, city: string) => {
                 }
             })).catch((err) => {
             console.log(err);
-            if (weatherOutputElem!== null) {
+            if (weatherOutputElem !== null) {
                 weatherOutputElem.innerText = weatherEmoji.Error + "no (valid) key";
             }
         });
@@ -100,11 +100,9 @@ export function addWeatherListener(widget: WeatherWidget, id: number): void {
     if (cityButton) {
         cityButton.addEventListener('click', () => {
             const cityNameInput: HTMLElement | null = document.getElementById(id + '-cityInput');
-            if (cityNameInput !== null) {
-                let city = (<HTMLInputElement>cityNameInput).value;
-                widget.settings.city = city;
-                getWeather(id, city);
-            }
+            let city = (cityNameInput as HTMLInputElement).value;
+            widget.settings.city = city;
+            getWeather(id, city);
         });
     } else {
         console.log("Could not find the 'change' button corresponding to widget", id);
