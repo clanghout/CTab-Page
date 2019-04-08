@@ -72,7 +72,7 @@ export interface baseSettings {
 }
 
 export interface CTabWidgetSerialized {
-    id: number;
+    id: number | string;//TODO: remove number type after migration
     settings: baseSettings;
     backgroundColor: string;
     textColor: string;

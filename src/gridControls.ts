@@ -6,6 +6,7 @@ import {cTabTypeMap, widgetNameList} from "./cTabWidgetTypeHelper";
 import Picker from 'vanilla-picker';
 import CTabSettings from "./settingsMenu";
 import * as weatherEl from './weatherControls';
+import {WeatherWidget} from "./cTabWidgetType";
 
 
 declare const $: any;
@@ -153,7 +154,7 @@ function grid(): CTabGrid {
     const simpleAdd = function (type: string, settings: baseSettings, backgroundColor: string, textColor: string) {
 
         addWidgetToGrid(
-            new cTabTypeMap[type](widgets.length, settings, backgroundColor, textColor));
+            new cTabTypeMap[type](new Date().getTime().toString(), settings, backgroundColor, textColor));
     };
 
     // Define return object
@@ -202,7 +203,7 @@ function grid(): CTabGrid {
         }
     };
 
-    const addWidgetToGrid = function (widget: any) {
+    const addWidgetToGrid = function (widget: CTabWidget) {
         let itemElem = document.createElement('div');
         itemElem.innerHTML = widget.widgetTemplate();
 
@@ -289,13 +290,13 @@ function grid(): CTabGrid {
 
         document.getElementById(`delete-${widget.id}`)!.addEventListener('click', () => removeWidget(widget.id));
 
-        if (widget.getType === 'WeatherWidget') {
+        if (widget instanceof WeatherWidget) {
             widget.settings.width = widget.settings.width > 1 ? widget.settings.width : 2;
             widget.settings.height = widget.settings.height > 1 ? widget.settings.height : 2;
-            widget.settings.city = widget.settings.city ? widget.settings.city : "delft";
+            widget.settings.city = widget.settings.city || "delft";
             setTimeout(() => {
                 weatherEl.addWeatherListener(widget, widget.id);
-                (document.getElementById(widget.id + '-cityInput') as HTMLInputElement).value = widget.settings.city;
+                (document.getElementById(widget.id + '-cityInput') as HTMLInputElement).value =widget.settings.city;
                 weatherEl.getWeather(widget.id, widget.settings.city);
             }, 100);
         }
@@ -308,11 +309,15 @@ function grid(): CTabGrid {
     };
 
     const loadModel = function () {
-        let widgetData: any = service.getConfig();
+        let widgetData: CTabWidgetSerialized[] = service.getConfig();
         widgets = [];
         widgetData = Array.isArray(widgetData) ? widgetData : [];
 
-        widgetData.forEach((widget: any) => {
+        widgetData.filter((a:any) => a !== null).forEach((widget: CTabWidgetSerialized) => {
+            //TODO: remove temp code
+            if(typeof widget.id === "number"){
+                widget.id = new Date().getTime().toString();
+            }
             // what if widget does not have a type
             try {
                 addWidgetToGrid(new cTabTypeMap[widget.type](widget.id, widget.settings, widget.backgroundColor, widget.textColor));
