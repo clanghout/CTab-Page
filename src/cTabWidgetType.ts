@@ -18,13 +18,13 @@ export class WeatherWidget extends CTabWidget {
                                     </div>`;
     };
 
-    constructor(public id: number, public settings: weatherSettings, public backgroundColor: string, public textColor: string) {
+    constructor(public id: string, public settings: weatherSettings, public backgroundColor: string, public textColor: string) {
         super(id, settings, backgroundColor, textColor);
     }
 }
 
 export class LinkWidget extends TitleWidget {
-    constructor(public id: number, public settings: linkSettings, public backgroundColor: string, public textColor: string, public newTab: boolean) {
+    constructor(public id: string, public settings: linkSettings, public backgroundColor: string, public textColor: string, public newTab: boolean) {
         super(id, settings, backgroundColor, textColor);
     }
 
@@ -56,7 +56,7 @@ export class ClockWidget extends CTabWidget {
         return `<div id="${this.id}" class="ctab-widget-body ctab-item-clock"><span></span></div>`;
     };
 
-    constructor(public id: number, public settings: baseSettings, public backgroundColor: string, public textColor: string) {
+    constructor(public id: string, public settings: baseSettings, public backgroundColor: string, public textColor: string) {
         super(id, settings, backgroundColor, textColor);
     }
 
@@ -69,7 +69,7 @@ export class BuienradarWidget extends CTabWidget {
                                     </div>`;
     };
 
-    constructor(public id: number, public settings: baseSettings, public backgroundColor: string, public textColor: string) {
+    constructor(public id: string, public settings: baseSettings, public backgroundColor: string, public textColor: string) {
         super(id, settings, backgroundColor, textColor);
     }
 }
@@ -81,7 +81,7 @@ export class NoteWidget extends TitleWidget {
                                     </div>`;
     };
 
-    constructor(public id: number, public settings: titleSettings, public backgroundColor: string, public textColor: string) {
+    constructor(public id: string, public settings: titleSettings, public backgroundColor: string, public textColor: string) {
         super(id, settings, backgroundColor, textColor);
     }
 }

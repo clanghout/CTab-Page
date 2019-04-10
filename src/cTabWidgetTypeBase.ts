@@ -2,7 +2,7 @@ export abstract class CTabWidget {
 
     abstract getTemplateCore: () => string;
 
-    constructor(public id: number, public settings: baseSettings, public backgroundColor: string, public textColor: string) {
+    constructor(public id: string, public settings: baseSettings, public backgroundColor: string, public textColor: string) {
     }
 
 
@@ -27,7 +27,7 @@ ${this.getHtmlControls()}
             backgroundColor: this.backgroundColor,
             textColor: this.textColor,
             id: this.id,
-            type: this.constructor.name.replace("cTabWidgetType_","")
+            type: this.constructor.name.replace("cTabWidgetType_", "")
         };
     };
 
@@ -45,11 +45,11 @@ ${this.getHtmlControls()}
                     <div class="vanilla-color-picker widget-control-picker" id="${this.id}-text-color" style="color:var(--${this.id}-text-color); border-color: var(--${this.id}-text-color); background-color: rgba(255,255,255,.8)">tc</div>
                     <div class="vanilla-color-picker widget-control-picker" id="${this.id}-background-color" style="background-color: var(--${this.id}-background-color); border-color: var(--${this.id}-background-color);">bg</div>
                 </div>`;
-    getType = this.constructor.name.replace("cTabWidgetType_","");
+    getType = this.constructor.name.replace("cTabWidgetType_", "");
 }
 
 export abstract class TitleWidget extends CTabWidget {
-    protected constructor(public id: number, public settings: titleSettings, public backgroundColor: string, public textColor: string) {
+    protected constructor(public id: string, public settings: titleSettings, public backgroundColor: string, public textColor: string) {
         super(id, settings, backgroundColor, textColor);
     };
 
@@ -61,7 +61,7 @@ export abstract class TitleWidget extends CTabWidget {
             backgroundColor: this.backgroundColor,
             id: this.id,
             textColor: this.textColor,
-            type: this.constructor.name.replace("cTabWidgetType_","")
+            type: this.constructor.name.replace("cTabWidgetType_", "")
         };
     };
 }

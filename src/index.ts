@@ -77,6 +77,7 @@ function widgetTypeFieldVisibilityControl(showTitle: boolean, showUrl: boolean):
         }
     }
 }
+
 widgetTypeFieldVisibilityControl(false, false);
 
 
@@ -86,8 +87,7 @@ if (widgetTypeChanger !== null) {
 
         if (curVal === "LinkWidget") {
             widgetTypeFieldVisibilityControl(true, true);
-        }
-        else {
+        } else {
             widgetTypeFieldVisibilityControl(false, false);
         }
     });

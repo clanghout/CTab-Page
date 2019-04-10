@@ -143,7 +143,7 @@ function grid(): CTabGrid {
             service.setConfig(sampleConfiguration);
         }
         if (addSampleWidgets) {
-            addWidgetToGrid(new CTabWidgetTypes.LinkWidget(widgets.length, {
+            addWidgetToGrid(new CTabWidgetTypes.LinkWidget(new Date().getTime().toString(), {
                 width: 1,
                 height: 1,
                 title: "hallo!", url: "https://github.com"
@@ -189,17 +189,17 @@ function grid(): CTabGrid {
         return false;
     };
 
-    const removeWidget = function (id: number) {
+    const removeWidget = function (id: string) {
         // Get the outer muuri cell
-        let innerId = document.getElementById(id.toString());
+        let innerId = document.getElementById(id);
         let cell = innerId!.parentElement!.parentElement;
 
         if (cell) {
             // remove from the grid (ui only)
             grid.remove([cell], {removeElements: true, layout: true});
-
             // also remove from widgets, otherwise no changes will be detected on saving.
-            delete widgets[id];
+            widgets = widgets.filter((widget: CTabWidget) => widget.id !== id);
+            dirty = true;
         }
     };
 
@@ -296,7 +296,7 @@ function grid(): CTabGrid {
             widget.settings.city = widget.settings.city || "delft";
             setTimeout(() => {
                 weatherEl.addWeatherListener(widget, widget.id);
-                (document.getElementById(widget.id + '-cityInput') as HTMLInputElement).value =widget.settings.city;
+                (document.getElementById(widget.id + '-cityInput') as HTMLInputElement).value = widget.settings.city;
                 weatherEl.getWeather(widget.id, widget.settings.city);
             }, 100);
         }
@@ -313,9 +313,9 @@ function grid(): CTabGrid {
         widgets = [];
         widgetData = Array.isArray(widgetData) ? widgetData : [];
 
-        widgetData.filter((a:any) => a !== null).forEach((widget: CTabWidgetSerialized) => {
+        widgetData.filter((a: any) => a !== null).forEach((widget: CTabWidgetSerialized) => {
             //TODO: remove temp code
-            if(typeof widget.id === "number"){
+            if (typeof widget.id === "number") {
                 widget.id = new Date().getTime().toString();
             }
             // what if widget does not have a type
