@@ -2,6 +2,7 @@ import grid from './gridControls';
 import {baseSettings, linkSettings, titleSettings} from "./cTabWidgetTypeBase";
 import {widgetNameList} from "./cTabWidgetTypeHelper";
 
+
 (<any>window).browser = (() => {
     return (<any>window).browser || (<any>window).chrome || (<any>window).msBrowser;
 })();
@@ -94,6 +95,7 @@ if (widgetTypeChanger !== null) {
 }
 
 // New Add button
+const modalBackdrop: HTMLDivElement | null = document.querySelector('#modal-backdrop');
 const addMenu: HTMLElement | null = document.querySelector('#addMenu');
 const floatingAddButton: HTMLButtonElement | null = document.querySelector('#floatingAddButton');
 const addCancelButton: HTMLButtonElement | null = document.querySelector('#addCancelButton');
@@ -155,32 +157,31 @@ function addWidget(): void {
     }
 }
 
-if (addMenu !== null) {
-    addMenu.classList.add('hidden');
-}
-if (widgetAddButton !== null && floatingAddButton !== null && addMenu !== null && addCancelButton !== null) {
-    widgetAddButton.addEventListener('click', addWidget);
-    floatingAddButton.addEventListener('click', () => {
-        floatingAddButton.classList.add('hidden');
-        addMenu.classList.remove('hidden');
-    });
-    addCancelButton.addEventListener('click', () => {
-        floatingAddButton.classList.remove('hidden');
-        addMenu.classList.add('hidden');
-    });
-}
+addMenu!.classList.add('hidden');
+widgetAddButton!.addEventListener('click', addWidget);
+floatingAddButton!.addEventListener('click', () => {
+    floatingAddButton!.classList.add('hidden');
+    addMenu!.classList.remove('hidden');
+    modalBackdrop!.classList.remove('hidden');
+
+});
+addCancelButton!.addEventListener('click', () => {
+    floatingAddButton!.classList.remove('hidden');
+    addMenu!.classList.add('hidden');
+    modalBackdrop!.classList.add('hidden');
+});
+
 
 // Accept the 'Enter' key as alternative to clicking on the 'Add' button with the mouse, when interacting with the 'addMenu'.
 // Doesn't work for the background/text backgroundColor selectors as the browser seems to override the 'Enter' key for it (i.e. opens the backgroundColor palette).
 ['#typeDropdown', '#addTitle', '#addUrl', '#widgetAddButton'].forEach((item) => {
     const itemElem: HTMLElement | null = document.querySelector(item);
-    if (itemElem !== null) {
-        itemElem.addEventListener('keydown', (e) => {
-            if (e.key === "Enter") {
-                addWidget();
-            }
-        });
-    }
+    itemElem!.addEventListener('keydown', (e) => {
+        if (e.key === "Enter") {
+            addWidget();
+        }
+    });
+
 });
 
 

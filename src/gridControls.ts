@@ -8,9 +8,6 @@ import CTabSettings from "./settingsMenu";
 import * as weatherEl from './weatherControls';
 import {WeatherWidget} from "./cTabWidgetType";
 
-
-declare const $: any;
-
 (window as any).browser = (() => {
     return (window as any).browser || (window as any).chrome || (window as any).msBrowser;
 })();
@@ -82,11 +79,9 @@ function grid(): CTabGrid {
             // service.saveGrid(); // Disabled to enable dev edit
         };
 
+        // todo: textfill loop over all widgets?
         // Call to textfill library, calculate font sizes that make the text fit in the boxes.
-        widgets.forEach(i => ($('#' + i.id) as any).textfill({
-            minFontPixels: 12,
-            allowOverflow: true,
-        }));
+
         // Start clocks
         startTime();
         document.querySelectorAll(".ctab-item-note").forEach(note => {
@@ -96,10 +91,7 @@ function grid(): CTabGrid {
         // Set dirty to false, since note widgets might have set the state to dirty
         dirty = false;
 
-        ($('.ctab-item-clock') as any).textfill({
-            minFontPixels: 10,
-            allowOverflow: true,
-        });
+    //    todo: textfill ?
     };
 
     const getConfig = (): CTabWidgetSerialized[] => {
