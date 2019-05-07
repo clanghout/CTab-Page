@@ -291,7 +291,7 @@ function grid(): CTabGrid {
         }
 
         try {
-            BigText('#' + widget.id + " > span", {maximumFontSize:55, limitingDimension: "both",  verticalAlign:"center"})
+            BigText('#' + widget.id + " > span", {maximumFontSize:45, limitingDimension: "both",  verticalAlign:"center"})
         } catch (e) {
             console.log(widget.id, widget.getType);
         }

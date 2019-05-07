@@ -185,6 +185,13 @@ body {
   float: left;
 }
 
+.ctab-item-clock span{
+  width: 100%;
+  height: 100%;
+  line-height: 100%;
+  top: 0;
+  left: 0;
+}
 
 .ctab-widget-controls {
   height: calc(100% + 4px);
