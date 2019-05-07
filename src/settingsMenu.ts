@@ -14,6 +14,7 @@ let CTabSettings = (): CTabSettingsMenu => {
     const settingsPaneDiv: HTMLDivElement | null = document.querySelector('#settingsMenu');
     const backgroundImg: HTMLImageElement | null = document.querySelector('#background');
     const bgUrlVal: HTMLInputElement | null = document.querySelector('#background-url-value');
+    const modalBackdrop: HTMLDivElement | null = document.querySelector('#modal-backdrop');
 
     const weatherTimeoutInput: HTMLInputElement | null = document.querySelector('#weather-timeout');
 
@@ -172,6 +173,8 @@ let CTabSettings = (): CTabSettingsMenu => {
     function settingsToggle(): void {
         settingsActive = !settingsActive;
         settingsActive ? settingsPaneDiv!.classList.remove('hidden') : settingsPaneDiv!.classList.add('hidden');
+        settingsActive ? modalBackdrop!.classList.remove('hidden') : modalBackdrop!.classList.add('hidden');
+        settingsActive ? modalBackdrop!.addEventListener('click', settingsToggle) : modalBackdrop!.removeEventListener('click', settingsToggle);
     }
 
     const getWeatherTimeoutValue = function (): number {

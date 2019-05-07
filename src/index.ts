@@ -216,13 +216,11 @@ loadBackupButton!.addEventListener('change', () => {
         let file = loadBackupButton!.files![0];
         let fr = new FileReader();
         fr.onload = () => {
-            configField!.innerText = fr.result as string;
+            configField!.value = fr.result as string;
         };
         fr.readAsText(file);
-        // fr.readAsDataURL(file);
-
     }
-})
+});
 
 // disable dev mode by default
 devSwitch('none');
