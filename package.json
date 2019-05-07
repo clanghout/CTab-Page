@@ -7,6 +7,7 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
+    "big-text.js": "^1.0.1",
     "bootstrap": "3",
     "muuri": "^0.7.1",
     "streamsaver": "^1.2.0",

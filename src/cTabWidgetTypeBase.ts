@@ -2,6 +2,7 @@ export abstract class CTabWidget {
 
     abstract getTemplateCore: () => string;
 
+
     constructor(public id: string, public settings: baseSettings, public backgroundColor: string, public textColor: string) {
     }
 
@@ -72,7 +73,7 @@ export interface baseSettings {
 }
 
 export interface CTabWidgetSerialized {
-    id: number | string;//TODO: remove number type after migration
+    id: string;
     settings: baseSettings;
     backgroundColor: string;
     textColor: string;

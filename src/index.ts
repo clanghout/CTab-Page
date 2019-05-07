@@ -194,7 +194,7 @@ const devEnabledCheckbox: HTMLInputElement | null = document.querySelector("#dev
 const devOpacityButton: HTMLButtonElement | null = document.querySelector("#opacityButton");
 const configField: HTMLInputElement | null = document.querySelector("#configFieldInput");
 const devSaveButton: HTMLButtonElement | null = document.querySelector("#saveDevConfig");
-//TODO: const loadBackupButton: HTMLButtonElement | null = document.querySelector('#loadBackupButton');
+const loadBackupButton: HTMLInputElement | null = document.querySelector('#loadBackupButton');
 
 // Show or hide developer mode specific buttons
 function devSwitch(displayStyle: string): void {
@@ -207,6 +207,16 @@ function devSwitch(displayStyle: string): void {
     // document.querySelector("#widescreenButton").style.display = displayStyle;
 }
 
+loadBackupButton!.addEventListener('change', () => {
+    if(loadBackupButton!.files!.length > 0){
+        let file = loadBackupButton!.files![0];
+        let fr = new FileReader();
+        fr.onload = () => {configField!.innerText = fr.result as string;};
+        fr.readAsText(file);
+        // fr.readAsDataURL(file);
+
+    }
+})
 
 // disable dev mode by default
 devSwitch('none');

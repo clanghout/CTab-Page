@@ -7,6 +7,7 @@ import Picker from 'vanilla-picker';
 import CTabSettings from "./settingsMenu";
 import * as weatherEl from './weatherControls';
 import {WeatherWidget} from "./cTabWidgetType";
+import BigText from 'big-text.js';
 
 (window as any).browser = (() => {
     return (window as any).browser || (window as any).chrome || (window as any).msBrowser;
@@ -79,9 +80,6 @@ function grid(): CTabGrid {
             // service.saveGrid(); // Disabled to enable dev edit
         };
 
-        // todo: textfill loop over all widgets?
-        // Call to textfill library, calculate font sizes that make the text fit in the boxes.
-
         // Start clocks
         startTime();
         document.querySelectorAll(".ctab-item-note").forEach(note => {
@@ -91,7 +89,6 @@ function grid(): CTabGrid {
         // Set dirty to false, since note widgets might have set the state to dirty
         dirty = false;
 
-    //    todo: textfill ?
     };
 
     const getConfig = (): CTabWidgetSerialized[] => {
@@ -129,7 +126,7 @@ function grid(): CTabGrid {
                     "settings": {"width": 1, "height": 1},
                     "backgroundColor": "rgba(0,0,0,1)",
                     "textColor": "rgba(209,20,20,1)",
-                    "id": 0,
+                    "id": 'i0',
                     "type": "ClockWidget"
                 }];
             service.setConfig(sampleConfiguration);
@@ -146,7 +143,7 @@ function grid(): CTabGrid {
     const simpleAdd = function (type: string, settings: baseSettings, backgroundColor: string, textColor: string) {
 
         addWidgetToGrid(
-            new cTabTypeMap[type](new Date().getTime().toString(), settings, backgroundColor, textColor));
+            new cTabTypeMap[type]("i" + new Date().getTime().toString(), settings, backgroundColor, textColor));
     };
 
     // Define return object
@@ -293,6 +290,12 @@ function grid(): CTabGrid {
             }, 100);
         }
 
+        try {
+            BigText('#' + widget.id + " > span", {maximumFontSize:55, limitingDimension: "both",  verticalAlign:"center"})
+        } catch (e) {
+            console.log(widget.id, widget.getType);
+        }
+
         widgets.push(widget);
     };
 
@@ -306,12 +309,11 @@ function grid(): CTabGrid {
         widgetData = Array.isArray(widgetData) ? widgetData : [];
 
         widgetData.filter((a: any) => a !== null).forEach((widget: CTabWidgetSerialized) => {
-            //TODO: remove temp code
-            if (typeof widget.id === "number") {
-                widget.id = new Date().getTime().toString();
-            }
             // what if widget does not have a type
             try {
+                if (typeof widget.id === "number") {
+                    widget.id = "i" + widget.id;
+                }
                 addWidgetToGrid(new cTabTypeMap[widget.type](widget.id, widget.settings, widget.backgroundColor, widget.textColor));
             } catch (e) {
                 if (widget) {
