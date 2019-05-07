@@ -159,16 +159,20 @@ function addWidget(): void {
 
 addMenu!.classList.add('hidden');
 widgetAddButton!.addEventListener('click', addWidget);
+const closeAdd = () => {
+    floatingAddButton!.classList.remove('hidden');
+    addMenu!.classList.add('hidden');
+    modalBackdrop!.classList.add('hidden');
+};
 floatingAddButton!.addEventListener('click', () => {
     floatingAddButton!.classList.add('hidden');
     addMenu!.classList.remove('hidden');
     modalBackdrop!.classList.remove('hidden');
-
+    modalBackdrop!.addEventListener('click', closeAdd);
 });
 addCancelButton!.addEventListener('click', () => {
-    floatingAddButton!.classList.remove('hidden');
-    addMenu!.classList.add('hidden');
-    modalBackdrop!.classList.add('hidden');
+    closeAdd();
+    modalBackdrop!.removeEventListener("click", closeAdd);
 });
 
 
@@ -208,10 +212,12 @@ function devSwitch(displayStyle: string): void {
 }
 
 loadBackupButton!.addEventListener('change', () => {
-    if(loadBackupButton!.files!.length > 0){
+    if (loadBackupButton!.files!.length > 0) {
         let file = loadBackupButton!.files![0];
         let fr = new FileReader();
-        fr.onload = () => {configField!.innerText = fr.result as string;};
+        fr.onload = () => {
+            configField!.innerText = fr.result as string;
+        };
         fr.readAsText(file);
         // fr.readAsDataURL(file);
 

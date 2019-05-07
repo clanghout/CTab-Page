@@ -8,28 +8,27 @@
     <title>CTab Page</title>
     <link href="./style.css" rel="stylesheet"/>
     <link href="sizeStyles.css" rel="stylesheet"/>
-    <link rel="stylesheet" href="../node_modules/bootstrap/dist/css/bootstrap.css">
 </head>
 <body>
 
 <div class="hidden" id="modal-backdrop">
-
+&nbsp;
 </div>
 
 <div class="top-bar">
-    <div id="logo1" class="col-sm-3"><a title="to github page" href="https://github.com/clanghout/ctab-page">CTab</a>
+    <div id="logo1"><a title="to github page" href="https://github.com/clanghout/ctab-page">CTab</a>
     </div>
-    <div class="col-sm-1" style="color: #ffffff;"></div>
-    <div class="col-sm-3">
+    <div style="color: #ffffff;"></div>
+    <div>
         <div class="sorting-control">
             <select name="sorting" id="sortingDropdown" class="sortingDropdown">
             </select>
         </div>
     </div>
-    <div class="col-sm-1">
+    <div>
         <button id="settings-toggle">settings</button>
     </div>
-    <div class="clockdate col-sm-4">
+    <div class="clockdate">
         <div class="clock ctab-item-clock"><span></span></div>
         <div class="date"><span id="currDate"></span></div>
     </div>
@@ -671,11 +670,11 @@
 <!--Muuri scripts-->
 <script defer src="../modules/web-animations.min.js"></script>
 <script defer src="../modules/hammer.min.js"></script>
-<script defer async src="../node_modules/muuri/dist/muuri.min.js"></script>
+<script defer src="../node_modules/muuri/dist/muuri.min.js"></script>
 <script defer async src="../node_modules/streamsaver/StreamSaver.js"></script>
 
 
 <!--CTab script-->
-<script defer async type=module src="main.js"></script>
+<script defer type=module src="main.js"></script>
 </body>
 </html>
