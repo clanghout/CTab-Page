@@ -90,4 +90,5 @@ export interface titleSettings extends baseSettings {
 
 export interface linkSettings extends titleSettings {
     url: string;
+    newTab: boolean;
 }

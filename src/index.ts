@@ -191,6 +191,7 @@ addCancelButton!.addEventListener('click', () => {
 
 /// Dev mode
 const devConfigBox: HTMLDivElement | null = document.querySelector("#devConfig");
+const devArea: HTMLDivElement | null = document.querySelector("#dev-area");
 const clearButton: HTMLButtonElement | null = document.querySelector("#clearButton");
 const debugButton: HTMLButtonElement | null = document.querySelector("#debugButton");
 const backupButton: HTMLButtonElement | null = document.querySelector("#backupButton");
@@ -202,13 +203,12 @@ const loadBackupButton: HTMLInputElement | null = document.querySelector('#loadB
 
 // Show or hide developer mode specific buttons
 function devSwitch(displayStyle: string): void {
-    if (devConfigBox && clearButton && debugButton) {
-        devConfigBox.style.display = displayStyle;
-        devConfigBox.classList.remove("hidden");
-        clearButton.style.display = displayStyle;
-        debugButton.style.display = displayStyle;
-    }
-    // document.querySelector("#widescreenButton").style.display = displayStyle;
+    devConfigBox!.style.display = displayStyle;
+    devArea!.style.display = displayStyle;
+    devConfigBox!.classList.remove("hidden");
+    devArea!.classList.remove("hidden");
+    clearButton!.style.display = displayStyle;
+    debugButton!.style.display = displayStyle;
 }
 
 loadBackupButton!.addEventListener('change', () => {
@@ -230,7 +230,7 @@ backupButton!.addEventListener('click', saveCurrentConfig);
 devEnabledCheckbox!.addEventListener('change', (a) => {
     if (a !== null && a.srcElement !== null)
         if ((a.srcElement as HTMLInputElement).checked) {
-            devSwitch('block');
+            devSwitch('inline');
         } else {
             devSwitch('none');
         }

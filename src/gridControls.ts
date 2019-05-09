@@ -1,6 +1,6 @@
 "use strict";
 
-import {baseSettings, CTabWidget, CTabWidgetSerialized} from "./cTabWidgetTypeBase";
+import {baseSettings, CTabWidget, CTabWidgetSerialized, linkSettings} from "./cTabWidgetTypeBase";
 import * as CTabWidgetTypes from './cTabWidgetType';
 import {cTabTypeMap, widgetNameList} from "./cTabWidgetTypeHelper";
 import Picker from 'vanilla-picker';
@@ -75,7 +75,8 @@ function grid(): CTabGrid {
             // dirty state is implemented loosely (did not care much before, dirty in the probability of change)
             // so an extra check is also added comparing the current state to the saved state
             if (hasChanges() && CTabSettings.getShowUnsavedWarning()) {
-                return "You have unsaved changes on this page. Do you want to leave this page and discard your changes or stay on this page?";
+                // You have unsaved changes on this page. Do you want to leave this page and discard your changes or stay on this page?
+                return "";
             }
             // service.saveGrid(); // Disabled to enable dev edit
         };
@@ -135,8 +136,9 @@ function grid(): CTabGrid {
             addWidgetToGrid(new CTabWidgetTypes.LinkWidget(new Date().getTime().toString(), {
                 width: 1,
                 height: 1,
-                title: "hallo!", url: "https://github.com"
-            }, "rgba(255,255,255,0.5)", "rgba(0,0,0,1)", CTabSettings.getNewTab()));
+                title: "hallo!", url: "https://github.com",
+                newTab: CTabSettings.getNewTab()
+            }, "rgba(255,255,255,0.5)", "rgba(0,0,0,1)"));
         }
     };
 
@@ -311,8 +313,8 @@ function grid(): CTabGrid {
         widgetData.filter((a: any) => a !== null).forEach((widget: CTabWidgetSerialized) => {
             // what if widget does not have a type
             try {
-                if (typeof widget.id === "number") {
-                    widget.id = "i" + widget.id;
+                if(widget.type === "LinkWidget"){
+                    (widget.settings as linkSettings).newTab = CTabSettings.getNewTab();
                 }
                 addWidgetToGrid(new cTabTypeMap[widget.type](widget.id, widget.settings, widget.backgroundColor, widget.textColor));
             } catch (e) {

@@ -25,6 +25,16 @@
             </select>
         </div>
     </div>
+    <div class="dev-toggle">
+        <input type="checkbox" id="devEnabled"/>
+        <label for="devEnabled">Developer mode</label>
+    </div>
+    <div class="buttonBar">
+        <button id="saveButton" title="Ctrl+Shift+S">Save</button>
+        <button id="clearButton">Reset to Default</button>
+        <button id="debugButton">Add Test Widget</button>
+        <!--<button id="widescreenButton">Widescreen Mode</button>-->
+    </div>
     <div>
         <button id="settings-toggle">settings</button>
     </div>
@@ -45,23 +55,13 @@
     <div class="grid" id="main-dashboard">
     </div>
 
-
-    <div class="buttonBar">
-        <button id="saveButton" title="Ctrl+Shift+S">Save</button>
-        <button id="clearButton">Reset to Default</button>
-        <button id="debugButton">Add Test Widget</button>
-        <!--<button id="widescreenButton">Widescreen Mode</button>-->
-    </div>
-
     <div class="addButton" id="floatingAddButton">
         <div class="addSign"></div>
     </div>
 </div>
 
-<div class="dev-area">
+<div class="dev-area hidden" id="dev-area">
     <div class="others">
-        <input type="checkbox" id="devEnabled"/>
-        <label for="devEnabled">Developer mode</label>
         <div id="devConfig" class="hidden">
             <div id="configField">
                 <textarea name="configFieldInput" id="configFieldInput" cols="125" rows="10"></textarea>

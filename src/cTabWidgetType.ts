@@ -24,13 +24,13 @@ export class WeatherWidget extends CTabWidget {
 }
 
 export class LinkWidget extends TitleWidget {
-    constructor(public id: string, public settings: linkSettings, public backgroundColor: string, public textColor: string, public newTab: boolean) {
+    constructor(public id: string, public settings: linkSettings, public backgroundColor: string, public textColor: string) {
         super(id, settings, backgroundColor, textColor);
     }
 
 
     private getTag = () => `<span style="line-height: 100%;">${this.settings.title}</span>
-<a href="${this.settings.url}" ${this.newTab ? 'target="_blank"' : ""} id="${this.settings.title}">
+<a href="${this.settings.url}" ${this.settings.newTab ? 'target="_blank"' : ""} id="${this.settings.title}">
     <span class="ctab-widget-link"></span>
 </a>`;
 
