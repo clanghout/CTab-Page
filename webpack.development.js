@@ -1,15 +1,9 @@
 const path = require('path');
-const {CheckerPlugin} = require('awesome-typescript-loader');
-const webpack = require('webpack');
+const { CheckerPlugin } = require('awesome-typescript-loader')
 
 
 const typescriptLoader = {
-    entry: {app: './src/index.ts'},
-    devtool: "inline-source-map",
-    devServer: {
-        contentBase: './dist',
-        hot: true
-    },
+    entry: './src/index.ts',
     mode: 'production', // otherwise evals are added which are blocked for the extension
     module: {
         rules: [
@@ -33,8 +27,7 @@ const typescriptLoader = {
         minimize: false
     },
     plugins: [
-        new CheckerPlugin(),
-        new webpack.HotModuleReplacementPlugin()
+        new CheckerPlugin()
     ]
 };
 
