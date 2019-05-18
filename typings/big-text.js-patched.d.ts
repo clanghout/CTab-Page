@@ -1,4 +1,4 @@
-declare module "big-text.js" {
+declare module "big-text.js-patched" {
 
     interface options {
         rotateText?: number | null; // null

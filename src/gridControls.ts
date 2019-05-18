@@ -7,7 +7,7 @@ import Picker from 'vanilla-picker';
 import CTabSettings from "./settingsMenu";
 import * as weatherEl from './weatherControls';
 import {WeatherWidget} from "./cTabWidgetType";
-import BigText from 'big-text.js';
+import BigText from 'big-text.js-patched';
 
 (window as any).browser = (() => {
     return (window as any).browser || (window as any).chrome || (window as any).msBrowser;
