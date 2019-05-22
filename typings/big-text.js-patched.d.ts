@@ -3,7 +3,7 @@ declare module "big-text.js-patched" {
     interface options {
         rotateText?: number | null; // null
         fontSizeFactor?: number; // 0.8,
-        maximumFontSize?: number | null ; // null,
+        maximumFontSize?: number | null; // null,
         limitingDimension?: string; // "both",
         horizontalAlign?: string; // "center",
         verticalAlign?: string; // "center",
@@ -11,6 +11,6 @@ declare module "big-text.js-patched" {
         whiteSpace?: string; // "nowrap"
     }
 
-    export default function BigText(element: string | HTMLElement, options?: options) :void;
+    export default function BigText(element: string | HTMLElement, options?: options): void;
 
 }

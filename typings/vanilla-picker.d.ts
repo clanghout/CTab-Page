@@ -16,7 +16,7 @@ declare module "vanilla-picker" {
         hex: string;
     }
 
-    declare class Picker {
+    class Picker {
         constructor(settings: {
             parent?: HTMLElement;
             popup?: "top" | "bottom" | "left" | "right";

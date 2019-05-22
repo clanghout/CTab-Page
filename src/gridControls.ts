@@ -162,11 +162,11 @@ function grid(): CTabGrid {
         widgetColorPickerOpen = isOpen;
     };
 
-    const noteChanged = () => {
+    const noteChanged: () => void = () => {
         dirty = true;
     };
 
-    const hasChanges = () => {
+    const hasChanges: () => boolean = () => {
         let saved = service.getConfig();
         let current = getDashboardConfig();
         // compare strings since object compare is always different with ==
@@ -180,7 +180,7 @@ function grid(): CTabGrid {
         return false;
     };
 
-    const removeWidget = function (id: string) {
+    const removeWidget: (id: string) => void = function (id: string) {
         // Get the outer muuri cell
         let innerId = document.getElementById(id);
         let cell = innerId!.parentElement!.parentElement;

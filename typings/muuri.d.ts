@@ -6,15 +6,13 @@ declare module 'Muuri' {
 
     declare class Muuri {
         constructor(
-            element: HTMLElement|String,
-            options: MuuriOptions|any
+            element: HTMLElement | String,
+            options: MuuriOptions | any
         );
     }
+
     export default Muuri;
 }
-
-
-
 
 
 /* @class
