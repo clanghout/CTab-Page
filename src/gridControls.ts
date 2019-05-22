@@ -1,15 +1,13 @@
 "use strict";
 
-import {baseSettings, CTabWidget, CTabWidgetSerialized} from "./cTabWidgetTypeBase";
+import {baseSettings, CTabWidget, CTabWidgetSerialized, linkSettings} from "./cTabWidgetTypeBase";
 import * as CTabWidgetTypes from './cTabWidgetType';
 import {cTabTypeMap, widgetNameList} from "./cTabWidgetTypeHelper";
 import Picker from 'vanilla-picker';
 import CTabSettings from "./settingsMenu";
 import * as weatherEl from './weatherControls';
 import {WeatherWidget} from "./cTabWidgetType";
-
-
-declare const $: any;
+import BigText from 'big-text.js-patched';
 
 (window as any).browser = (() => {
     return (window as any).browser || (window as any).chrome || (window as any).msBrowser;
@@ -77,16 +75,12 @@ function grid(): CTabGrid {
             // dirty state is implemented loosely (did not care much before, dirty in the probability of change)
             // so an extra check is also added comparing the current state to the saved state
             if (hasChanges() && CTabSettings.getShowUnsavedWarning()) {
-                return "You have unsaved changes on this page. Do you want to leave this page and discard your changes or stay on this page?";
+                // You have unsaved changes on this page. Do you want to leave this page and discard your changes or stay on this page?
+                return "";
             }
             // service.saveGrid(); // Disabled to enable dev edit
         };
 
-        // Call to textfill library, calculate font sizes that make the text fit in the boxes.
-        widgets.forEach(i => ($('#' + i.id) as any).textfill({
-            minFontPixels: 12,
-            allowOverflow: true,
-        }));
         // Start clocks
         startTime();
         document.querySelectorAll(".ctab-item-note").forEach(note => {
@@ -96,10 +90,6 @@ function grid(): CTabGrid {
         // Set dirty to false, since note widgets might have set the state to dirty
         dirty = false;
 
-        ($('.ctab-item-clock') as any).textfill({
-            minFontPixels: 10,
-            allowOverflow: true,
-        });
     };
 
     const getConfig = (): CTabWidgetSerialized[] => {
@@ -137,24 +127,25 @@ function grid(): CTabGrid {
                     "settings": {"width": 1, "height": 1},
                     "backgroundColor": "rgba(0,0,0,1)",
                     "textColor": "rgba(209,20,20,1)",
-                    "id": 0,
+                    "id": 'i0',
                     "type": "ClockWidget"
                 }];
             service.setConfig(sampleConfiguration);
         }
         if (addSampleWidgets) {
-            addWidgetToGrid(new CTabWidgetTypes.LinkWidget(widgets.length, {
+            addWidgetToGrid(new CTabWidgetTypes.LinkWidget(new Date().getTime().toString(), {
                 width: 1,
                 height: 1,
-                title: "hallo!", url: "https://github.com"
-            }, "rgba(255,255,255,0.5)", "rgba(0,0,0,1)", CTabSettings.getNewTab()));
+                title: "hallo!", url: "https://github.com",
+                newTab: CTabSettings.getNewTab()
+            }, "rgba(255,255,255,0.5)", "rgba(0,0,0,1)"));
         }
     };
 
     const simpleAdd = function (type: string, settings: baseSettings, backgroundColor: string, textColor: string) {
 
         addWidgetToGrid(
-            new cTabTypeMap[type](new Date().getTime().toString(), settings, backgroundColor, textColor));
+            new cTabTypeMap[type]("i" + new Date().getTime().toString(), settings, backgroundColor, textColor));
     };
 
     // Define return object
@@ -171,11 +162,11 @@ function grid(): CTabGrid {
         widgetColorPickerOpen = isOpen;
     };
 
-    const noteChanged = () => {
+    const noteChanged: () => void = () => {
         dirty = true;
     };
 
-    const hasChanges = () => {
+    const hasChanges: () => boolean = () => {
         let saved = service.getConfig();
         let current = getDashboardConfig();
         // compare strings since object compare is always different with ==
@@ -189,17 +180,17 @@ function grid(): CTabGrid {
         return false;
     };
 
-    const removeWidget = function (id: number) {
+    const removeWidget: (id: string) => void = function (id: string) {
         // Get the outer muuri cell
-        let innerId = document.getElementById(id.toString());
+        let innerId = document.getElementById(id);
         let cell = innerId!.parentElement!.parentElement;
 
         if (cell) {
             // remove from the grid (ui only)
             grid.remove([cell], {removeElements: true, layout: true});
-
             // also remove from widgets, otherwise no changes will be detected on saving.
-            delete widgets[id];
+            widgets = widgets.filter((widget: CTabWidget) => widget.id !== id);
+            dirty = true;
         }
     };
 
@@ -296,9 +287,15 @@ function grid(): CTabGrid {
             widget.settings.city = widget.settings.city || "delft";
             setTimeout(() => {
                 weatherEl.addWeatherListener(widget, widget.id);
-                (document.getElementById(widget.id + '-cityInput') as HTMLInputElement).value =widget.settings.city;
+                (document.getElementById(widget.id + '-cityInput') as HTMLInputElement).value = widget.settings.city;
                 weatherEl.getWeather(widget.id, widget.settings.city);
             }, 100);
+        }
+
+        try {
+            BigText('#' + widget.id + " > span", {maximumFontSize:45, limitingDimension: "both",  verticalAlign:"center"})
+        } catch (e) {
+            console.log(widget.id, widget.getType);
         }
 
         widgets.push(widget);
@@ -313,13 +310,12 @@ function grid(): CTabGrid {
         widgets = [];
         widgetData = Array.isArray(widgetData) ? widgetData : [];
 
-        widgetData.filter((a:any) => a !== null).forEach((widget: CTabWidgetSerialized) => {
-            //TODO: remove temp code
-            if(typeof widget.id === "number"){
-                widget.id = new Date().getTime().toString();
-            }
+        widgetData.filter((a: any) => a !== null).forEach((widget: CTabWidgetSerialized) => {
             // what if widget does not have a type
             try {
+                if(widget.type === "LinkWidget"){
+                    (widget.settings as linkSettings).newTab = CTabSettings.getNewTab();
+                }
                 addWidgetToGrid(new cTabTypeMap[widget.type](widget.id, widget.settings, widget.backgroundColor, widget.textColor));
             } catch (e) {
                 if (widget) {

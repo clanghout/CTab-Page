@@ -21,7 +21,7 @@ interface weatherDataSave extends OpenWeatherMapData {
 }
 
 interface OpenWeatherMapWeather {
-    id: number;
+    id: string;
     main: string;
     description: string;
 }
@@ -60,7 +60,7 @@ let tempFormat = (data: OpenWeatherMapData): string => {
     return "invalid key";
 };
 
-export const getWeather = (id: number, city: string) => {
+export const getWeather = (id: string, city: string) => {
 
     let weatherOutputElem: HTMLElement | null = document.getElementById(id + '-output');
     let weatherTimeout = CTabSettings.getWeatherTimeoutValue() || defaultWeatherTimeout;
@@ -95,7 +95,7 @@ export const getWeather = (id: number, city: string) => {
 
 
 // Export this function
-export function addWeatherListener(widget: WeatherWidget, id: number): void {
+export function addWeatherListener(widget: WeatherWidget, id: string): void {
     const cityButton = document.getElementById(id + '-cityInputButton');
     if (cityButton) {
         cityButton.addEventListener('click', () => {

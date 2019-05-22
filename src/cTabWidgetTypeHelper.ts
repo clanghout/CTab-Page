@@ -3,8 +3,7 @@ import {CTabWidget} from "./cTabWidgetTypeBase";
 import * as widgetTypes from "./cTabWidgetType";
 
 interface WidgetConstructor {
-    // TODO: remove id number type after migration
-    new (id: number | string, settings: baseSettings, backgroundColor: string, textColor: string): CTabWidget;
+    new (id: string, settings: baseSettings, backgroundColor: string, textColor: string): CTabWidget;
 }
 
 

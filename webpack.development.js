@@ -1,10 +1,10 @@
 const path = require('path');
-const { CheckerPlugin } = require('awesome-typescript-loader')
+const { CheckerPlugin } = require('awesome-typescript-loader');
 
 
 const typescriptLoader = {
     entry: './src/index.ts',
-    mode: 'production', // otherwise evals are added which are blocked for the extension
+    mode: 'development', // otherwise evals are added which are blocked for the extension
     module: {
         rules: [
             {
@@ -28,7 +28,8 @@ const typescriptLoader = {
     },
     plugins: [
         new CheckerPlugin()
-    ]
+    ],
+    devtool: ""
 };
 
 

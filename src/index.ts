@@ -2,6 +2,7 @@ import grid from './gridControls';
 import {baseSettings, linkSettings, titleSettings} from "./cTabWidgetTypeBase";
 import {widgetNameList} from "./cTabWidgetTypeHelper";
 
+
 (<any>window).browser = (() => {
     return (<any>window).browser || (<any>window).chrome || (<any>window).msBrowser;
 })();
@@ -77,6 +78,7 @@ function widgetTypeFieldVisibilityControl(showTitle: boolean, showUrl: boolean):
         }
     }
 }
+
 widgetTypeFieldVisibilityControl(false, false);
 
 
@@ -86,14 +88,14 @@ if (widgetTypeChanger !== null) {
 
         if (curVal === "LinkWidget") {
             widgetTypeFieldVisibilityControl(true, true);
-        }
-        else {
+        } else {
             widgetTypeFieldVisibilityControl(false, false);
         }
     });
 }
 
 // New Add button
+const modalBackdrop: HTMLDivElement | null = document.querySelector('#modal-backdrop');
 const addMenu: HTMLElement | null = document.querySelector('#addMenu');
 const floatingAddButton: HTMLButtonElement | null = document.querySelector('#floatingAddButton');
 const addCancelButton: HTMLButtonElement | null = document.querySelector('#addCancelButton');
@@ -155,37 +157,41 @@ function addWidget(): void {
     }
 }
 
-if (addMenu !== null) {
-    addMenu.classList.add('hidden');
-}
-if (widgetAddButton !== null && floatingAddButton !== null && addMenu !== null && addCancelButton !== null) {
-    widgetAddButton.addEventListener('click', addWidget);
-    floatingAddButton.addEventListener('click', () => {
-        floatingAddButton.classList.add('hidden');
-        addMenu.classList.remove('hidden');
-    });
-    addCancelButton.addEventListener('click', () => {
-        floatingAddButton.classList.remove('hidden');
-        addMenu.classList.add('hidden');
-    });
-}
+addMenu!.classList.add('hidden');
+widgetAddButton!.addEventListener('click', addWidget);
+const closeAdd = () => {
+    floatingAddButton!.classList.remove('hidden');
+    addMenu!.classList.add('hidden');
+    modalBackdrop!.classList.add('hidden');
+};
+floatingAddButton!.addEventListener('click', () => {
+    floatingAddButton!.classList.add('hidden');
+    addMenu!.classList.remove('hidden');
+    modalBackdrop!.classList.remove('hidden');
+    modalBackdrop!.addEventListener('click', closeAdd);
+});
+addCancelButton!.addEventListener('click', () => {
+    closeAdd();
+    modalBackdrop!.removeEventListener("click", closeAdd);
+});
+
 
 // Accept the 'Enter' key as alternative to clicking on the 'Add' button with the mouse, when interacting with the 'addMenu'.
 // Doesn't work for the background/text backgroundColor selectors as the browser seems to override the 'Enter' key for it (i.e. opens the backgroundColor palette).
 ['#typeDropdown', '#addTitle', '#addUrl', '#widgetAddButton'].forEach((item) => {
     const itemElem: HTMLElement | null = document.querySelector(item);
-    if (itemElem !== null) {
-        itemElem.addEventListener('keydown', (e) => {
-            if (e.key === "Enter") {
-                addWidget();
-            }
-        });
-    }
+    itemElem!.addEventListener('keydown', (e) => {
+        if (e.key === "Enter") {
+            addWidget();
+        }
+    });
+
 });
 
 
 /// Dev mode
 const devConfigBox: HTMLDivElement | null = document.querySelector("#devConfig");
+const devArea: HTMLDivElement | null = document.querySelector("#dev-area");
 const clearButton: HTMLButtonElement | null = document.querySelector("#clearButton");
 const debugButton: HTMLButtonElement | null = document.querySelector("#debugButton");
 const backupButton: HTMLButtonElement | null = document.querySelector("#backupButton");
@@ -193,19 +199,28 @@ const devEnabledCheckbox: HTMLInputElement | null = document.querySelector("#dev
 const devOpacityButton: HTMLButtonElement | null = document.querySelector("#opacityButton");
 const configField: HTMLInputElement | null = document.querySelector("#configFieldInput");
 const devSaveButton: HTMLButtonElement | null = document.querySelector("#saveDevConfig");
-//TODO: const loadBackupButton: HTMLButtonElement | null = document.querySelector('#loadBackupButton');
+const loadBackupButton: HTMLInputElement | null = document.querySelector('#loadBackupButton');
 
 // Show or hide developer mode specific buttons
 function devSwitch(displayStyle: string): void {
-    if (devConfigBox && clearButton && debugButton) {
-        devConfigBox.style.display = displayStyle;
-        devConfigBox.classList.remove("hidden");
-        clearButton.style.display = displayStyle;
-        debugButton.style.display = displayStyle;
-    }
-    // document.querySelector("#widescreenButton").style.display = displayStyle;
+    devConfigBox!.style.display = displayStyle;
+    devArea!.style.display = displayStyle;
+    devConfigBox!.classList.remove("hidden");
+    devArea!.classList.remove("hidden");
+    clearButton!.style.display = displayStyle;
+    debugButton!.style.display = displayStyle;
 }
 
+loadBackupButton!.addEventListener('change', () => {
+    if (loadBackupButton!.files!.length > 0) {
+        let file = loadBackupButton!.files![0];
+        let fr = new FileReader();
+        fr.onload = () => {
+            configField!.value = fr.result as string;
+        };
+        fr.readAsText(file);
+    }
+});
 
 // disable dev mode by default
 devSwitch('none');
@@ -215,7 +230,7 @@ backupButton!.addEventListener('click', saveCurrentConfig);
 devEnabledCheckbox!.addEventListener('change', (a) => {
     if (a !== null && a.srcElement !== null)
         if ((a.srcElement as HTMLInputElement).checked) {
-            devSwitch('block');
+            devSwitch('inline');
         } else {
             devSwitch('none');
         }
