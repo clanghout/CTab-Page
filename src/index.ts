@@ -1,6 +1,8 @@
 import grid from './gridControls';
 import {baseSettings, linkSettings, titleSettings} from "./cTabWidgetTypeBase";
 import {widgetNameList} from "./cTabWidgetTypeHelper";
+// @ts-ignore streamsaver is no module, but adds to global scope
+import streamSaver from 'streamsaver';
 
 
 (<any>window).browser = (() => {
@@ -247,8 +249,6 @@ devOpacityButton!.addEventListener('click', () => {
 });
 
 configField!.value = prettyPrintConfig(CTabGrid.getConfig());
-
-const streamSaver = (window as any).steamSaver;
 
 function saveCurrentConfig() {
     const fileStream = streamSaver.createWriteStream('config.json');

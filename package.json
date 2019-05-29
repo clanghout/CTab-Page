@@ -20,7 +20,7 @@
     "typescript": "^3.4.1"
   },
   "scripts": {
-    "start": "node scripts/createSizeStyles.js && parcel src/index.html manifest.json",
+    "start": "node scripts/createSizeStyles.js && parcel src/index.html",
     "build": "node scripts/createSizeStyles.js && parcel build src/index.html manifest.json"
   }
 }

@@ -9,7 +9,7 @@ import * as weatherEl from './weatherControls';
 import * as widgetTypes from "./cTabWidgetType";
 import BigText from 'big-text.js-patched';
 // @ts-ignore Muuri does not export an object as of version 0.7.1; it is listed as a TODO in their source code
-import Muuri from "../node_modules/muuri/dist/muuri.js";
+import Muuri from "muuri";
 
 (window as any).browser = (() => {
     return (window as any).browser || (window as any).chrome || (window as any).msBrowser;
