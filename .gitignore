@@ -6,3 +6,4 @@ out/*
 dist/*
 
 sample-config.json
+.cache/

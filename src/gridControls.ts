@@ -6,8 +6,10 @@ import {cTabTypeMap, widgetNameList} from "./cTabWidgetTypeHelper";
 import Picker from 'vanilla-picker';
 import CTabSettings from "./settingsMenu";
 import * as weatherEl from './weatherControls';
-import {WeatherWidget} from "./cTabWidgetType";
+import * as widgetTypes from "./cTabWidgetType";
 import BigText from 'big-text.js-patched';
+// @ts-ignore Muuri does not export an object as of version 0.7.1; it is listed as a TODO in their source code
+import Muuri from "../node_modules/muuri/dist/muuri.js";
 
 (window as any).browser = (() => {
     return (window as any).browser || (window as any).chrome || (window as any).msBrowser;
@@ -25,6 +27,8 @@ interface CTabGrid {
     setConfig: (config: CTabWidgetSerialized[]) => void;
     getConfig: () => CTabWidgetSerialized[];
 }
+
+
 
 function grid(): CTabGrid {
     let grid: any;
@@ -66,8 +70,10 @@ function grid(): CTabGrid {
 
     const initialize = function (): void {
         CTabSettings.initialize();
-        const muuriCopy = (window as any).Muuri;
-        grid = new muuriCopy(".grid", options);
+        // const muuriCopy = (window as any).Muuri;
+        console.log(globalThis);
+        //(globalThis as any).y
+        grid = new Muuri(".grid", options);
         loadModel();
 
         // @ts-ignore - no return for not showing a before-unload alert
@@ -143,9 +149,20 @@ function grid(): CTabGrid {
     };
 
     const simpleAdd = function (type: string, settings: baseSettings, backgroundColor: string, textColor: string) {
-
-        addWidgetToGrid(
-            new cTabTypeMap[type]("i" + new Date().getTime().toString(), settings, backgroundColor, textColor));
+        dirty = true;
+        try {
+            addWidgetToGrid(
+                new (widgetTypes as any)[type]("i" + new Date().getTime().toString(), settings, backgroundColor, textColor));
+        }
+        catch(e){
+            if(type) {
+                console.log(`Widget type ${type} does not exist.`);
+            }
+            console.log(`Existing types are:`, widgetNameList);
+            console.log(cTabTypeMap);
+            console.log(widgetTypes);
+            console.error(e);
+        }
     };
 
     // Define return object
@@ -281,7 +298,7 @@ function grid(): CTabGrid {
 
         document.getElementById(`delete-${widget.id}`)!.addEventListener('click', () => removeWidget(widget.id));
 
-        if (widget instanceof WeatherWidget) {
+        if (widget instanceof widgetTypes.WeatherWidget) {
             widget.settings.width = widget.settings.width > 1 ? widget.settings.width : 2;
             widget.settings.height = widget.settings.height > 1 ? widget.settings.height : 2;
             widget.settings.city = widget.settings.city || "delft";
@@ -316,13 +333,15 @@ function grid(): CTabGrid {
                 if(widget.type === "LinkWidget"){
                     (widget.settings as linkSettings).newTab = CTabSettings.getNewTab();
                 }
-                addWidgetToGrid(new cTabTypeMap[widget.type](widget.id, widget.settings, widget.backgroundColor, widget.textColor));
+                addWidgetToGrid(new (widgetTypes as any)[widget.type](widget.id, widget.settings, widget.backgroundColor, widget.textColor));
             } catch (e) {
                 if (widget) {
                     console.log(`Widget type ${widget.type} does not exist.`);
                 }
                 console.log(`Existing types are:`, widgetNameList);
+console.log(widgetTypes);
                 console.error(e);
+
             }
         });
 
