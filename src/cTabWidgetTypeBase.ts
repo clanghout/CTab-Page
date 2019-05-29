@@ -76,6 +76,7 @@ export interface baseSettings {
     height: number;
 }
 
+// Serialized version of a CTab Widget
 export interface CTabWidgetSerialized {
     id: string;
     settings: baseSettings;
@@ -84,6 +85,8 @@ export interface CTabWidgetSerialized {
     type: string;
 }
 
+// Settings can differ per widget type, since the `cTabWidgetType.ts` file is used only for the widget classes itself
+// the specific settings are defined here.
 export interface weatherSettings extends baseSettings {
     city: string;
 }
