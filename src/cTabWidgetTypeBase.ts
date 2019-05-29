@@ -5,7 +5,6 @@ export abstract class CTabWidget {
     abstract getTemplateCore: () => string;
 
 
-
     constructor(public id: string, public settings: baseSettings, public backgroundColor: string, public textColor: string) {
     }
 

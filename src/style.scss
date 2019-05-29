@@ -170,6 +170,7 @@ button, input, optgroup, select, textarea {
   .buttonBar {
     float: left;
     width: 300px;
+
     button {
       background-color: lightblue;
     }
@@ -190,7 +191,8 @@ button, input, optgroup, select, textarea {
   #settings-toggle {
     background-color: lightblue;
   }
-  .dev-toggle{
+
+  .dev-toggle {
     color: white;
   }
 }

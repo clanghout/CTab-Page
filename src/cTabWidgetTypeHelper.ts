@@ -3,13 +3,13 @@ import {CTabWidget} from "./cTabWidgetTypeBase";
 import * as widgetTypes from "./cTabWidgetType";
 
 interface WidgetConstructor {
-    new (id: string, settings: baseSettings, backgroundColor: string, textColor: string): CTabWidget;
+    new(id: string, settings: baseSettings, backgroundColor: string, textColor: string): CTabWidget;
 }
 
 
 export const widgetNameList: string[] = Object.keys(widgetTypes);
 
-export const cTabTypeMap: { [name: string]:  WidgetConstructor } = widgetNameList.reduce((acc, widgetName) => {
+export const cTabTypeMap: { [name: string]: WidgetConstructor } = widgetNameList.reduce((acc, widgetName) => {
     acc[widgetName] = ((widgetTypes as any)[widgetName] as any);
     console.log(widgetTypes);
     return acc;
