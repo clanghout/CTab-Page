@@ -6,8 +6,10 @@ import {cTabTypeMap, widgetNameList} from "./cTabWidgetTypeHelper";
 import Picker from 'vanilla-picker';
 import CTabSettings from "./settingsMenu";
 import * as weatherEl from './weatherControls';
-import {WeatherWidget} from "./cTabWidgetType";
+import * as widgetTypes from "./cTabWidgetType";
 import BigText from 'big-text.js-patched';
+// @ts-ignore Muuri does not export an object as of version 0.7.1; it is listed as a TODO in their source code
+import Muuri from "muuri";
 
 (window as any).browser = (() => {
     return (window as any).browser || (window as any).chrome || (window as any).msBrowser;
@@ -26,6 +28,8 @@ interface CTabGrid {
     getConfig: () => CTabWidgetSerialized[];
 }
 
+
+// module function; this will be exported
 function grid(): CTabGrid {
     let grid: any;
     let widgets: CTabWidget[] = [];
@@ -64,10 +68,11 @@ function grid(): CTabGrid {
         }
     };
 
+    // Function to be called to initialize the CTab page.
+    //  This function will
     const initialize = function (): void {
         CTabSettings.initialize();
-        const muuriCopy = (window as any).Muuri;
-        grid = new muuriCopy(".grid", options);
+        grid = new Muuri(".grid", options);
         loadModel();
 
         // @ts-ignore - no return for not showing a before-unload alert
@@ -78,7 +83,7 @@ function grid(): CTabGrid {
                 // You have unsaved changes on this page. Do you want to leave this page and discard your changes or stay on this page?
                 return "";
             }
-            // service.saveGrid(); // Disabled to enable dev edit
+            // service.saveGrid(); // Disabled to enable dev edit | possibly reenable with an autosave option in settings
         };
 
         // Start clocks
@@ -92,6 +97,7 @@ function grid(): CTabGrid {
 
     };
 
+    // Retrieve the current config from the browser's localstorage
     const getConfig = (): CTabWidgetSerialized[] => {
         let lsConfig = window.localStorage.getItem("CTabConfig") || "{}";
         let config: CTabWidgetSerialized[] = [];
@@ -104,17 +110,20 @@ function grid(): CTabGrid {
         return config;
     };
 
+    // Write param to localStorage
     const setConfig = (config: CTabWidgetSerialized[]) => {
         window.localStorage.setItem("CTabConfig", JSON.stringify(config));
     };
+
+    //
     // Returns message if save call is executed or not
-    const saveGrid = () => {
+    const saveGrid: () => string = () => {
         if (hasChanges()) {
             service.setConfig(getDashboardConfig());
             dirty = false;
             return "Configuration saved!";
         } else {
-            return "nothing to save";
+            return "Nothing to save.";
         }
     };
 
@@ -142,10 +151,21 @@ function grid(): CTabGrid {
         }
     };
 
+    // Create a new widget object and add it to the dashboard.
     const simpleAdd = function (type: string, settings: baseSettings, backgroundColor: string, textColor: string) {
-
-        addWidgetToGrid(
-            new cTabTypeMap[type]("i" + new Date().getTime().toString(), settings, backgroundColor, textColor));
+        dirty = true;
+        try {
+            addWidgetToGrid(
+                new (widgetTypes as any)[type]("i" + new Date().getTime().toString(), settings, backgroundColor, textColor));
+        } catch (e) {
+            if (type) {
+                console.log(`Widget type ${type} does not exist.`);
+            }
+            console.log(`Existing types are:`, widgetNameList);
+            console.log(cTabTypeMap);
+            console.log(widgetTypes);
+            console.error(e);
+        }
     };
 
     // Define return object
@@ -158,14 +178,18 @@ function grid(): CTabGrid {
         getConfig: getConfig
     };
 
+    // Toggle the colorpickers
     const toggleWidgetColorPicker = (isOpen: boolean): void => {
         widgetColorPickerOpen = isOpen;
     };
 
+    // Listener for note widgets on change
+    // Used to track whether changes are made that need to be saved.
     const noteChanged: () => void = () => {
         dirty = true;
     };
 
+    // Check if the current state of the dashboard is different from the saved state
     const hasChanges: () => boolean = () => {
         let saved = service.getConfig();
         let current = getDashboardConfig();
@@ -194,6 +218,11 @@ function grid(): CTabGrid {
         }
     };
 
+    // Function that handles the addition of a widget to the actual grid.
+    // Adding any necessary event listeners,
+    // setting the body of the widget,
+    // adding the control buttons to widgets,
+    // and adapting the font size of the text using bigText
     const addWidgetToGrid = function (widget: CTabWidget) {
         let itemElem = document.createElement('div');
         itemElem.innerHTML = widget.widgetTemplate();
@@ -281,7 +310,7 @@ function grid(): CTabGrid {
 
         document.getElementById(`delete-${widget.id}`)!.addEventListener('click', () => removeWidget(widget.id));
 
-        if (widget instanceof WeatherWidget) {
+        if (widget instanceof widgetTypes.WeatherWidget) {
             widget.settings.width = widget.settings.width > 1 ? widget.settings.width : 2;
             widget.settings.height = widget.settings.height > 1 ? widget.settings.height : 2;
             widget.settings.city = widget.settings.city || "delft";
@@ -293,7 +322,11 @@ function grid(): CTabGrid {
         }
 
         try {
-            BigText('#' + widget.id + " > span", {maximumFontSize:45, limitingDimension: "both",  verticalAlign:"center"})
+            BigText('#' + widget.id + " > span", {
+                maximumFontSize: 45,
+                limitingDimension: "both",
+                verticalAlign: "center"
+            })
         } catch (e) {
             console.log(widget.id, widget.getType);
         }
@@ -301,10 +334,14 @@ function grid(): CTabGrid {
         widgets.push(widget);
     };
 
+
+    // Getter for the current config
     const getDashboardConfig = function () {
         return widgets.map(widget => widget.getConfig());
     };
 
+    // Load in the model and add every individual widget to the grid.
+    // Called by initialize;
     const loadModel = function () {
         let widgetData: CTabWidgetSerialized[] = service.getConfig();
         widgets = [];
@@ -313,16 +350,18 @@ function grid(): CTabGrid {
         widgetData.filter((a: any) => a !== null).forEach((widget: CTabWidgetSerialized) => {
             // what if widget does not have a type
             try {
-                if(widget.type === "LinkWidget"){
+                if (widget.type === "LinkWidget") {
                     (widget.settings as linkSettings).newTab = CTabSettings.getNewTab();
                 }
-                addWidgetToGrid(new cTabTypeMap[widget.type](widget.id, widget.settings, widget.backgroundColor, widget.textColor));
+                addWidgetToGrid(new (widgetTypes as any)[widget.type](widget.id, widget.settings, widget.backgroundColor, widget.textColor));
             } catch (e) {
                 if (widget) {
                     console.log(`Widget type ${widget.type} does not exist.`);
                 }
                 console.log(`Existing types are:`, widgetNameList);
+                console.log(widgetTypes);
                 console.error(e);
+
             }
         });
 

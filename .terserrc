@@ -1,0 +1,19 @@
+{
+  "keep_classnames": true,
+  "keep_fnames": true,
+  "mangle": {
+    "keep_classnames": true,
+    "keep_fnames": true,
+    "reserved": [
+      "WeatherWidget",
+      "LinkWidget",
+      "ClockWidget",
+      "BuienradarWidget",
+      "NoteWidget"
+    ]
+  },
+  "compress": {
+    "ecma": 6
+  }
+}
+

@@ -6,13 +6,13 @@
           content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>CTab Page</title>
-    <link href="./style.css" rel="stylesheet"/>
+    <link href="./style.scss" rel="stylesheet"/>
     <link href="sizeStyles.css" rel="stylesheet"/>
 </head>
 <body>
 
 <div class="hidden" id="modal-backdrop">
-&nbsp;
+    &nbsp;
 </div>
 
 <div class="top-bar">
@@ -667,14 +667,8 @@
     <button id="addCancelButton">Cancel</button>
 </div>
 
-<!--Muuri scripts-->
 <script src="../modules/web-animations.min.js"></script>
-<script src="../modules/hammer.min.js"></script>
-<script src="../node_modules/muuri/dist/muuri.min.js"></script>
-<script src="../node_modules/streamsaver/StreamSaver.js"></script>
-
-
 <!--CTab script-->
-<script type=module src="main.js"></script>
+<script src="index.ts"></script>
 </body>
 </html>

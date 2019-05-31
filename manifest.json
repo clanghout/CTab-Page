@@ -1,9 +1,10 @@
 {
+  "comment": "This file will be moved to the dist folder",
   "manifest_version": 2,
 
   "name": "CTab-Page",
   "description": "This extension creates a custom new tab page where the user can freely modify what page links are present on the page.",
-  "version": "0.3",
+  "version": "0.4",
 
   "permissions": [
     "activeTab",
@@ -15,7 +16,7 @@
     "tabs"
   ],
   "chrome_url_overrides" : {
-    "newtab" : "dist/index.html"
+    "newtab" : "index.html"
   },
   "commands":{
     "save_configuration":{

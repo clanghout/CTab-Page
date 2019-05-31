@@ -1,3 +1,5 @@
+import * as Helper from './cTabWidgetTypeHelper';
+
 export abstract class CTabWidget {
 
     abstract getTemplateCore: () => string;
@@ -28,7 +30,8 @@ ${this.getHtmlControls()}
             backgroundColor: this.backgroundColor,
             textColor: this.textColor,
             id: this.id,
-            type: this.constructor.name.replace("cTabWidgetType_", "")
+            type: Helper.lookupConstructorName(this.constructor.name.replace("cTabWidgetType_", ""))
+            // type: this.constructor.name.replace("cTabWidgetType_", "")
         };
     };
 
@@ -72,6 +75,7 @@ export interface baseSettings {
     height: number;
 }
 
+// Serialized version of a CTab Widget
 export interface CTabWidgetSerialized {
     id: string;
     settings: baseSettings;
@@ -80,6 +84,8 @@ export interface CTabWidgetSerialized {
     type: string;
 }
 
+// Settings can differ per widget type, since the `cTabWidgetType.ts` file is used only for the widget classes itself
+// the specific settings are defined here.
 export interface weatherSettings extends baseSettings {
     city: string;
 }

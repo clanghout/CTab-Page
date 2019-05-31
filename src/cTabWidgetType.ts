@@ -46,7 +46,7 @@ export class LinkWidget extends TitleWidget {
             backgroundColor: this.backgroundColor,
             textColor: this.textColor,
             id: this.id,
-            type: this.constructor.name.replace("cTabWidgetType_","")
+            type: this.constructor.name.replace("cTabWidgetType_", "")
         };
     };
 }
