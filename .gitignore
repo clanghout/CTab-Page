@@ -1,3 +1,10 @@
 .idea/
 ignore/
 node_modules/
+
+out/*
+dist/*
+
+sample-config.json
+.cache/
+src/sizeStyles.css
