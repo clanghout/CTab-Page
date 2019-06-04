@@ -137,6 +137,10 @@ button, input, optgroup, select, textarea {
   width: 100%;
   background-color: #000000;
   z-index: 4;
+  display: grid;
+  grid-template-rows: var(--topbar-height);
+  grid-template-columns: 1fr repeat(5,2fr);
+  overflow: hidden;
 
   div {
     float: left;
