@@ -20,6 +20,7 @@
     "typescript": "^3.4.1"
   },
   "scripts": {
+    "dev": "rm -rf dist/ && mkdir dist && node scripts/createSizeStyles.js && parcel src/index.html",
     "start": "rm -rf dist/ && mkdir dist && node scripts/createSizeStyles.js && parcel src/index.html",
     "build": "rm -rf dist/ && mkdir dist && cp manifest.json dist/manifest.json && node scripts/createSizeStyles.js && parcel build src/index.html"
   }
