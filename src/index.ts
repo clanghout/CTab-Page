@@ -228,6 +228,7 @@ loadBackupButton!.addEventListener('change', () => {
 devSwitch('none');
 clearButton!.addEventListener('click', () => CTabGrid.debug(true, false));
 debugButton!.addEventListener('click', () => CTabGrid.debug(false, true));
+
 backupButton!.addEventListener('click', saveCurrentConfig);
 devEnabledCheckbox!.addEventListener('change', (a) => {
     if (a !== null && a.srcElement !== null)
@@ -250,8 +251,9 @@ devOpacityButton!.addEventListener('click', () => {
 
 configField!.value = prettyPrintConfig(CTabGrid.getConfig());
 
+// saving config to file
 function saveCurrentConfig() {
-    const fileStream = streamSaver.createWriteStream('config.json');
+    const fileStream = streamSaver.createWriteStream(`config-${new Date().valueOf()}.json`);
     const writer = fileStream.getWriter();
     const encoder = new TextEncoder;
     let data = JSON.stringify(CTabGrid.getConfig());
