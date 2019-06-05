@@ -286,8 +286,6 @@ try {
         // If user checks the disableAddWidgetOnBookmark setting, then we don't want to add a bookmark.
         // Hence, if it is not checked, we do want to add a bookmark. 
         if (!CTabSettings.getAddWidgetOnBookmarkIsDisabled()) {
-            console.log("id", id);
-            console.log("bookmark", bookmark);
             CTabGrid.simpleAdd("LinkWidget", {
                 width: 1,
                 height: 1,
