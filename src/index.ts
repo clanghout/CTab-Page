@@ -52,7 +52,7 @@ widgetNameList.forEach((widget) => {
     widgetTypeChanger.add(option);
 });
 
-// Show or hide the title and url input fields in the simple add area.
+// Show or hide the title and url input fields in the add area.
 function widgetTypeFieldVisibilityControl(showTitle: boolean, showUrl: boolean): void {
     const hiddenClassName = "hidden";
     let title = document.querySelector("#addTitle");
@@ -150,7 +150,7 @@ function addWidget(): void {
         showToast(`Unable to add widget:${errorList.reduce((acc, curr) => " " + acc + curr, "")}.`);
     } else {
 
-        CTabGrid.simpleAdd(widgetTypeChanger.value, settings, bgcolor!.value, textcolor!.value);
+        CTabGrid.createWidget(widgetTypeChanger.value, settings, bgcolor!.value, textcolor!.value);
         title!.value = "";
         url!.value = "";
 
@@ -283,7 +283,7 @@ try {
     (window as any).browser.bookmarks.onCreated.addListener(function (id: any, bookmark: any) {
         console.log("id", id);
         console.log("bookmark", bookmark);
-        CTabGrid.simpleAdd("LinkWidget", {
+        CTabGrid.createWidget("LinkWidget", {
             width: 1,
             height: 1,
             title: (bookmark.title as string),
