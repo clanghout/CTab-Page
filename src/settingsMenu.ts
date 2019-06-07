@@ -204,7 +204,7 @@ let CTabSettings = (): CTabSettingsMenu => {
     const getNewTab = function () {
         return currentSettings.openInNewTab;
     };
-    
+
     const getAddWidgetOnBookmarkIsDisabled = function () {
         return currentSettings.disableAddWidgetOnBookmark;
     };
