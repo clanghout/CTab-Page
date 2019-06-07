@@ -1,11 +1,12 @@
 import grid from './gridControls';
 import {baseSettings, linkSettings, titleSettings} from "./cTabWidgetTypeBase";
 import {widgetNameList} from "./cTabWidgetTypeHelper";
+import CTabSettings from "./settingsMenu";
 // @ts-ignore streamsaver is no module, but adds to global scope
 import streamSaver from 'streamsaver';
 
 
-(<any>window).browser = (() => {
+(window as any).browser = (() => {
     return (<any>window).browser || (<any>window).chrome || (<any>window).msBrowser;
 })();
 
@@ -279,17 +280,18 @@ function prettyPrintConfig(config: any): string {
 /// Chrome extension specific
 try {
     (window as any).browser.commands.onCommand.addListener(saveGrid);
+    (window as any).browser.bookmarks.onCreated.addListener(function (_id: any, bookmark: any) {
 
-    (window as any).browser.bookmarks.onCreated.addListener(function (id: any, bookmark: any) {
-        console.log("id", id);
-        console.log("bookmark", bookmark);
-        CTabGrid.createWidget("LinkWidget", {
-            width: 1,
-            height: 1,
-            title: (bookmark.title as string),
-            url: (bookmark.url as string)
-        } as linkSettings, "#fff", "#000");
-
+        // If user checks the disableAddWidgetOnBookmark setting, then we don't want to add a bookmark.
+        // Hence, if it is not checked, we do want to add a bookmark.
+        if (!CTabSettings.getAddWidgetOnBookmarkIsDisabled()) {
+            CTabGrid.createWidget("LinkWidget", {
+                width: 1,
+                height: 1,
+                title: (bookmark.title as string),
+                url: (bookmark.url as string)
+            } as linkSettings, "#fff", "#000");
+        }
     });
 } catch (e) {
     // not on chrome

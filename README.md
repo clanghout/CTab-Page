@@ -52,3 +52,5 @@ The most important part of the developer mode options is the big textarea at the
 
 ### Bookmarks to add links
 When the ctab page is open, and a bookmark is created within the browser. This site is also added to the ctab grid. The title change currently does not track the changing of the name, since this is probably an event triggered after the oncreate is already called. Need to figure out a way to track this.
+
+This behaviour can be disabled by checking the checkbox 'Disable adding a widget on bookmarking' in the settings menu. 
