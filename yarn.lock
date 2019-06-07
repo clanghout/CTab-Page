@@ -3526,7 +3526,7 @@ pako@~1.0.5:
   resolved "https://registry.yarnpkg.com/pako/-/pako-1.0.10.tgz#4328badb5086a426aa90f541977d4955da5c9732"
   integrity sha512-0DTvPVU3ed8+HNXOu5Bs+o//Mbdj9VNQMUOe9oKCwh8l0GNwpTDMKCWbRjgtD291AWnkAgkqA/LOnQS8AmS1tw==
 
-parcel-bundler@^1.12.3:
+parcel-bundler@^1.12.3, parcel-bundler@^1.9.0:
   version "1.12.3"
   resolved "https://registry.yarnpkg.com/parcel-bundler/-/parcel-bundler-1.12.3.tgz#2bbf70bfa2d06097f071653285040bd125684d09"
   integrity sha512-8bq6lj0hhQeGxD9f9xEkFMXQ3d8TIlf2+isKxoi9bciB0KVEILRGllaPkUgp++5t0anToBh9+tG6ZyInXOC1/A==
@@ -3588,6 +3588,15 @@ parcel-bundler@^1.12.3:
     terser "^3.7.3"
     v8-compile-cache "^2.0.0"
     ws "^5.1.1"
+
+parcel-plugin-web-extension@^1.5.2:
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/parcel-plugin-web-extension/-/parcel-plugin-web-extension-1.5.2.tgz#f2d694464aba2e4581b419af1a62ede3cd524068"
+  integrity sha512-qcxcEi6lA9+3sLA3TgMcfddTHrxIQXBhwdM12JxEEEhmxz4FIw9JqaOq+GNQQ2EHAiEQ6Amb7I+YE+NGOx9BXQ==
+  dependencies:
+    "@parcel/fs" "^1.11.0"
+    fast-glob "^2.2.2"
+    parcel-bundler "^1.9.0"
 
 parse-asn1@^5.0.0:
   version "5.1.4"
