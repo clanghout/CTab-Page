@@ -21,7 +21,8 @@
     "typescript": "^3.4.1"
   },
   "scripts": {
-    "start": "rm -rf dist/ && mkdir dist && node scripts/createSizeStyles.js && parcel src/index.html",
-    "build": "rm -rf dist/ && mkdir dist && node scripts/createSizeStyles.js && parcel build src/manifest.json"
+    "start": "node scripts/createSizeStyles.js && parcel src/index.html",
+    "build": "node scripts/createSizeStyles.js && parcel build src/manifest.json",
+    "clean": "rm -rf dist/ && mkdir dist"
   }
 }
