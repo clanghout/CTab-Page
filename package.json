@@ -23,6 +23,7 @@
   "scripts": {
     "start": "node scripts/createSizeStyles.js && parcel src/index.html",
     "build": "node scripts/createSizeStyles.js && parcel build src/manifest.json",
-    "clean": "rm -rf dist/ && mkdir dist"
+    "clean": "rm -rf dist/ && mkdir dist",
+    "typecheck": "tsc"
   }
 }
