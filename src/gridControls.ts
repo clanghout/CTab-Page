@@ -115,7 +115,6 @@ function grid(): CTabGrid {
         window.localStorage.setItem("CTabConfig", JSON.stringify(config));
     };
 
-    //
     // Returns message if save call is executed or not
     const saveGrid: () => string = () => {
         if (hasChanges()) {
