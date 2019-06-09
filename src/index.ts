@@ -6,7 +6,7 @@ import CTabSettings from "./settingsMenu";
 import streamSaver from 'streamsaver';
 
 
-(<any>window).browser = (() => {
+(window as any).browser = (() => {
     return (<any>window).browser || (<any>window).chrome || (<any>window).msBrowser;
 })();
 
@@ -53,7 +53,7 @@ widgetNameList.forEach((widget) => {
     widgetTypeChanger.add(option);
 });
 
-// Show or hide the title and url input fields in the simple add area.
+// Show or hide the title and url input fields in the add area.
 function widgetTypeFieldVisibilityControl(showTitle: boolean, showUrl: boolean): void {
     const hiddenClassName = "hidden";
     let title = document.querySelector("#addTitle");
@@ -151,7 +151,7 @@ function addWidget(): void {
         showToast(`Unable to add widget:${errorList.reduce((acc, curr) => " " + acc + curr, "")}.`);
     } else {
 
-        CTabGrid.simpleAdd(widgetTypeChanger.value, settings, bgcolor!.value, textcolor!.value);
+        CTabGrid.createWidget(widgetTypeChanger.value, settings, bgcolor!.value, textcolor!.value);
         title!.value = "";
         url!.value = "";
 
@@ -280,13 +280,12 @@ function prettyPrintConfig(config: any): string {
 /// Chrome extension specific
 try {
     (window as any).browser.commands.onCommand.addListener(saveGrid);
+    (window as any).browser.bookmarks.onCreated.addListener(function (_id: any, bookmark: any) {
 
-    (window as any).browser.bookmarks.onCreated.addListener(function (id: any, bookmark: any) {
-        
         // If user checks the disableAddWidgetOnBookmark setting, then we don't want to add a bookmark.
-        // Hence, if it is not checked, we do want to add a bookmark. 
+        // Hence, if it is not checked, we do want to add a bookmark.
         if (!CTabSettings.getAddWidgetOnBookmarkIsDisabled()) {
-            CTabGrid.simpleAdd("LinkWidget", {
+            CTabGrid.createWidget("LinkWidget", {
                 width: 1,
                 height: 1,
                 title: (bookmark.title as string),
