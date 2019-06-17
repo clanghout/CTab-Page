@@ -187,13 +187,30 @@ export class CTabGrid {
         }
 
         try {
-            BigText('#' + widget.id + " > span", {
-                maximumFontSize: 45,
-                limitingDimension: "both",
-                verticalAlign: "center"
-            })
+            if(widget instanceof widgetTypes.LinkWidget){
+                BigText('#' + widget.id + " > span", {
+                    maximumFontSize: 45,
+                    limitingDimension: "both",
+                    verticalAlign: "center"
+                });
+            }
+            else if(widget instanceof widgetTypes.ClockWidget){
+                BigText('#' + widget.id + " > span", {
+                    maximumFontSize: 37,
+                    limitingDimension: "both",
+                    verticalAlign: "center"
+                });
+            }
+            else if(widget instanceof widgetTypes.WeatherWidget){
+                BigText('#' + widget.id + " > span", {
+                    maximumFontSize: 40,
+                    limitingDimension: "both",
+                    verticalAlign: "center"
+                });
+            }
+
         } catch (e) {
-            console.log(widget.id, widget.getType);
+            console.log(widget.id, widget.getType, e);
         }
 
         this.widgets.push(widget);
