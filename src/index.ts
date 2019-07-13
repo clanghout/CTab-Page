@@ -4,7 +4,7 @@ import CTabSettings from "./settingsMenu";
 // @ts-ignore streamsaver is no module, but adds to global scope
 import streamSaver from 'streamsaver';
 import CTabGrid from "./gridControls";
-
+import {debugSetGridToUseSampleConfig, debugAddSampleWidgetToGrid} from './gridControlsDebug';
 
 (window as any).browser = (() => {
     return (<any>window).browser || (<any>window).chrome || (<any>window).msBrowser;
@@ -150,7 +150,7 @@ function addWidget(): void {
         showToast(`Unable to add widget:${errorList.reduce((acc, curr) => " " + acc + curr, "")}.`);
     } else {
 
-        CTabGrid.createWidget(widgetTypeChanger.value, settings, bgcolor!.value, textcolor!.value);
+        cTabGrid.createWidget(widgetTypeChanger.value, settings, bgcolor!.value, textcolor!.value);
         title!.value = "";
         url!.value = "";
 
@@ -226,8 +226,8 @@ loadBackupButton!.addEventListener('change', () => {
 
 // disable dev mode by default
 devSwitch('none');
-clearButton!.addEventListener('click', () => CTabGrid.debug(true, false));
-debugButton!.addEventListener('click', () => CTabGrid.debug(false, true));
+clearButton!.addEventListener('click', () => debugSetGridToUseSampleConfig(cTabGrid));
+debugButton!.addEventListener('click', () => debugAddSampleWidgetToGrid(cTabGrid));
 
 backupButton!.addEventListener('click', saveCurrentConfig);
 devEnabledCheckbox!.addEventListener('change', (a) => {
@@ -241,22 +241,23 @@ devEnabledCheckbox!.addEventListener('change', (a) => {
 
 devSaveButton!.addEventListener('click', () => {
     let config = JSON.parse(configField!.value);
-    CTabGrid.setConfig(config);
+    cTabGrid.setConfig(config);
 });
+
 devOpacityButton!.addEventListener('click', () => {
     let config = configField!.value;
     configField!.value = config.replace(/(backgroundColor":"rgba\([0-9]+,[0-9]+,[0-9]+,)([0-9.]+)((?=\)"))/gm, "$1 0.5$3");
 
 });
 
-configField!.value = prettyPrintConfig(CTabGrid.getConfig());
+configField!.value = prettyPrintConfig(cTabGrid.getConfig());
 
 // saving config to file
 function saveCurrentConfig() {
     const fileStream = streamSaver.createWriteStream(`config-${new Date().valueOf()}.json`);
     const writer = fileStream.getWriter();
     const encoder = new TextEncoder;
-    let data = JSON.stringify(CTabGrid.getConfig());
+    let data = JSON.stringify(cTabGrid.getConfig());
     let uint8array = encoder.encode(data + "\n\n");
 
     writer.write(uint8array);
@@ -284,7 +285,7 @@ try {
         // If user checks the disableAddWidgetOnBookmark setting, then we don't want to add a bookmark.
         // Hence, if it is not checked, we do want to add a bookmark.
         if (!CTabSettings.getAddWidgetOnBookmarkIsDisabled()) {
-            CTabGrid.createWidget("LinkWidget", {
+            cTabGrid.createWidget("LinkWidget", {
                 width: 1,
                 height: 1,
                 title: (bookmark.title as string),

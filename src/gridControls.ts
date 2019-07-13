@@ -17,7 +17,7 @@ import Muuri from "muuri";
 // HTML element
 const styleElem = document.head.appendChild(document.createElement('style'));
 
-class CTabGrid {
+export class CTabGrid {
     private muuriOptions = {
         dragEnabled: true,
         dragStartPredicate: {
@@ -88,7 +88,7 @@ class CTabGrid {
     // setting the body of the widget,
     // adding the control buttons to widgets,
     // and adapting the font size of the text using bigText
-    public addWidgetToGrid = (widget: CTabWidget) => {
+    public addWidgetToGrid(widget: CTabWidget): void {
         let itemElem = document.createElement('div');
         itemElem.innerHTML = widget.widgetTemplate();
 
@@ -198,7 +198,8 @@ class CTabGrid {
 
         this.widgets.push(widget);
     };
-    public loadModel = () => {
+
+    public loadModel(): void {
         let widgetData: CTabWidgetSerialized[] = this.getConfig();
         widgetData = Array.isArray(widgetData) ? widgetData : [];
 
@@ -221,12 +222,14 @@ class CTabGrid {
         });
 
     };
+
     // Toggle the colorpickers
-    private toggleWidgetColorPicker = (isOpen: boolean): void => {
+    private toggleWidgetColorPicker(isOpen: boolean): void {
         this.widgetColorPickerOpen = isOpen;
     };
+
     // Retrieve the current config from the browser's localstorage
-    public getConfig = (): CTabWidgetSerialized[] => {
+    public getConfig(): CTabWidgetSerialized[] {
         let lsConfig = window.localStorage.getItem("CTabConfig") || "{}";
         let config: CTabWidgetSerialized[] = [];
         try {
@@ -238,7 +241,7 @@ class CTabGrid {
         return config;
     };
 
-    public removeWidget: (id: string) => void = (id: string) => {
+    public removeWidget(id: string): void {
         // Get the outer muuri cell
         let innerId = document.getElementById(id);
         let cell = innerId!.parentElement!.parentElement;
@@ -253,13 +256,13 @@ class CTabGrid {
     };
 
     // Write param to localStorage
-    public setConfig = (config: CTabWidgetSerialized[]) => {
+    public setConfig (config: CTabWidgetSerialized[]): void {
         window.localStorage.setItem("CTabConfig", JSON.stringify(config));
     };
 
 
     // Returns message if save call is executed or not
-    public saveGrid: () => string = () => {
+    public saveGrid(): string {
         if (this.hasChanges()) {
             this.setConfig(this.getDashboardConfig());
             this.dirty = false;
@@ -270,7 +273,7 @@ class CTabGrid {
     };
 
     // Create a new widget object and add it to the dashboard.
-    public createWidget = (type: string, settings: baseSettings, backgroundColor: string, textColor: string) => {
+    public createWidget(type: string, settings: baseSettings, backgroundColor: string, textColor: string): void {
         this.dirty = true;
         try {
             this.addWidgetToGrid(
@@ -288,12 +291,12 @@ class CTabGrid {
 
     // Listener for note widgets on change
     // Used to track whether changes are made that need to be saved.
-    private noteChanged: () => void = () => {
+    private noteChanged(): void {
         this.dirty = true;
     };
 
     // Check if the current state of the dashboard is different from the saved state
-    private hasChanges: () => boolean = () => {
+    private hasChanges(): boolean {
         let saved = this.getConfig();
         let current = this.getDashboardConfig();
         // compare strings since object compare is always different with ==
@@ -309,7 +312,7 @@ class CTabGrid {
 
 
     // Getter for the current config
-    private getDashboardConfig = () => {
+    private getDashboardConfig(): CTabWidgetSerialized[] {
         return this.widgets.map(widget => widget.getConfig());
     };
 
@@ -317,7 +320,7 @@ class CTabGrid {
 
 // Independent functions
 // From w3 to add clock
-function startTime() {
+function startTime(): void {
     let clocks = document.querySelectorAll('.ctab-item-clock');
     if (clocks.length > 0) {
         const todayDate = new Date();
