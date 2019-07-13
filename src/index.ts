@@ -1,9 +1,9 @@
+import grid from './gridControls';
 import {baseSettings, linkSettings, titleSettings} from "./cTabWidgetTypeBase";
 import {widgetNameList} from "./cTabWidgetTypeHelper";
 import CTabSettings from "./settingsMenu";
 // @ts-ignore streamsaver is no module, but adds to global scope
 import streamSaver from 'streamsaver';
-import CTabGrid from "./gridControls";
 
 
 (window as any).browser = (() => {
@@ -30,11 +30,12 @@ function showToast(message: string): void {
 }
 
 
-let cTabGrid = new CTabGrid();
+let CTabGrid = grid();
+CTabGrid.initialize();
 
 // Save the grid and show the result to user using toastBox.
 function saveGrid(): void {
-    const saveResult = cTabGrid.saveGrid();
+    const saveResult = CTabGrid.saveGrid();
     showToast(saveResult);
 }
 
