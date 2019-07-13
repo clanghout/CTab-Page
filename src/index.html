@@ -16,29 +16,28 @@
 </div>
 
 <div class="top-bar">
-    <div id="logo1"><a title="to github page" href="https://github.com/clanghout/ctab-page">CTab</a>
+    <div id="logo1" style="order: 1;"><a title="to github page" href="https://github.com/clanghout/ctab-page">CTab</a>
     </div>
-    <div style="color: #ffffff;"></div>
-    <div>
+    <div style="order: 2">
         <div class="sorting-control">
             <select name="sorting" id="sortingDropdown" class="sortingDropdown">
             </select>
         </div>
     </div>
-    <div class="dev-toggle">
+    <div class="dev-toggle" style="order: 3;">
         <input type="checkbox" id="devEnabled"/>
         <label for="devEnabled">Developer mode</label>
     </div>
-    <div class="buttonBar">
+    <div class="buttonBar" style="order: 4;">
         <button id="saveButton" title="Ctrl+Shift+S">Save</button>
         <button id="clearButton">Reset to Default</button>
         <button id="debugButton">Add Test Widget</button>
         <!--<button id="widescreenButton">Widescreen Mode</button>-->
     </div>
-    <div>
+    <div style="order: 5;">
         <button id="settings-toggle">settings</button>
     </div>
-    <div class="clockdate">
+    <div class="clockdate" style="order: 6">
         <div class="clock ctab-item-clock"><span></span></div>
         <div class="date"><span id="currDate"></span></div>
     </div>

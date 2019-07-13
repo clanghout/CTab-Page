@@ -3,7 +3,7 @@ $break-large: 1200px;
 
 :root {
   --ctab-widget-controls-width: 20px;
-  --topbar-height: 50px;
+  --topbar-height: 55px;
   --widget-border-color: #222;
   --background-color: #fff;
 }
@@ -137,6 +137,10 @@ button, input, optgroup, select, textarea {
   width: 100%;
   background-color: #000000;
   z-index: 4;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  overflow: hidden;
 
   div {
     float: left;
