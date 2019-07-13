@@ -21,7 +21,7 @@ const styleElem = document.head.appendChild(document.createElement('style'));
 interface CTabGrid {
     initialize: () => void;
     saveGrid: () => string;
-    simpleAdd: (type: string, settings: baseSettings, backgroundColor: string, textColor: string) => void;
+    createWidget: (type: string, settings: baseSettings, backgroundColor: string, textColor: string) => void;
     debug: (sampleConfig: boolean, addSampleWidgets: boolean) => void;
 
     setConfig: (config: CTabWidgetSerialized[]) => void;
@@ -115,7 +115,6 @@ function grid(): CTabGrid {
         window.localStorage.setItem("CTabConfig", JSON.stringify(config));
     };
 
-    //
     // Returns message if save call is executed or not
     const saveGrid: () => string = () => {
         if (hasChanges()) {
@@ -172,7 +171,7 @@ function grid(): CTabGrid {
     let service: CTabGrid = {
         initialize: initialize,
         saveGrid: saveGrid,
-        simpleAdd: simpleAdd,
+        createWidget: simpleAdd,
         debug: debug,
         setConfig: setConfig,
         getConfig: getConfig

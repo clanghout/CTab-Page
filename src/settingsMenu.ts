@@ -7,6 +7,7 @@ interface CTabSettingsMenu {
     getWeatherAPIKey: () => string;
     getShowUnsavedWarning: () => boolean;
     getNewTab: () => boolean;
+    getAddWidgetOnBookmarkIsDisabled: () => boolean;
 }
 
 let CTabSettings = (): CTabSettingsMenu => {
@@ -23,6 +24,7 @@ let CTabSettings = (): CTabSettingsMenu => {
     const settingsMainSaveButton: HTMLButtonElement | null = document.querySelector('#settings-main-save-button');
     const unsavedChangesWarningCheckbox: HTMLInputElement | null = document.querySelector('#unsaved-changes-warning');
     const openInNewTabCheckbox: HTMLInputElement | null = document.querySelector('#link-new-tab');
+    const disableAddWidgetOnBookmarkCheckbox: HTMLInputElement | null = document.querySelector('#disable-bookmarking-adds-widget');
     const weatherAPIKeyInput: HTMLInputElement | null = document.querySelector('#weather-API-key');
     const timezoneSelect: HTMLSelectElement | null = document.querySelector('#timezone-select');
 
@@ -81,6 +83,12 @@ let CTabSettings = (): CTabSettingsMenu => {
         openInNewTabCheckbox!.checked = currentSettings.openInNewTab || false;
         openInNewTabCheckbox!.addEventListener('click', () => {
             currentSettings.openInNewTab = openInNewTabCheckbox!.checked;
+            save();
+        });
+
+        disableAddWidgetOnBookmarkCheckbox!.checked = currentSettings.disableAddWidgetOnBookmark || false;
+        disableAddWidgetOnBookmarkCheckbox!.addEventListener('click', () => {
+            currentSettings.disableAddWidgetOnBookmark = disableAddWidgetOnBookmarkCheckbox!.checked;
             save();
         });
 
@@ -197,13 +205,18 @@ let CTabSettings = (): CTabSettingsMenu => {
         return currentSettings.openInNewTab;
     };
 
+    const getAddWidgetOnBookmarkIsDisabled = function () {
+        return currentSettings.disableAddWidgetOnBookmark;
+    };
+
     return {
         initialize: initialize,
         getWeatherTimeoutValue: getWeatherTimeoutValue,
         getTimezone: getTimezone,
         getWeatherAPIKey: getWeatherAPIKey,
         getShowUnsavedWarning: getShowUnsavedWarning,
-        getNewTab: getNewTab
+        getNewTab: getNewTab,
+        getAddWidgetOnBookmarkIsDisabled: getAddWidgetOnBookmarkIsDisabled
     };
 };
 
