@@ -47,7 +47,6 @@ let weatherEmoji: { [weatherType: string]: string; } = {
 
 let tempFormat = (data: OpenWeatherMapData): string => {
     if (data.weather) {
-        console.log("Weather type(s)", data.weather.reduce((acc, curr) => acc + " - " + curr.main, ""));
         let curTemp = (data.main.temp - 273.15).toFixed(2);
         let curWeather = data.weather.reduce((acc, weatherType: OpenWeatherMapWeather) => {
             if (weatherEmoji.hasOwnProperty(weatherType.main)) {

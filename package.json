@@ -1,29 +1,42 @@
 {
   "name": "ctab-page",
   "version": "1.0.0",
-  "main": "dist/index.html",
-  "repository": "https://github.com/clanghout/CTab-Page",
-  "author": "clanghout",
+  "description": "A web extension giving you a customizable new tab screen",
+  "keywords": [
+    "extension",
+    "newtab",
+    "dashboard"
+  ],
   "license": "MIT",
-  "private": true,
+  "bugs": "https://github.com/clanghout/CTab-Page/issues",
+  "repository": "github:clanghout/CTab-Page",
+  "author": "clanghout",
+  "contributors": [
+    "foresterre"
+  ],
+  "files": [
+    "dist/"
+  ],
+  "main": "dist/index.html",
+  "man": "README.md",
+  "scripts": {
+    "dev": "parcel src/index.html",
+    "start": "rm -rf dist/ && mkdir dist && node scripts/createSizeStyles.js && parcel src/index.html",
+    "build": "rm -rf dist/ && mkdir dist && cp manifest.json dist/manifest.json && node scripts/createSizeStyles.js && parcel build src/index.html"
+  },
   "dependencies": {
+    "@types/node": "^12.0.2",
     "big-text.js-patched": "^1.0.1",
     "hammerjs": "^2.0.8",
     "muuri": "^0.7.1",
-    "streamsaver": "^1.2.0",
+    "streamsaver": "*",
     "vanilla-picker": "^2.7.2"
   },
   "devDependencies": {
-    "parcel-bundler": "^1.12.3",
-    "parcel-plugin-web-extension": "^1.5.2",
-    "sass": "^1.20.1",
     "@types/node": "^12.0.2",
+    "parcel-bundler": "^1.12.3",
+    "sass": "^1.20.1",
     "typescript": "^3.4.1"
   },
-  "scripts": {
-    "start": "node scripts/createSizeStyles.js && parcel src/index.html",
-    "build": "node scripts/createSizeStyles.js && parcel build src/manifest.json",
-    "clean": "rm -rf dist/ && mkdir dist",
-    "typecheck": "tsc"
-  }
+  "private": true
 }

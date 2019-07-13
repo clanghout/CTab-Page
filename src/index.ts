@@ -42,6 +42,26 @@ function saveGrid(): void {
 const saveButton: HTMLButtonElement = document.querySelector("#saveButton") as HTMLButtonElement;
 saveButton.addEventListener('click', saveGrid);
 
+const sortingDropdown: HTMLSelectElement | null = document.querySelector('#sortingDropdown');
+sortingDropdown!.addEventListener('change', () => {
+    let sortMode = sortingDropdown!.value;
+    switch (sortMode) {
+        case "id-desc" :
+            cTabGrid.grid.sort("id:desc");
+            break;
+        case "alpha-asc" :
+            cTabGrid.grid.sort("title");
+            break;
+        case "alpha-desc" :
+            cTabGrid.grid.sort("title:desc");
+            break;
+        case "id-asc" :
+        default:
+            cTabGrid.grid.sort("id");
+            break;
+    }
+});
+
 
 /// Adding Widgets
 const widgetTypeChanger: HTMLSelectElement = document.querySelector("#typeDropdown") as HTMLSelectElement;
@@ -194,8 +214,6 @@ addCancelButton!.addEventListener('click', () => {
 /// Dev mode
 const devConfigBox: HTMLDivElement | null = document.querySelector("#devConfig");
 const devArea: HTMLDivElement | null = document.querySelector("#dev-area");
-const clearButton: HTMLButtonElement | null = document.querySelector("#clearButton");
-const debugButton: HTMLButtonElement | null = document.querySelector("#debugButton");
 const backupButton: HTMLButtonElement | null = document.querySelector("#backupButton");
 const devEnabledCheckbox: HTMLInputElement | null = document.querySelector("#devEnabled");
 const devOpacityButton: HTMLButtonElement | null = document.querySelector("#opacityButton");
@@ -209,8 +227,6 @@ function devSwitch(displayStyle: string): void {
     devArea!.style.display = displayStyle;
     devConfigBox!.classList.remove("hidden");
     devArea!.classList.remove("hidden");
-    clearButton!.style.display = displayStyle;
-    debugButton!.style.display = displayStyle;
 }
 
 loadBackupButton!.addEventListener('change', () => {
@@ -226,8 +242,6 @@ loadBackupButton!.addEventListener('change', () => {
 
 // disable dev mode by default
 devSwitch('none');
-clearButton!.addEventListener('click', () => debugSetGridToUseSampleConfig(cTabGrid));
-debugButton!.addEventListener('click', () => debugAddSampleWidgetToGrid(cTabGrid));
 
 backupButton!.addEventListener('click', saveCurrentConfig);
 devEnabledCheckbox!.addEventListener('change', (a) => {
@@ -295,5 +309,5 @@ try {
     });
 } catch (e) {
     // not on chrome
-    console.log("Did not execute chrome extension specific code");
+    console.log("Did not execute extension specific code");
 }
