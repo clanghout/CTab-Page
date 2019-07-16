@@ -24,7 +24,7 @@
     "start": "rm -rf dist/ && mkdir dist && node scripts/createSizeStyles.js && parcel src/index.html",
     "build": "rm -rf dist/ && mkdir dist && node scripts/createSizeStyles.js && parcel build src/manifest.json",
     "clean": "rm -rf dist/ && mkdir dist",
-    "typecheck": "tsc"
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@types/node": "^12.0.2",
