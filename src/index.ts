@@ -4,7 +4,6 @@ import CTabSettings from "./settingsMenu";
 // @ts-ignore streamsaver is no module, but adds to global scope
 import streamSaver from 'streamsaver';
 import CTabGrid from "./gridControls";
-import {debugSetGridToUseSampleConfig, debugAddSampleWidgetToGrid} from './gridControlsDebug';
 
 (window as any).browser = (() => {
     return (<any>window).browser || (<any>window).chrome || (<any>window).msBrowser;
