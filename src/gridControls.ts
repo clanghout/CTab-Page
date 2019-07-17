@@ -25,6 +25,27 @@ export class CTabGrid {
             delay: 0,
             handle: '.ctab-widget-drag-handle'
         },
+        dragSortHeuristics: {
+            sortInterval: 10,
+            minDragDistance: 5,
+            minBounceBackAngle: Math.PI / 2
+        },
+        dragCssProps: {
+            touchAction: 'pan-y',
+            userSelect: '',
+            userDrag: '',
+            tapHighlightColor: '',
+            touchCallout: '',
+            contentZooming: ''
+        },
+        dragPlaceholder: {
+            enabled: true,
+            duration: 300,
+            easing: 'ease',
+            createElement: null,
+            onCreate: null,
+            onRemove: null
+        },
         layoutOnInit: false,
         layout: {
             fillGaps: false,
@@ -187,21 +208,19 @@ export class CTabGrid {
         }
 
         try {
-            if(widget instanceof widgetTypes.LinkWidget){
+            if (widget instanceof widgetTypes.LinkWidget) {
                 BigText('#' + widget.id + " > span", {
                     maximumFontSize: 45,
                     limitingDimension: "both",
                     verticalAlign: "center"
                 });
-            }
-            else if(widget instanceof widgetTypes.ClockWidget){
+            } else if (widget instanceof widgetTypes.ClockWidget) {
                 BigText('#' + widget.id + " > span", {
                     maximumFontSize: 37,
                     limitingDimension: "both",
                     verticalAlign: "center"
                 });
-            }
-            else if(widget instanceof widgetTypes.WeatherWidget){
+            } else if (widget instanceof widgetTypes.WeatherWidget) {
                 BigText('#' + widget.id + " > span", {
                     maximumFontSize: 40,
                     limitingDimension: "both",
@@ -273,7 +292,7 @@ export class CTabGrid {
     };
 
     // Write param to localStorage
-    public setConfig (config: CTabWidgetSerialized[]): void {
+    public setConfig(config: CTabWidgetSerialized[]): void {
         window.localStorage.setItem("CTabConfig", JSON.stringify(config));
     };
 
