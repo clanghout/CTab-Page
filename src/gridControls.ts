@@ -75,8 +75,7 @@ export class CTabGrid {
                     if (a < b) return -1;
                     if (a > b) return 1;
 
-                    // HACK: if equal ensure, we sort consistently
-                    return getWidgetTitle(element);
+                    return 0;
                 });
             }
         }
@@ -382,11 +381,6 @@ function startTime(): void {
         clocks.forEach(a => a.children[0].innerHTML = today);
         setTimeout(startTime, 500);
     }
-}
-
-function getWidgetTitle(element: HTMLElement) {
-    const ctabBody: any = [].slice.call(element.children[0].children).filter((el: HTMLElement) => el.classList.contains("ctab-widget-body"))[0];
-    return ctabBody.children[0].innerText.toUpperCase();
 }
 
 export default CTabGrid;

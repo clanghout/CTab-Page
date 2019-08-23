@@ -13,11 +13,10 @@ export abstract class CTabWidget {
 
 
     widgetTemplate: () => string = () => {
-        let tags: string[] = this.settings.tags;
-        let tagsAttrValue: string = tags.join(",");
+        let joinedTags: string = this.settings.tags.join(",");
 
         let template =
-            `<div class="item he${this.settings.height} w${this.settings.width}" data-tags="${tagsAttrValue}">
+            `<div class="item he${this.settings.height} w${this.settings.width}" data-tags="${joinedTags}">
                         <div class="item-content" ${this.colorInfo()}>
 ${this.getHtmlControls()}
 <div class="ctab-widget-drag-handle hidden" id="drag-handle-${this.id}">
