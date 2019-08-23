@@ -1,6 +1,6 @@
-"use strict";
+ "use strict";
 
-import {baseSettings, CTabWidget, CTabWidgetSerialized, linkSettings} from "./cTabWidgetTypeBase";
+import {BaseSettings, CTabWidget, CTabWidgetSerialized, LinkSettings} from "./cTabWidgetTypeBase";
 import {cTabTypeMap, widgetNameList} from "./cTabWidgetTypeHelper";
 import Picker from 'vanilla-picker';
 import CTabSettings from "./settingsMenu";
@@ -67,6 +67,17 @@ export class CTabGrid {
                     return "ZZZ";
                 }
                 return ctabBody.children[0].innerText.toUpperCase();
+            },
+            tagAlpha: function (_item: any, element: any)  {
+                let tagsAttr: string = element.getAttribute("data-tags");
+                return  tagsAttr.split(",").sort(function (a: string, b: string) {
+                    // sort alphabetically within tags
+                    if (a < b) return -1;
+                    if (a > b) return 1;
+
+                    // HACK: if equal ensure, we sort consistently
+                    return getWidgetTitle(element);
+                });
             }
         }
     };
@@ -243,7 +254,7 @@ export class CTabGrid {
             // what if widget does not have a type
             try {
                 if (widget.type === "LinkWidget") {
-                    (widget.settings as linkSettings).newTab = CTabSettings.getNewTab();
+                    (widget.settings as LinkSettings).newTab = CTabSettings.getNewTab();
                 }
                 this.addWidgetToGrid(new (widgetTypes as any)[widget.type](widget.id, widget.settings, widget.backgroundColor, widget.textColor));
             } catch (e) {
@@ -309,7 +320,7 @@ export class CTabGrid {
     };
 
     // Create a new widget object and add it to the dashboard.
-    public createWidget(type: string, settings: baseSettings, backgroundColor: string, textColor: string): void {
+    public createWidget(type: string, settings: BaseSettings, backgroundColor: string, textColor: string): void {
         this.dirty = true;
         try {
             this.addWidgetToGrid(
@@ -371,6 +382,11 @@ function startTime(): void {
         clocks.forEach(a => a.children[0].innerHTML = today);
         setTimeout(startTime, 500);
     }
+}
+
+function getWidgetTitle(element: HTMLElement) {
+    const ctabBody: any = [].slice.call(element.children[0].children).filter((el: HTMLElement) => el.classList.contains("ctab-widget-body"))[0];
+    return ctabBody.children[0].innerText.toUpperCase();
 }
 
 export default CTabGrid;

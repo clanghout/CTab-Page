@@ -5,13 +5,19 @@ export abstract class CTabWidget {
     abstract getTemplateCore: () => string;
 
 
-    constructor(public id: string, public settings: baseSettings, public backgroundColor: string, public textColor: string) {
+    constructor(public id: string, public settings: BaseSettings, public backgroundColor: string, public textColor: string) {
+        if (!settings.tags) {
+            this.settings.tags = []
+        }
     }
 
 
     widgetTemplate: () => string = () => {
+        let tags: string[] = this.settings.tags;
+        let tagsAttrValue: string = tags.join(",");
+
         let template =
-            `<div class="item he${this.settings.height} w${this.settings.width}">
+            `<div class="item he${this.settings.height} w${this.settings.width}" data-tags="${tagsAttrValue}">
                         <div class="item-content" ${this.colorInfo()}>
 ${this.getHtmlControls()}
 <div class="ctab-widget-drag-handle hidden" id="drag-handle-${this.id}">
@@ -53,7 +59,7 @@ ${this.getHtmlControls()}
 }
 
 export abstract class TitleWidget extends CTabWidget {
-    protected constructor(public id: string, public settings: titleSettings, public backgroundColor: string, public textColor: string) {
+    protected constructor(public id: string, public settings: TitleSettings, public backgroundColor: string, public textColor: string) {
         super(id, settings, backgroundColor, textColor);
     };
 
@@ -70,15 +76,18 @@ export abstract class TitleWidget extends CTabWidget {
     };
 }
 
-export interface baseSettings {
+export interface BaseSettings {
     width: number;
     height: number;
+
+    // Tags allow users to categorize their widgets
+    tags: string[];
 }
 
 // Serialized version of a CTab Widget
 export interface CTabWidgetSerialized {
     id: string;
-    settings: baseSettings;
+    settings: BaseSettings;
     backgroundColor: string;
     textColor: string;
     type: string;
@@ -86,15 +95,15 @@ export interface CTabWidgetSerialized {
 
 // Settings can differ per widget type, since the `cTabWidgetType.ts` file is used only for the widget classes itself
 // the specific settings are defined here.
-export interface weatherSettings extends baseSettings {
+export interface WeatherSettings extends BaseSettings {
     city: string;
 }
 
-export interface titleSettings extends baseSettings {
+export interface TitleSettings extends BaseSettings {
     title: string;
 }
 
-export interface linkSettings extends titleSettings {
+export interface LinkSettings extends TitleSettings {
     url: string;
     newTab: boolean;
 }

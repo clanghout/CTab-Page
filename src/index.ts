@@ -1,4 +1,4 @@
-import {baseSettings, linkSettings, titleSettings} from "./cTabWidgetTypeBase";
+import {BaseSettings, LinkSettings, TitleSettings} from "./cTabWidgetTypeBase";
 import {widgetNameList} from "./cTabWidgetTypeHelper";
 import CTabSettings from "./settingsMenu";
 // @ts-ignore streamsaver is no module, but adds to global scope
@@ -53,6 +53,9 @@ sortingDropdown!.addEventListener('change', () => {
             break;
         case "alpha-desc" :
             cTabGrid.grid.sort("title:desc");
+            break;
+        case "tag-alpha":
+            cTabGrid.grid.sort("tagAlpha");
             break;
         case "id-asc" :
         default:
@@ -129,7 +132,7 @@ function addWidget(): void {
     let bgcolor: HTMLInputElement | null = document.querySelector('#addBGC');
     let textcolor: HTMLInputElement | null = document.querySelector('#addTC');
 
-    let settings: baseSettings = {width: 1, height: 1};
+    let settings: BaseSettings = {width: 1, height: 1, tags: []};
     let errorList: string[] = [];
     switch (widgetTypeChanger.value) {
         case "BuienradarWidget":
@@ -143,8 +146,8 @@ function addWidget(): void {
         case "LinkWidget":
             if (title && title.value !== "") {
                 if (url && url.value !== "") {
-                    (settings as linkSettings).title = title.value;
-                    (settings as linkSettings).url = url.value;
+                    (settings as LinkSettings).title = title.value;
+                    (settings as LinkSettings).url = url.value;
                 } else {
                     // link widgets without link were originally used as notes, but since note widgets exist, this is no longer necessary.
                     errorList.push("url is missing");
@@ -156,7 +159,7 @@ function addWidget(): void {
         case "NoteWidget":
             settings.width = 2;
             settings.height = 2;
-            (settings as titleSettings).title = "";
+            (settings as TitleSettings).title = "";
             break;
         case "ClockWidget":
             break;
@@ -303,7 +306,7 @@ try {
                 height: 1,
                 title: (bookmark.title as string),
                 url: (bookmark.url as string)
-            } as linkSettings, "#fff", "#000");
+            } as LinkSettings, "#fff", "#000");
         }
     });
 } catch (e) {
