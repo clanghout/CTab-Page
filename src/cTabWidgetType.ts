@@ -18,14 +18,14 @@ export class WeatherWidget extends CTabWidget {
                                     </div>`;
     };
 
-    constructor(public id: string, public settings: weatherSettings, public backgroundColor: string, public textColor: string) {
-        super(id, settings, backgroundColor, textColor);
+    constructor(public id: string, public settings: weatherSettings, public backgroundColor: string, public textColor: string, public category: string) {
+        super(id, settings, backgroundColor, textColor, category);
     }
 }
 
 export class LinkWidget extends TitleWidget {
-    constructor(public id: string, public settings: linkSettings, public backgroundColor: string, public textColor: string) {
-        super(id, settings, backgroundColor, textColor);
+    constructor(public id: string, public settings: linkSettings, public backgroundColor: string, public textColor: string, public category: string) {
+        super(id, settings, backgroundColor, textColor, category);
     }
 
 
@@ -46,7 +46,8 @@ export class LinkWidget extends TitleWidget {
             backgroundColor: this.backgroundColor,
             textColor: this.textColor,
             id: this.id,
-            type: this.constructor.name.replace("cTabWidgetType_", "")
+            type: this.constructor.name.replace("cTabWidgetType_", ""),
+            category: this.category
         };
     };
 }
@@ -56,8 +57,8 @@ export class ClockWidget extends CTabWidget {
         return `<div id="${this.id}" class="ctab-widget-body ctab-item-clock"><span></span></div>`;
     };
 
-    constructor(public id: string, public settings: baseSettings, public backgroundColor: string, public textColor: string) {
-        super(id, settings, backgroundColor, textColor);
+    constructor(public id: string, public settings: baseSettings, public backgroundColor: string, public textColor: string, public category: string) {
+        super(id, settings, backgroundColor, textColor, category);
     }
 
 }
@@ -69,8 +70,8 @@ export class BuienradarWidget extends CTabWidget {
                                     </div>`;
     };
 
-    constructor(public id: string, public settings: baseSettings, public backgroundColor: string, public textColor: string) {
-        super(id, settings, backgroundColor, textColor);
+    constructor(public id: string, public settings: baseSettings, public backgroundColor: string, public textColor: string, public category: string) {
+        super(id, settings, backgroundColor, textColor, category);
     }
 }
 
@@ -81,7 +82,25 @@ export class NoteWidget extends TitleWidget {
                                     </div>`;
     };
 
-    constructor(public id: string, public settings: titleSettings, public backgroundColor: string, public textColor: string) {
-        super(id, settings, backgroundColor, textColor);
+    constructor(public id: string, public settings: titleSettings, public backgroundColor: string, public textColor: string, public category: string) {
+        super(id, settings, backgroundColor, textColor, category);
+    }
+}
+
+
+export class TopSitesWidget extends CTabWidget {
+    getTemplateCore = () => {
+        return `
+        <div id="${this.id}" class="ctab-widget-body ctab-item-note">
+        <ol>
+        <li>site1</li><li></li><li></li><li></li><li></li>
+</ol>
+        
+</div>
+        `;
+    };
+
+    constructor(public id: string, public settings: baseSettings, public backgroundColor: string, public textColor: string, public category: string) {
+        super(id, settings, backgroundColor, textColor, category);
     }
 }

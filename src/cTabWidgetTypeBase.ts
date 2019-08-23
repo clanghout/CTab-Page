@@ -1,11 +1,20 @@
 import * as Helper from './cTabWidgetTypeHelper';
 
 export abstract class CTabWidget {
+    get element(): HTMLDivElement {
+        return this._element;
+    }
+
+    set element(value: HTMLDivElement) {
+        this._element = value;
+    }
 
     abstract getTemplateCore: () => string;
+    private _element: HTMLDivElement;
 
 
-    constructor(public id: string, public settings: baseSettings, public backgroundColor: string, public textColor: string) {
+    protected constructor(public id: string, public settings: baseSettings, public backgroundColor: string, public textColor: string, public category: string) {
+        this._element = document.createElement('div');
     }
 
 
@@ -30,7 +39,8 @@ ${this.getHtmlControls()}
             backgroundColor: this.backgroundColor,
             textColor: this.textColor,
             id: this.id,
-            type: Helper.lookupConstructorName(this.constructor.name.replace("cTabWidgetType_", ""))
+            type: Helper.lookupConstructorName(this.constructor.name.replace("cTabWidgetType_", "")),
+            category: this.category
             // type: this.constructor.name.replace("cTabWidgetType_", "")
         };
     };
@@ -53,8 +63,8 @@ ${this.getHtmlControls()}
 }
 
 export abstract class TitleWidget extends CTabWidget {
-    protected constructor(public id: string, public settings: titleSettings, public backgroundColor: string, public textColor: string) {
-        super(id, settings, backgroundColor, textColor);
+    protected constructor(public id: string, public settings: titleSettings, public backgroundColor: string, public textColor: string, public category: string) {
+        super(id, settings, backgroundColor, textColor, category);
     };
 
     getConfig = (): CTabWidgetSerialized => {
@@ -65,7 +75,8 @@ export abstract class TitleWidget extends CTabWidget {
             backgroundColor: this.backgroundColor,
             id: this.id,
             textColor: this.textColor,
-            type: this.constructor.name.replace("cTabWidgetType_", "")
+            type: this.constructor.name.replace("cTabWidgetType_", ""),
+            category: this.category
         };
     };
 }
@@ -82,6 +93,7 @@ export interface CTabWidgetSerialized {
     backgroundColor: string;
     textColor: string;
     type: string;
+    category: string;
 }
 
 // Settings can differ per widget type, since the `cTabWidgetType.ts` file is used only for the widget classes itself

@@ -14,7 +14,6 @@ export const cTabTypeMap: { [name: string]: WidgetConstructor } = widgetNameList
     return acc;
 }, {} as any);
 
-
 export function lookupConstructorName(cname: string): string {
     return (Object.entries(widgetTypes) as [string, any][]).find(([_, w]) => w.name == cname)![0];
 }

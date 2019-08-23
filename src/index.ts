@@ -41,6 +41,9 @@ function saveGrid(): void {
 const saveButton: HTMLButtonElement = document.querySelector("#saveButton") as HTMLButtonElement;
 saveButton.addEventListener('click', saveGrid);
 
+// const hideTestButton: HTMLButtonElement = document.querySelector('#hideTestButton')as HTMLButtonElement;
+// hideTestButton.addEventListener('click',() => cTabGrid.hideCategory("test"));
+
 const sortingDropdown: HTMLSelectElement | null = document.querySelector('#sortingDropdown');
 sortingDropdown!.addEventListener('change', () => {
     let sortMode = sortingDropdown!.value;
@@ -160,6 +163,8 @@ function addWidget(): void {
             break;
         case "ClockWidget":
             break;
+        case "TopSitesWidget":
+            break;
         default:
             errorList.push("Type missing");
             break;
@@ -169,7 +174,7 @@ function addWidget(): void {
         showToast(`Unable to add widget:${errorList.reduce((acc, curr) => " " + acc + curr, "")}.`);
     } else {
 
-        cTabGrid.createWidget(widgetTypeChanger.value, settings, bgcolor!.value, textcolor!.value);
+        cTabGrid.createWidget(widgetTypeChanger.value, settings, bgcolor!.value, textcolor!.value, "test");
         title!.value = "";
         url!.value = "";
 
@@ -293,8 +298,8 @@ function prettyPrintConfig(config: any): string {
 /// Chrome extension specific
 try {
     (window as any).browser.commands.onCommand.addListener(saveGrid);
-    (window as any).browser.bookmarks.onCreated.addListener(function (_id: any, bookmark: any) {
-
+    (window as any).browser.bookmarks.onCreated.addListener(function (this: MediaQueryListEvent, ev: MediaQueryListEvent): void {
+        let bookmark = ev as any;
         // If user checks the disableAddWidgetOnBookmark setting, then we don't want to add a bookmark.
         // Hence, if it is not checked, we do want to add a bookmark.
         if (!CTabSettings.getAddWidgetOnBookmarkIsDisabled()) {
@@ -303,7 +308,7 @@ try {
                 height: 1,
                 title: (bookmark.title as string),
                 url: (bookmark.url as string)
-            } as linkSettings, "#fff", "#000");
+            } as linkSettings, "#fff", "#000", "bookmark");
         }
     });
 } catch (e) {

@@ -48,7 +48,7 @@ export class CTabGrid {
         },
         layoutOnInit: false,
         layout: {
-            fillGaps: false,
+            fillGaps: true,
             horizontal: false,
             alignRight: false,
             alignBottom: false,
@@ -110,12 +110,11 @@ export class CTabGrid {
     // adding the control buttons to widgets,
     // and adapting the font size of the text using bigText
     public addWidgetToGrid(widget: CTabWidget): void {
-        let itemElem = document.createElement('div');
-        itemElem.innerHTML = widget.widgetTemplate();
+        widget.element.innerHTML = widget.widgetTemplate();
 
         let textColOpen = false;
 
-        itemElem.firstChild!.addEventListener('mouseover', () => {
+        widget.element.firstChild!.addEventListener('mouseover', () => {
             if (!this.widgetColorPickerOpen) {
                 const controlPanel = document.getElementById(`controls-${widget.id}`)!;
                 const controlDragHandle = document.getElementById(`drag-handle-${widget.id}`)!;
@@ -130,7 +129,7 @@ export class CTabGrid {
         });
 
 
-        itemElem!.firstChild!.addEventListener('mouseout', () => {
+        widget.element.firstChild!.addEventListener('mouseout', () => {
             if (!textColOpen) {
                 const controlPanel = document.getElementById(`controls-${widget.id}`)!;
                 const controlDragHandle = document.getElementById(`drag-handle-${widget.id}`)!;
@@ -142,7 +141,7 @@ export class CTabGrid {
                 controlDragHandle.classList.add('hidden');
             }
         });
-        this.grid.add(itemElem.firstChild, {index: widget.id});
+        this.grid.add(widget.element.firstChild, {index: widget.id});
 
         new Picker({
             parent: document.getElementById(`${widget.id}-text-color`)!,
@@ -309,11 +308,11 @@ export class CTabGrid {
     };
 
     // Create a new widget object and add it to the dashboard.
-    public createWidget(type: string, settings: baseSettings, backgroundColor: string, textColor: string): void {
+    public createWidget(type: string, settings: baseSettings, backgroundColor: string, textColor: string, category: string): void {
         this.dirty = true;
         try {
             this.addWidgetToGrid(
-                new (widgetTypes as any)[type]("i" + new Date().getTime().toString(), settings, backgroundColor, textColor));
+                new (widgetTypes as any)[type]("i" + new Date().getTime().toString(), settings, backgroundColor, textColor, category));
         } catch (e) {
             if (type) {
                 console.log(`Widget type ${type} does not exist.`);
@@ -352,6 +351,13 @@ export class CTabGrid {
         return this.widgets.map(widget => widget.getConfig());
     };
 
+    // hideCategory(name: string) {
+    //     this.grid.hide()
+    // }
+    //
+    // showCategory(name: string) {
+    //     this.widgets.filter(widget => widget.category.toLowerCase() === name.toLowerCase()).forEach(widget => widget.element.classList.remove("muuri-item-hidden"))
+    // }
 }
 
 // Independent functions
