@@ -4,6 +4,7 @@ import {BaseSettings, CTabWidget, CTabWidgetSerialized, LinkSettings} from "./cT
 import {cTabTypeMap, widgetNameList} from "./cTabWidgetTypeHelper";
 import Picker from 'vanilla-picker';
 import CTabSettings from "./settingsMenu";
+import CTabFilterMenu from "./filterMenu";
 import * as weatherEl from './weatherControls';
 import * as widgetTypes from "./cTabWidgetType";
 import BigText from 'big-text.js-patched';
@@ -90,6 +91,10 @@ export class CTabGrid {
         CTabSettings.initialize();
         this.grid = new Muuri(".grid", this.muuriOptions);
         this.loadModel();
+
+        // start after Muuri initialized, because we need access to the widgets
+        CTabFilterMenu.initialize(this.widgets, this.grid);
+
 
         // @ts-ignore - no return for not showing a before-unload alert
         window.onbeforeunload = () => {

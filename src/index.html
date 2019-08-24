@@ -39,7 +39,10 @@
     <div style="order: 5;">
         <button id="settings-toggle">settings</button>
     </div>
-    <div class="clockdate" style="order: 6">
+    <div style="order: 6;">
+        <button id="filter-menu-toggle">filters</button>
+    </div>
+    <div class="clockdate" style="order: 7">
         <div class="clock ctab-item-clock"><span></span></div>
         <div class="date"><span id="currDate"></span></div>
     </div>
@@ -74,6 +77,7 @@
         </div>
     </div>
 </div>
+
 
 <!-- ###PANE AREA### Modal like 'pop-ups' that show on top of the normal website body -->
 <div class="settings-pane pane hidden" id="settingsMenu">
@@ -643,6 +647,15 @@
 
         <button id="background-apply" style="grid-column: 2; ">Apply background setting</button>
     </div>
+</div>
+
+<div class="filter-menu-pane pane hidden" id="filter-menu">
+    <div style="font-weight: bold; grid-column: 1/3;">Filters:</div>
+    <p></p>
+    <!--  Here we use JS to inject checkboxes which represent the currently available tags -->
+    <div id="filter-menu-tag-list"></div>
+    <p></p>
+    <button id="filter-menu-save-button">Filter</button>
 </div>
 
 <div class="add-pane pane hidden" id="addMenu">

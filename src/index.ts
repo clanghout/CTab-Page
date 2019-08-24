@@ -1,6 +1,7 @@
 import {BaseSettings, LinkSettings, TitleSettings} from "./cTabWidgetTypeBase";
 import {widgetNameList} from "./cTabWidgetTypeHelper";
 import CTabSettings from "./settingsMenu";
+import CTabFilterMenu from "./filterMenu";
 // @ts-ignore streamsaver is no module, but adds to global scope
 import streamSaver from 'streamsaver';
 import CTabGrid from "./gridControls";
@@ -40,6 +41,8 @@ function saveGrid(): void {
 
 const saveButton: HTMLButtonElement = document.querySelector("#saveButton") as HTMLButtonElement;
 saveButton.addEventListener('click', saveGrid);
+saveButton.addEventListener('click', CTabFilterMenu.updateAvailableTagList);
+
 
 const sortingDropdown: HTMLSelectElement | null = document.querySelector('#sortingDropdown');
 sortingDropdown!.addEventListener('change', () => {
@@ -291,7 +294,6 @@ function prettyPrintConfig(config: any): string {
     }
     return "";
 }
-
 
 /// Chrome extension specific
 try {
