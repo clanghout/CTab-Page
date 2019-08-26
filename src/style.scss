@@ -26,6 +26,7 @@ button, input, optgroup, select, textarea {
   line-height: inherit;
 }
 
+
 .bold {
   font-weight: bold;
 }
@@ -112,19 +113,26 @@ button, input, optgroup, select, textarea {
   z-index: 1;
   background: transparent;
   color: #000000;
+
+  .muuri-item-dragging {
+    z-index: 3;
+  }
+
+  .muuri-item-releasing {
+    z-index: 2;
+  }
+
+  .muuri-item-hidden {
+    z-index: 0;
+  }
 }
 
-.item.muuri-item-dragging {
-  z-index: 3;
+// Styling of the drag placeholder
+div.muuri-item-placeholder {
+  border: 2px #777 dashed;
+  border-radius: 4px;
 }
 
-.item.muuri-item-releasing {
-  z-index: 2;
-}
-
-.item.muuri-item-hidden {
-  z-index: 0;
-}
 
 /*End Muuri style*/
 
@@ -141,6 +149,7 @@ button, input, optgroup, select, textarea {
   justify-content: space-between;
   align-items: flex-end;
   overflow: hidden;
+  padding: 5px 0;
 
   div {
     float: left;
@@ -305,8 +314,9 @@ button, input, optgroup, select, textarea {
 }
 
 /*DEBUG STYLES*/
-.devConfig #configField #configFieldInput {
+#devConfig #configField #configFieldInput {
   width: calc(100% - 15px);
+  resize: none;
 }
 
 .others {
