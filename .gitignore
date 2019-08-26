@@ -8,3 +8,7 @@ dist/*
 sample-config.json
 .cache/
 src/sizeStyles.css
+
+scripts/src/
+
+scripts/scripts/

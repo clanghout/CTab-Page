@@ -128,6 +128,7 @@ button, input, optgroup, select, textarea {
   background: transparent;
   color: #000000;
 
+
   .muuri-item-dragging {
     z-index: 3;
   }
@@ -328,8 +329,9 @@ div.muuri-item-placeholder {
 }
 
 /*DEBUG STYLES*/
-.devConfig #configField #configFieldInput {
+#devConfig #configField #configFieldInput {
   width: calc(100% - 15px);
+  resize: none;
 }
 
 .others {
