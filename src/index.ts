@@ -35,13 +35,13 @@ let cTabGrid = new CTabGrid();
 // Save the grid and show the result to user using toastBox.
 function saveGrid(): void {
     const saveResult = cTabGrid.saveGrid();
+    CTabFilterMenu.updateAvailableTagList();
     showToast(saveResult);
 }
 
 
 const saveButton: HTMLButtonElement = document.querySelector("#saveButton") as HTMLButtonElement;
 saveButton.addEventListener('click', saveGrid);
-saveButton.addEventListener('click', CTabFilterMenu.updateAvailableTagList);
 
 
 const sortingDropdown: HTMLSelectElement | null = document.querySelector('#sortingDropdown');

@@ -1,4 +1,4 @@
- "use strict";
+"use strict";
 
 import {BaseSettings, CTabWidget, CTabWidgetSerialized, LinkSettings} from "./cTabWidgetTypeBase";
 import {cTabTypeMap, widgetNameList} from "./cTabWidgetTypeHelper";

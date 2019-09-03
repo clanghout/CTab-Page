@@ -8,7 +8,7 @@ interface Tags {
 }
 
 let Tags = (rWidgets: CTabWidget[]): Tags => {
-    let widgets: CTabWidget[] = [...rWidgets];
+    let widgets: CTabWidget[] = rWidgets;
     let allTags: Set<string> = new Set();
     let enabledTags: Set<string> = new Set();
 
@@ -68,7 +68,6 @@ let CTabTagFilter = (): CTabTagFilterMenu => {
 
     let filterMenuActive: boolean = false;
     let tagData: Tags | null = null;
-
 
     // Should always be called before calling other functions.
     const initialize = (widgets: CTabWidget[], grid: any): void => {
