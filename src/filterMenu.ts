@@ -7,8 +7,7 @@ interface Tags {
     setEnabled: (tagNames: string[]) => void;
 }
 
-let Tags = (rWidgets: CTabWidget[]): Tags => {
-    let widgets: CTabWidget[] = rWidgets;
+let Tags = (widgets: CTabWidget[]): Tags => {
     let allTags: Set<string> = new Set();
     let enabledTags: Set<string> = new Set();
 
