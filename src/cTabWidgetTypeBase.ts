@@ -3,14 +3,13 @@ import * as Helper from './cTabWidgetTypeHelper';
 export abstract class CTabWidget {
 
     abstract getTemplateCore: () => string;
-
+    getType = this.constructor.name.replace("cTabWidgetType_", "");
 
     constructor(public id: string, public settings: BaseSettings, public backgroundColor: string, public textColor: string) {
         if (!settings.tags) {
             this.settings.tags = []
         }
     }
-
 
     widgetTemplate: () => string = () => {
         let joinedTags: string = this.settings.tags.join(",");
@@ -29,6 +28,7 @@ ${this.getHtmlControls()}
         template += `</div></div>`;
         return template;
     };
+
     getConfig = (): CTabWidgetSerialized => {
         return {
             settings: this.settings,
@@ -46,15 +46,15 @@ ${this.getHtmlControls()}
         --item-background-color:${this.backgroundColor};
         "`;
     };
+
     getHtmlControls = () =>
         `<div class="ctab-widget-controls hidden" id="controls-${this.id}">
+                    <div class="vanilla-color-picker widget-control-picker" id="${this.id}-text-color" style="color:var(--${this.id}-text-color); border-color: var(--${this.id}-text-color); background-color: rgba(255,255,255,.8)">tc</div>
+                    <div class="vanilla-color-picker widget-control-picker" id="${this.id}-background-color" style="background-color: var(--${this.id}-background-color); border-color: var(--${this.id}-background-color);">bg</div>
                     <div class="deletebutton">
                         <button id="delete-${this.id}" style="padding: 0; border: 0; background: transparent;">❌</button>
                     </div>
-                    <div class="vanilla-color-picker widget-control-picker" id="${this.id}-text-color" style="color:var(--${this.id}-text-color); border-color: var(--${this.id}-text-color); background-color: rgba(255,255,255,.8)">tc</div>
-                    <div class="vanilla-color-picker widget-control-picker" id="${this.id}-background-color" style="background-color: var(--${this.id}-background-color); border-color: var(--${this.id}-background-color);">bg</div>
                 </div>`;
-    getType = this.constructor.name.replace("cTabWidgetType_", "");
 }
 
 export abstract class TitleWidget extends CTabWidget {
