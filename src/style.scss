@@ -88,6 +88,10 @@ button, input, optgroup, select, textarea {
   grid-template-columns: 400px 420px;
 }
 
+#filter-menu-toggle {
+  display: var(--experimental-features-display);
+}
+
 .filter-menu-pane {
   top: var(--topbar-height);
   right: 10em;
@@ -221,6 +225,7 @@ div.muuri-item-placeholder {
 
   .dev-toggle {
     color: white;
+    display: var(--experimental-features-display);
   }
 }
 
@@ -236,6 +241,7 @@ div.muuri-item-placeholder {
   border-radius: 4px;
   align-items: center;
   margin-top: 5px;
+  display: var(--experimental-features-display);
 }
 
 .item-content {

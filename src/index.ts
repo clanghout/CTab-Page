@@ -5,6 +5,7 @@ import CTabFilterMenu from "./filterMenu";
 // @ts-ignore streamsaver is no module, but adds to global scope
 import streamSaver from 'streamsaver';
 import CTabGrid from "./gridControls";
+import settingsMenu from "./settingsMenu";
 
 (window as any).browser = (() => {
     return (<any>window).browser || (<any>window).chrome || (<any>window).msBrowser;
@@ -105,6 +106,10 @@ function widgetTypeFieldVisibilityControl(showTitle: boolean, showUrl: boolean):
         }
     }
 }
+
+// set css property to show or hide experimental features
+(document as any).documentElement.style.setProperty('--experimental-features-display',
+    settingsMenu.getExperimentalFeatures() ? "initial" : "none");
 
 widgetTypeFieldVisibilityControl(false, false);
 

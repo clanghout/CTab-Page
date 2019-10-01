@@ -8,6 +8,7 @@ interface CTabSettingsMenu {
     getShowUnsavedWarning: () => boolean;
     getNewTab: () => boolean;
     getAddWidgetOnBookmarkIsDisabled: () => boolean;
+    getExperimentalFeatures: () => boolean;
 }
 
 let CTabSettings = (): CTabSettingsMenu => {
@@ -27,6 +28,7 @@ let CTabSettings = (): CTabSettingsMenu => {
     const disableAddWidgetOnBookmarkCheckbox: HTMLInputElement | null = document.querySelector('#disable-bookmarking-adds-widget');
     const weatherAPIKeyInput: HTMLInputElement | null = document.querySelector('#weather-API-key');
     const timezoneSelect: HTMLSelectElement | null = document.querySelector('#timezone-select');
+    const experimentalFeaturesCheckbox: HTMLInputElement | null = document.querySelector('#epxerimental-features-checkbox');
 
     let currentSettings = JSON.parse((<any>window).localStorage.getItem('CTab-settings')) || {};
 
@@ -113,6 +115,13 @@ let CTabSettings = (): CTabSettingsMenu => {
             currentSettings.timezoneIndex = timezoneSelect!.selectedIndex;
             save();
         });
+
+        // experimental features check
+        experimentalFeaturesCheckbox!.checked = currentSettings.experimentalFeatures || false;
+        experimentalFeaturesCheckbox!.addEventListener('change',() => {
+            currentSettings.experimentalFeatures = experimentalFeaturesCheckbox!.checked;
+            save();
+        })
     };
 
     function getBackgroundSetting(): void {
@@ -209,6 +218,10 @@ let CTabSettings = (): CTabSettingsMenu => {
         return currentSettings.disableAddWidgetOnBookmark;
     };
 
+    const getExperimentalFeatures = function () {
+        return currentSettings.experimentalFeatures;
+    }
+
     return {
         initialize: initialize,
         getWeatherTimeoutValue: getWeatherTimeoutValue,
@@ -216,7 +229,8 @@ let CTabSettings = (): CTabSettingsMenu => {
         getWeatherAPIKey: getWeatherAPIKey,
         getShowUnsavedWarning: getShowUnsavedWarning,
         getNewTab: getNewTab,
-        getAddWidgetOnBookmarkIsDisabled: getAddWidgetOnBookmarkIsDisabled
+        getAddWidgetOnBookmarkIsDisabled: getAddWidgetOnBookmarkIsDisabled,
+        getExperimentalFeatures: getExperimentalFeatures,
     };
 };
 
