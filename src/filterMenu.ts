@@ -130,7 +130,7 @@ let CTabTagFilter = (): CTabTagFilterMenu => {
             let elem = item.getElement();
             let tags = elem.getAttribute("data-tags").split(",");
 
-            return tags.length > 0 && tags.some((tag) => toBeEnabled.includes(tag));
+            return tags.length > 0 && tags.some((tag: any) => toBeEnabled.includes(tag));
         });
 
         let hides = refGrid.getItems().filter((item: any) => {
