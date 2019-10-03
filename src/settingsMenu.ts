@@ -1,4 +1,5 @@
 import Picker from 'vanilla-picker';
+import get = Reflect.get;
 
 interface CTabSettingsMenu {
     initialize: () => void;
@@ -8,6 +9,7 @@ interface CTabSettingsMenu {
     getShowUnsavedWarning: () => boolean;
     getNewTab: () => boolean;
     getAddWidgetOnBookmarkIsDisabled: () => boolean;
+    getMuuriFillgaps: () => boolean;
 }
 
 let CTabSettings = (): CTabSettingsMenu => {
@@ -27,6 +29,7 @@ let CTabSettings = (): CTabSettingsMenu => {
     const disableAddWidgetOnBookmarkCheckbox: HTMLInputElement | null = document.querySelector('#disable-bookmarking-adds-widget');
     const weatherAPIKeyInput: HTMLInputElement | null = document.querySelector('#weather-API-key');
     const timezoneSelect: HTMLSelectElement | null = document.querySelector('#timezone-select');
+    const muuriFillgaps: HTMLInputElement | null = document.querySelector('#muuri-fillgaps');
 
     let currentSettings = JSON.parse((<any>window).localStorage.getItem('CTab-settings')) || {};
 
@@ -113,6 +116,12 @@ let CTabSettings = (): CTabSettingsMenu => {
             currentSettings.timezoneIndex = timezoneSelect!.selectedIndex;
             save();
         });
+
+        muuriFillgaps!.checked = currentSettings.muuriFillgaps || false;
+        muuriFillgaps!.addEventListener('click', () => {
+            currentSettings.muuriFillgaps = muuriFillgaps!.checked;
+            save();
+        })
     };
 
     function getBackgroundSetting(): void {
@@ -209,6 +218,10 @@ let CTabSettings = (): CTabSettingsMenu => {
         return currentSettings.disableAddWidgetOnBookmark;
     };
 
+    const getMuuriFillgaps = function () {
+        return currentSettings.muuriFillgaps;
+    }
+
     return {
         initialize: initialize,
         getWeatherTimeoutValue: getWeatherTimeoutValue,
@@ -216,7 +229,8 @@ let CTabSettings = (): CTabSettingsMenu => {
         getWeatherAPIKey: getWeatherAPIKey,
         getShowUnsavedWarning: getShowUnsavedWarning,
         getNewTab: getNewTab,
-        getAddWidgetOnBookmarkIsDisabled: getAddWidgetOnBookmarkIsDisabled
+        getAddWidgetOnBookmarkIsDisabled: getAddWidgetOnBookmarkIsDisabled,
+        getMuuriFillgaps: getMuuriFillgaps,
     };
 };
 
