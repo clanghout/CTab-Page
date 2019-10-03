@@ -1,6 +1,13 @@
 "use strict";
 
-import {BaseSettings, CTabWidget, CTabWidgetSerialized, LinkSettings} from "./cTabWidgetTypeBase";
+import {
+    BaseSettings,
+    CTabWidget,
+    CTabWidgetSerialized,
+    LinkSettings,
+    TitleSettings,
+    WeatherSettings
+} from "./cTabWidgetTypeBase";
 import {cTabTypeMap, widgetNameList} from "./cTabWidgetTypeHelper";
 import Picker from 'vanilla-picker';
 import CTabSettings from "./settingsMenu";
@@ -10,6 +17,7 @@ import * as widgetTypes from "./cTabWidgetType";
 import BigText from 'big-text.js-patched';
 // @ts-ignore Muuri does not export an object as of version 0.7.1; it is listed as a TODO in their source code
 import Muuri from "muuri";
+import settingsMenu from "./settingsMenu";
 
 (window as any).browser = (() => {
     return (window as any).browser || (window as any).chrome || (window as any).msBrowser;
@@ -19,6 +27,7 @@ import Muuri from "muuri";
 const styleElem = document.head.appendChild(document.createElement('style'));
 
 export class CTabGrid {
+    public grid: any;
     private muuriOptions = {
         dragEnabled: true,
         dragStartPredicate: {
@@ -49,7 +58,7 @@ export class CTabGrid {
         },
         layoutOnInit: false,
         layout: {
-            fillGaps: false,
+            fillGaps: settingsMenu.getMuuriFillgaps(),
             horizontal: false,
             alignRight: false,
             alignBottom: false,
@@ -69,9 +78,9 @@ export class CTabGrid {
                 }
                 return ctabBody.children[0].innerText.toUpperCase();
             },
-            tagAlpha: function (_item: any, element: any)  {
+            tagAlpha: function (_item: any, element: any) {
                 let tagsAttr: string = element.getAttribute("data-tags");
-                return  tagsAttr.split(",").sort(function (a: string, b: string) {
+                return tagsAttr.split(",").sort(function (a: string, b: string) {
                     // sort alphabetically within tags
                     if (a < b) return -1;
                     if (a > b) return 1;
@@ -83,7 +92,6 @@ export class CTabGrid {
     };
     private widgets: CTabWidget[] = [];
     private widgetColorPickerOpen: boolean = false;
-    public grid: any;
     private dirty: boolean = false;
 
 
@@ -252,7 +260,71 @@ export class CTabGrid {
 
     public loadModel(): void {
         let widgetData: CTabWidgetSerialized[] = this.getConfig();
-        widgetData = Array.isArray(widgetData) ? widgetData : [];
+        if (!Array.isArray(widgetData)) {
+            // Set default settings
+            const fbSetting: LinkSettings = {
+                width: 1,
+                height: 1,
+                title: "Facebook",
+                url: "https://www.facebook.com",
+                newTab: false,
+                tags: ["socials"]
+            };
+            const twSetting: LinkSettings = {
+                width: 1,
+                height: 1,
+                title: "Twitter",
+                url: "https://www.twitter.com",
+                newTab: false,
+                tags: ["socials"]
+            };
+            const noteSetting: TitleSettings = {
+                width: 2,
+                height: 2,
+                title: "Welcome to CTab page!",
+                tags: []
+            };
+            const weatherSetting: WeatherSettings = {width: 2, height: 2, tags: [], city: "New York"};
+            widgetData =
+                [
+                    {
+                        settings: fbSetting,
+                        backgroundColor: "rgba(67,146,241,0.5)",
+                        textColor: "rgba(255,255,255,1)",
+                        id: "i1559213769276",
+                        type: "LinkWidget"
+                    },
+                    {
+                        settings: twSetting,
+                        backgroundColor: "rgba(67,228,247,0.5)"
+                        , textColor: "rgba(255,255,255,1)",
+                        id: "i1559213802713",
+                        type: "LinkWidget"
+                    },
+                    {
+                        settings: noteSetting,
+                        backgroundColor: "rgba(255,255,255,0.5)",
+                        id: "i1559214281406",
+                        textColor: "rgba(0,0,0,1)",
+                        type: "NoteWidget"
+                    },
+                    // Better explanation needed on how to get a valid key.
+                    // {
+                    //     settings: weatherSetting,
+                    //     backgroundColor: "rgba(255,255,255,1)",
+                    //     textColor: "rgba(0,0,0,1)",
+                    //     id: "i1569563043131",
+                    //     type: "WeatherWidget"
+                    // },
+                    {
+                        settings: {width: 1, height: 1, tags: []},
+                        backgroundColor: "rgba(255,255,255,0.5)",
+                        textColor: "rgba(0,0,0,1)",
+                        id: "i1559060644840",
+                        type: "ClockWidget"
+                    },
+                ];
+        }
 
         widgetData.filter((a: any) => a !== null).forEach((widget: CTabWidgetSerialized) => {
             // what if widget does not have a type
@@ -272,11 +344,6 @@ export class CTabGrid {
             }
         });
 
-    };
-
-    // Toggle the colorpickers
-    private toggleWidgetColorPicker(isOpen: boolean): void {
-        this.widgetColorPickerOpen = isOpen;
     };
 
     // Retrieve the current config from the browser's localstorage
@@ -311,7 +378,6 @@ export class CTabGrid {
         window.localStorage.setItem("CTabConfig", JSON.stringify(config));
     };
 
-
     // Returns message if save call is executed or not
     public saveGrid(): string {
         if (this.hasChanges()) {
@@ -340,7 +406,13 @@ export class CTabGrid {
         }
     };
 
+    // Toggle the colorpickers
+    private toggleWidgetColorPicker(isOpen: boolean): void {
+        this.widgetColorPickerOpen = isOpen;
+    };
+
     // Listener for note widgets on change
+
     // Used to track whether changes are made that need to be saved.
     private noteChanged(): void {
         this.dirty = true;

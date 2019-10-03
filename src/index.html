@@ -16,7 +16,8 @@
 </div>
 
 <div class="top-bar">
-    <div id="logo1" style="order: 1;"><a href="https://github.com/clanghout/ctab-page" title="to github page">CTab</a>
+    <div id="logo1" style="order: 1;"><a href="https://github.com/clanghout/ctab-page" target="_blank"
+                                         title="to github page">CTab</a>
     </div>
     <div style="order: 2">
         <div class="sorting-control">
@@ -73,7 +74,7 @@
             <button id="saveDevConfig">save dev config</button>
             <button id="backupButton">Save config to file</button>
             <button id="opacityButton">Make backgrounds half transparent</button>
-            <label for="loadBackupButton">Load config from file</label><input id="loadBackupButton" type="file">
+            <label for="loadBackupButton">Load config from file: </label><input id="loadBackupButton" type="file">
         </div>
     </div>
 </div>
@@ -620,6 +621,12 @@
             <input id="epxerimental-features-checkbox" name="epxerimental-features-checkbox" type="checkbox">
             Experimental features
         </label></div>
+        <div class="setting">
+            <label>
+                <input id="muuri-fillgaps" name="muuri-fillgaps" type="checkbox">
+                Compact widget placement
+            </label>
+        </div>
         <div class="setting">
             <button id="settings-main-save-button">Save settings</button>
             <span class="note"> Refresh the page for all settings to take effect</span>
