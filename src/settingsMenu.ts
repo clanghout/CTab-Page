@@ -9,6 +9,7 @@ interface CTabSettingsMenu {
     getShowUnsavedWarning: () => boolean;
     getNewTab: () => boolean;
     getAddWidgetOnBookmarkIsDisabled: () => boolean;
+    getExperimentalFeatures: () => boolean;
     getMuuriFillgaps: () => boolean;
 }
 
@@ -29,8 +30,8 @@ let CTabSettings = (): CTabSettingsMenu => {
     const disableAddWidgetOnBookmarkCheckbox: HTMLInputElement | null = document.querySelector('#disable-bookmarking-adds-widget');
     const weatherAPIKeyInput: HTMLInputElement | null = document.querySelector('#weather-API-key');
     const timezoneSelect: HTMLSelectElement | null = document.querySelector('#timezone-select');
+    const experimentalFeaturesCheckbox: HTMLInputElement | null = document.querySelector('#epxerimental-features-checkbox');
     const muuriFillgaps: HTMLInputElement | null = document.querySelector('#muuri-fillgaps');
-
     let currentSettings = JSON.parse((<any>window).localStorage.getItem('CTab-settings')) || {};
 
 
@@ -116,12 +117,17 @@ let CTabSettings = (): CTabSettingsMenu => {
             currentSettings.timezoneIndex = timezoneSelect!.selectedIndex;
             save();
         });
-
         muuriFillgaps!.checked = currentSettings.muuriFillgaps || false;
         muuriFillgaps!.addEventListener('click', () => {
             currentSettings.muuriFillgaps = muuriFillgaps!.checked;
+          save();
+        });
+          // experimental features check
+        experimentalFeaturesCheckbox!.checked = currentSettings.experimentalFeatures || false;
+        experimentalFeaturesCheckbox!.addEventListener('change',() => {
+            currentSettings.experimentalFeatures = experimentalFeaturesCheckbox!.checked;
             save();
-        })
+        });
     };
 
     function getBackgroundSetting(): void {
@@ -218,6 +224,10 @@ let CTabSettings = (): CTabSettingsMenu => {
         return currentSettings.disableAddWidgetOnBookmark;
     };
 
+    const getExperimentalFeatures = function () {
+        return currentSettings.experimentalFeatures;
+    }
+   
     const getMuuriFillgaps = function () {
         return currentSettings.muuriFillgaps;
     }
@@ -230,6 +240,7 @@ let CTabSettings = (): CTabSettingsMenu => {
         getShowUnsavedWarning: getShowUnsavedWarning,
         getNewTab: getNewTab,
         getAddWidgetOnBookmarkIsDisabled: getAddWidgetOnBookmarkIsDisabled,
+        getExperimentalFeatures: getExperimentalFeatures,
         getMuuriFillgaps: getMuuriFillgaps,
     };
 };
