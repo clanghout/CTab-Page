@@ -41,7 +41,7 @@ let CTabSettings = (): CTabSettingsMenu => {
             parent: document.getElementById('widget-border-color')!,
             popup: 'bottom', // 'right'(default), 'left', 'top', 'bottom'
             editor: true,
-            color: currentSettings.borderColor,
+            color: currentSettings.borderColor || "#02151a40",
             onChange: (newColor) => {
                 (<any>document).documentElement.style.setProperty('--widget-border-color', newColor.rgbaString);
                 currentSettings.borderColor = newColor.rgbaString;
@@ -56,7 +56,7 @@ let CTabSettings = (): CTabSettingsMenu => {
             parent: document.getElementById('background-color-picker')!,
             popup: 'bottom', // 'right'(default), 'left', 'top', 'bottom'
             editor: true,
-            color: currentSettings.backgroundColor,
+            color: currentSettings.backgroundColor || "#6abbd0ff",
             onChange: (newColor) => {
                 document.documentElement.style.setProperty('--background-color', newColor.rgbaString);
                 currentSettings.backgroundColor = newColor.rgbaString;
@@ -73,7 +73,7 @@ let CTabSettings = (): CTabSettingsMenu => {
         if (typeof currentSettings.backgroundRadioSelected === 'number') {
             (<HTMLInputElement>document.getElementsByName('background')[currentSettings.backgroundRadioSelected]).checked = true;
             if (currentSettings.backgroundRadioSelected === 2) {
-                bgUrlVal!.value = currentSettings.background;
+                bgUrlVal!.value = currentSettings.background || "#6abbd0ff";
             }
         }
 
@@ -110,7 +110,7 @@ let CTabSettings = (): CTabSettingsMenu => {
         });
 
         // Timezone
-        timezoneSelect!.selectedIndex = currentSettings.timezoneIndex || 421; //default to Europe/Amsterdam
+        timezoneSelect!.selectedIndex = currentSettings.timezoneIndex || 374; //default to Europe/Amsterdam
         timezoneSelect!.addEventListener('change', () => {
             currentSettings.timezone = timezoneSelect!.options[timezoneSelect!.selectedIndex].innerText;
             currentSettings.timezoneIndex = timezoneSelect!.selectedIndex;
