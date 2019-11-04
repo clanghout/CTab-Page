@@ -8,3 +8,4 @@ dist/*
 sample-config.json
 .cache/
 src/sizeStyles.css
+yarn-error.log
