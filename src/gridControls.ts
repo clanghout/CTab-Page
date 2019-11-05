@@ -105,8 +105,8 @@ export class CTabGrid {
 
         // @ts-ignore - no return for not showing a before-unload alert
         window.onbeforeunload = () => {
-            // dirty state is implemented loosely (did not care much before, dirty in the probability of change)
-            // so an extra check is also added comparing the current state to the saved state
+            // loosely implemented dirty state (did not care much before, dirty in the probability of change)
+            // so an additional check is added as well comparing the current state to the saved state
             if (this.hasChanges() && CTabSettings.getShowUnsavedWarning()) {
                 // You have unsaved changes on this page. Do you want to leave this page and discard your changes or stay on this page?
                 return "";
@@ -396,14 +396,14 @@ export class CTabGrid {
         }
     };
 
-    // Toggle the colorpickers
+    // Toggle the color pickers
     private toggleWidgetColorPicker(isOpen: boolean): void {
         this.widgetColorPickerOpen = isOpen;
     };
 
     // Listener for note widgets on change
 
-    // Used to track whether changes are made that need to be saved.
+    // Used to track whether changes have been made that need to be saved.
     private noteChanged(): void {
         this.dirty = true;
     };
