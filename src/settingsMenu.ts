@@ -1,5 +1,4 @@
 import Picker from 'vanilla-picker';
-import get = Reflect.get;
 
 interface CTabSettingsMenu {
     initialize: () => void;

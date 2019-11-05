@@ -6,7 +6,6 @@ import {
     CTabWidgetSerialized,
     LinkSettings,
     TitleSettings,
-    WeatherSettings
 } from "./cTabWidgetTypeBase";
 import {cTabTypeMap, widgetNameList} from "./cTabWidgetTypeHelper";
 import Picker from 'vanilla-picker';
@@ -15,7 +14,7 @@ import CTabFilterMenu from "./filterMenu";
 import * as weatherEl from './weatherControls';
 import * as widgetTypes from "./cTabWidgetType";
 import BigText from 'big-text.js-patched';
-// @ts-ignore Muuri does not export an object as of version 0.7.1; it is listed as a TODO in their source code
+// @ts-ignore Muuri does not export an object as of version 0.8; it is listed as a TODO in their source code
 import Muuri from "muuri";
 import settingsMenu from "./settingsMenu";
 
@@ -284,7 +283,6 @@ export class CTabGrid {
                 title: "Welcome to CTab page!",
                 tags: []
             };
-            const weatherSetting: WeatherSettings = {width: 2, height: 2, tags: [], city: "New York"};
             widgetData =
                 [
                     {
@@ -308,14 +306,6 @@ export class CTabGrid {
                         textColor: "rgba(0,0,0,1)",
                         type: "NoteWidget"
                     },
-                    // Better explanation needed on how to get a valid key.
-                    // {
-                    //     settings: weatherSetting,
-                    //     backgroundColor: "rgba(255,255,255,1)",
-                    //     textColor: "rgba(0,0,0,1)",
-                    //     id: "i1569563043131",
-                    //     type: "WeatherWidget"
-                    // },
                     {
                         settings: {width: 1, height: 1, tags: []},
                         backgroundColor: "rgba(255,255,255,0.5)",
