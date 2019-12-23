@@ -15,7 +15,7 @@ $break-large: 1200px;
 }
 
 body {
-  font-family: "DejaVu Sans Condensed","Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-family: "DejaVu Sans Condensed", "Helvetica Neue", Helvetica, Arial, sans-serif;
   overflow-x: hidden;
 }
 
@@ -170,12 +170,15 @@ div.muuri-item-placeholder {
 
   #logo1 {
     font-size: 2em;
+
     a {
       color: #f5f5f5;
       text-decoration: none;
-     :hover {
-       text-decoration: underline;
-     }
+
+      :hover {
+        text-decoration: underline;
+      }
+
       :visited {
         color: #f5f5f5;
       }
@@ -304,7 +307,7 @@ div.muuri-item-placeholder {
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: 100%;
 
-  div{
+  div {
     margin: 2px;
   }
 
