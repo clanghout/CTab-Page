@@ -86,6 +86,15 @@ export class CTabGrid {
 
                     return 0;
                 });
+            },
+            orderIndex: function (_item: any, element: any) {
+                let widgetBody = element.querySelector(".ctab-widget-body");
+
+                if (widgetBody && widgetBody.dataset.orderIndex != undefined) {
+                    return parseFloat(widgetBody.dataset.orderIndex);
+                } else {
+                    return Number.MAX_SAFE_INTEGER;
+                }
             }
         }
     };
@@ -122,6 +131,9 @@ export class CTabGrid {
         });
         // Set dirty to false, since note widgets might have set the state to dirty
         this.dirty = false;
+
+        this.initWidgetOrderViewData();
+        this.initOrderingHook();
     }
 
     // Load in the model and add every individual widget to the grid.
@@ -267,7 +279,8 @@ export class CTabGrid {
                 title: "Facebook",
                 url: "https://www.facebook.com",
                 newTab: false,
-                tags: ["socials"]
+                tags: ["socials"],
+                orderIndex: Number.MAX_SAFE_INTEGER - 3
             };
             const twSetting: LinkSettings = {
                 width: 1,
@@ -275,13 +288,15 @@ export class CTabGrid {
                 title: "Twitter",
                 url: "https://www.twitter.com",
                 newTab: false,
-                tags: ["socials"]
+                tags: ["socials"],
+                orderIndex: Number.MAX_SAFE_INTEGER - 2
             };
             const noteSetting: TitleSettings = {
                 width: 2,
                 height: 2,
                 title: "Welcome to CTab page!",
-                tags: []
+                tags: [],
+                orderIndex: Number.MAX_SAFE_INTEGER - 1
             };
             widgetData =
                 [
@@ -307,7 +322,7 @@ export class CTabGrid {
                         type: "NoteWidget"
                     },
                     {
-                        settings: {width: 1, height: 1, tags: []},
+                        settings: {width: 1, height: 1, tags: [], orderIndex: Number.MAX_SAFE_INTEGER},
                         backgroundColor: "rgba(255,255,255,0.5)",
                         textColor: "rgba(0,0,0,1)",
                         id: "i1559060644840",
@@ -370,6 +385,8 @@ export class CTabGrid {
 
     // Returns message if save call is executed or not
     public saveGrid(): string {
+        this.updateWidgetOrderingData();
+
         if (this.hasChanges()) {
             this.setConfig(this.getDashboardConfig());
             this.dirty = false;
@@ -395,6 +412,74 @@ export class CTabGrid {
             console.error(e);
         }
     };
+
+    // When dragging stops, we update the ordering indices for all elements
+    // FIXME: This does mean that if we are in a different ordering view (e.g.
+    //   "date added", we'll update the ordering to the currently active view);
+    //   whether that is the intended action is to be decided...
+    private initOrderingHook() {
+        let self = this;
+
+        this.grid.on('dragEnd', function(_item: any, _event: any) {
+            self.updateWidgetOrderingData();
+        });
+    }
+
+    // Sets the data-order-index attribute which is used by the grid sorting function
+    // to correctly display the user defined ordering of elements
+    //
+    // FIXME: Upon adding the widgetBody.dataset.orderIndex on addWidgetToGrid resulted in
+    //   undefined errors for the widgetBody element. Is it not yet initialized at that
+    //   stage? This method instead creates the data-order-index elements after everything else
+    //  has been initialized by the constructor
+    private initWidgetOrderViewData() {
+        let self = this;
+
+        // add user ordering data
+        this.grid.getItems().forEach((gridItem: any) => {
+            let widgetBody = gridItem.getElement().querySelector(".ctab-widget-body");
+            let widgetId = widgetBody.id;
+            let matchingWidget = self.widgets.find((widget: CTabWidget) => {
+                return widget.id === widgetId;
+            });
+
+            if (matchingWidget) {
+                widgetBody.dataset.orderIndex = matchingWidget.settings.orderIndex;
+            }
+        });
+
+        this.grid.refreshSortData();
+    }
+
+    private updateWidgetOrderingData() {
+        let self = this;
+        let updatedSortingData = false;
+
+        self.grid.getItems().forEach((gridItem: any, index: number) => {
+            let widgetBody = gridItem.getElement().querySelector(".ctab-widget-body");
+            let widgetId = widgetBody.id;
+            let matchingWidget = self.widgets.find((widget: CTabWidget) => {
+                return widget.id === widgetId;
+            });
+
+            if (matchingWidget) {
+                // this is the value used for saving and loading to localStorage
+                matchingWidget.settings.orderIndex = index;
+                // this is the value used by the grid for sorting
+                widgetBody.dataset.orderIndex = index;
+
+                // we need to reset the sorting data, since we updated the orderIndex, used by one of the sorters
+                updatedSortingData = true;
+            } else {
+                console.warn(`Didn't find a matching widget for ${widgetBody.id}`);
+            }
+        })
+
+        if (updatedSortingData) {
+            self.grid.refreshSortData();
+            self.dirty = true;
+        }
+    }
 
     // Toggle the color pickers
     private toggleWidgetColorPicker(isOpen: boolean): void {

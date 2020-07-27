@@ -61,6 +61,9 @@ sortingDropdown!.addEventListener('change', () => {
         case "tag-alpha":
             cTabGrid.grid.sort("tagAlpha");
             break;
+        case "user-order":
+            cTabGrid.grid.sort("orderIndex");
+            break;
         case "id-asc" :
         default:
             cTabGrid.grid.sort("id");
@@ -140,7 +143,7 @@ function addWidget(): void {
     let bgcolor: HTMLInputElement | null = document.querySelector('#addBGC');
     let textcolor: HTMLInputElement | null = document.querySelector('#addTC');
 
-    let settings: BaseSettings = {width: 1, height: 1, tags: []};
+    let settings: BaseSettings = {width: 1, height: 1, tags: [], orderIndex: Number.MAX_SAFE_INTEGER};
     let errorList: string[] = [];
     switch (widgetTypeChanger.value) {
         case "BuienradarWidget":
