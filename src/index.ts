@@ -1,4 +1,4 @@
-import {BaseSettings, LinkSettings, TitleSettings} from "./cTabWidgetTypeBase";
+import { BaseSettings, CTabWidgetSerialized, LinkSettings, TitleSettings } from "./cTabWidgetTypeBase";
 import {widgetNameList} from "./cTabWidgetTypeHelper";
 import settingsMenu from "./settingsMenu";
 import filterMenu from "./filterMenu";
@@ -6,8 +6,9 @@ import filterMenu from "./filterMenu";
 import streamsaver from "streamsaver";
 import gridControls from "./gridControls";
 
-(window as any).browser = (() => {
-    return (<any>window).browser || (<any>window).chrome || (<any>window).msBrowser;
+let windowWrapper = window as any;
+windowWrapper.browser = (() => {
+    return windowWrapper.browser || windowWrapper.chrome || windowWrapper.msBrowser;
 })();
 
 
@@ -50,25 +51,31 @@ const sortingDropdown: HTMLSelectElement | null = document.querySelector("#sorti
 sortingDropdown!.addEventListener("change", () => {
     let sortMode = sortingDropdown!.value;
     switch (sortMode) {
-        case "id-desc" :
+        case "id-desc" : {
             cTabGrid.grid.sort("id:desc");
             break;
-        case "alpha-asc" :
+        }
+        case "alpha-asc" : {
             cTabGrid.grid.sort("title");
             break;
-        case "alpha-desc" :
+        }
+        case "alpha-desc" : {
             cTabGrid.grid.sort("title:desc");
             break;
-        case "tag-alpha":
+        }
+        case "tag-alpha": {
             cTabGrid.grid.sort("tagAlpha");
             break;
-        case "id-asc":
+        }
+        case "id-asc": {
             cTabGrid.grid.sort("id");
             break;
+        }
         case "user-order":
-        default:
+        default: {
             cTabGrid.grid.sort("orderIndex");
             break;
+        }
     }
 });
 
@@ -112,7 +119,7 @@ function widgetTypeFieldVisibilityControl(showTitle: boolean, showUrl: boolean):
 }
 
 // set css property to show or hide experimental features
-(document as any).documentElement.style.setProperty("--experimental-features-display",
+document.documentElement.style.setProperty("--experimental-features-display",
     settingsMenu.getExperimentalFeatures() ? "initial" : "none");
 
 widgetTypeFieldVisibilityControl(false, false);
@@ -145,19 +152,21 @@ function addWidget(): void {
     let textcolor: HTMLInputElement | null = document.querySelector("#addTC");
 
     let settings: BaseSettings = {width: 1, height: 1, tags: [], orderIndex: Number.MAX_SAFE_INTEGER};
-    let errorList: string[] = [];
+    let errorList: Array<string> = [];
     switch (widgetTypeChanger.value) {
-        case "BuienradarWidget":
+        case "BuienradarWidget": {
             settings.width = 2;
             settings.height = 4;
             break;
-        case "WeatherWidget":
+        }
+        case "WeatherWidget": {
             settings.width = 2;
             settings.height = 2;
             break;
-        case "LinkWidget":
-            if (title && title.value !== "") {
-                if (url && url.value !== "") {
+        }
+        case "LinkWidget": {
+            if(title && title.value !== "") {
+                if(url && url.value !== "") {
                     (settings as LinkSettings).title = title.value;
                     (settings as LinkSettings).url = url.value;
                 } else {
@@ -168,20 +177,24 @@ function addWidget(): void {
                 errorList.push("title is missing");
             }
             break;
-        case "NoteWidget":
+        }
+        case "NoteWidget": {
             settings.width = 2;
             settings.height = 2;
             (settings as TitleSettings).title = "";
             break;
-        case "ClockWidget":
+        }
+        case "ClockWidget": {
             break;
-        default:
+        }
+        default: {
             errorList.push("Type missing");
             break;
+        }
     }
     if (errorList.length > 0) {
 
-        showToast(`Unable to add widget:${errorList.reduce((acc, curr) => " " + acc + curr, "")}.`);
+        showToast(`Unable to add widget:${errorList.reduce((acc, curr) => ` ${acc}${curr}`, "")}.`);
     } else {
 
         cTabGrid.createWidget(widgetTypeChanger.value, settings, bgcolor!.value, textcolor!.value);
@@ -195,11 +208,13 @@ function addWidget(): void {
 
 addMenu!.classList.add("hidden");
 widgetAddButton!.addEventListener("click", addWidget);
-const closeAdd = () => {
+
+function closeAdd() {
     floatingAddButton!.classList.remove("hidden");
     addMenu!.classList.add("hidden");
     modalBackdrop!.classList.add("hidden");
-};
+}
+
 floatingAddButton!.addEventListener("click", () => {
     floatingAddButton!.classList.add("hidden");
     addMenu!.classList.remove("hidden");
@@ -259,12 +274,13 @@ devSwitch("none");
 
 backupButton!.addEventListener("click", saveCurrentConfig);
 devEnabledCheckbox!.addEventListener("change", (a) => {
-    if (a !== null && a.target !== null)
-        if ((a.target as HTMLInputElement).checked) {
+    if (a !== null && a.target !== null) {
+        if((a.target as HTMLInputElement).checked) {
             devSwitch("inline");
         } else {
             devSwitch("none");
         }
+    }
 });
 
 devSaveButton!.addEventListener("click", () => {
@@ -286,28 +302,31 @@ function saveCurrentConfig() {
     const writer = fileStream.getWriter();
     const encoder = new TextEncoder;
     let data = JSON.stringify(cTabGrid.getConfig());
-    let uint8array = encoder.encode(data + "\n\n");
+    let uint8Array = encoder.encode(`${data}
 
-    writer.write(uint8array);
+`);
+
+    writer.write(uint8Array);
     writer.close();
 }
 
-function prettyPrintConfig(config: any): string {
+function prettyPrintConfig(config: Array<CTabWidgetSerialized>): string {
     if (config) {
         let result = "[";
         for (let i = 0; i < config.length; i++) {
             result += i === 0 ? "\n\t" : ",\n\t";
             result += JSON.stringify(config[i]);
         }
-        return result + "\n]";
+        return `${result}
+]`;
     }
     return "";
 }
 
 /// Chrome extension specific
 try {
-    (window as any).browser.commands.onCommand.addEventListener(saveGrid);
-    (window as any).browser.bookmarks.onCreated.addEventListener(function (_id: any, bookmark: any): any | null {
+    windowWrapper.browser.commands.onCommand.addEventListener(saveGrid);
+    windowWrapper.browser.bookmarks.onCreated.addEventListener(function (_id: any, bookmark: any): any | null {
 
         // If user checks the disableAddWidgetOnBookmark setting, then we don"t want to add a bookmark.
         // Hence, if it is not checked, we do want to add a bookmark.

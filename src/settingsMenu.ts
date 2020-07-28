@@ -1,4 +1,4 @@
-import Picker from "vanilla-picker";
+import vanillaPicker from "vanilla-picker";
 
 interface CTabSettingsMenu {
     initialize: () => void;
@@ -12,7 +12,7 @@ interface CTabSettingsMenu {
     getMuuriFillgaps: () => boolean;
 }
 
-let CTabSettings = (): CTabSettingsMenu => {
+function CTabSettings(): CTabSettingsMenu {
     const settingsToggleButton: HTMLButtonElement | null = document.querySelector("#settings-toggle");
     const settingsPaneDiv: HTMLDivElement | null = document.querySelector("#settingsMenu");
     const backgroundImg: HTMLImageElement | null = document.querySelector("#background");
@@ -22,28 +22,34 @@ let CTabSettings = (): CTabSettingsMenu => {
     const weatherTimeoutInput: HTMLInputElement | null = document.querySelector("#weather-timeout");
 
     let settingsActive: boolean = false;
-    const backgroundApplyButton: HTMLButtonElement | null = document.querySelector("#background-apply");
-    const settingsMainSaveButton: HTMLButtonElement | null = document.querySelector("#settings-main-save-button");
-    const unsavedChangesWarningCheckbox: HTMLInputElement | null = document.querySelector("#unsaved-changes-warning");
+    const backgroundApplyButton: HTMLButtonElement | null = document.querySelector(
+        "#background-apply");
+    const settingsMainSaveButton: HTMLButtonElement | null = document.querySelector(
+        "#settings-main-save-button");
+    const unsavedChangesWarningCheckbox: HTMLInputElement | null = document.querySelector(
+        "#unsaved-changes-warning");
     const openInNewTabCheckbox: HTMLInputElement | null = document.querySelector("#link-new-tab");
-    const disableAddWidgetOnBookmarkCheckbox: HTMLInputElement | null = document.querySelector("#disable-bookmarking-adds-widget");
+    const disableAddWidgetOnBookmarkCheckbox: HTMLInputElement | null = document.querySelector(
+        "#disable-bookmarking-adds-widget");
     const weatherAPIKeyInput: HTMLInputElement | null = document.querySelector("#weather-API-key");
     const timezoneSelect: HTMLSelectElement | null = document.querySelector("#timezone-select");
-    const experimentalFeaturesCheckbox: HTMLInputElement | null = document.querySelector("#epxerimental-features-checkbox");
+    const experimentalFeaturesCheckbox: HTMLInputElement | null = document.querySelector(
+        "#epxerimental-features-checkbox");
     const muuriFillgaps: HTMLInputElement | null = document.querySelector("#muuri-fillgaps");
-    let currentSettings = JSON.parse((<any>window).localStorage.getItem("CTab-settings")) || {};
+    let currentSettings = JSON.parse(window.localStorage.getItem("CTab-settings") ?? '{}');
 
 
-    const initialize = function (): void {
+    function initialize(): void {
         // Color pickers
 
-        new Picker({
+        new vanillaPicker({
             parent: document.getElementById("widget-border-color")!,
             popup: "bottom", // "right"(default), "left", "top", "bottom"
             editor: true,
             color: currentSettings.borderColor || "#02151a40",
             onChange: (newColor) => {
-                (<any>document).documentElement.style.setProperty("--widget-border-color", newColor.rgbaString);
+                document.documentElement.style.setProperty("--widget-border-color",
+                    newColor.rgbaString);
                 currentSettings.borderColor = newColor.rgbaString;
             },
             onDone: (newColor) => {
@@ -52,13 +58,14 @@ let CTabSettings = (): CTabSettingsMenu => {
             }
         });
 
-        new Picker({
+        new vanillaPicker({
             parent: document.getElementById("background-color-picker")!,
             popup: "bottom", // "right"(default), "left", "top", "bottom"
             editor: true,
             color: currentSettings.backgroundColor || "#6abbd0ff",
             onChange: (newColor) => {
-                document.documentElement.style.setProperty("--background-color", newColor.rgbaString);
+                document.documentElement.style.setProperty("--background-color",
+                    newColor.rgbaString);
                 currentSettings.backgroundColor = newColor.rgbaString;
             },
             onDone: (newColor) => {
@@ -67,17 +74,19 @@ let CTabSettings = (): CTabSettingsMenu => {
             }
         });
 
-        document.documentElement.style.setProperty("--widget-border-color", currentSettings.borderColor);
+        document.documentElement.style.setProperty("--widget-border-color",
+            currentSettings.borderColor);
 
         backgroundImg!.src = currentSettings.background;
-        if (typeof currentSettings.backgroundRadioSelected === "number") {
+        if(typeof currentSettings.backgroundRadioSelected === "number") {
             (<HTMLInputElement>document.getElementsByName("background")[currentSettings.backgroundRadioSelected]).checked = true;
-            if (currentSettings.backgroundRadioSelected === 2) {
+            if(currentSettings.backgroundRadioSelected === 2) {
                 bgUrlVal!.value = currentSettings.background || "#6abbd0ff";
             }
         }
 
-        unsavedChangesWarningCheckbox!.checked = currentSettings.unsavedChangesWarningEnabled || false;
+        unsavedChangesWarningCheckbox!.checked = currentSettings.unsavedChangesWarningEnabled
+            || false;
         unsavedChangesWarningCheckbox!.addEventListener("click", () => {
             currentSettings.unsavedChangesWarningEnabled = unsavedChangesWarningCheckbox!.checked;
             save();
@@ -89,7 +98,8 @@ let CTabSettings = (): CTabSettingsMenu => {
             save();
         });
 
-        disableAddWidgetOnBookmarkCheckbox!.checked = currentSettings.disableAddWidgetOnBookmark || false;
+        disableAddWidgetOnBookmarkCheckbox!.checked = currentSettings.disableAddWidgetOnBookmark
+            || false;
         disableAddWidgetOnBookmarkCheckbox!.addEventListener("click", () => {
             currentSettings.disableAddWidgetOnBookmark = disableAddWidgetOnBookmarkCheckbox!.checked;
             save();
@@ -119,58 +129,65 @@ let CTabSettings = (): CTabSettingsMenu => {
         muuriFillgaps!.checked = currentSettings.muuriFillgaps || false;
         muuriFillgaps!.addEventListener("click", () => {
             currentSettings.muuriFillgaps = muuriFillgaps!.checked;
-          save();
+            save();
         });
-          // experimental features check
+        // experimental features check
         experimentalFeaturesCheckbox!.checked = currentSettings.experimentalFeatures || false;
-        experimentalFeaturesCheckbox!.addEventListener("change",() => {
+        experimentalFeaturesCheckbox!.addEventListener("change", () => {
             currentSettings.experimentalFeatures = experimentalFeaturesCheckbox!.checked;
             save();
         });
-    };
+    }
 
     function getBackgroundSetting(): void {
         let selectedBackgroundOption: string = "";
-        let backgroundOptions: NodeListOf<HTMLElement> | null = document.getElementsByName("background");
-        for (let i = 0, length = backgroundOptions.length; i < length; i++) {
-            if ((<HTMLInputElement>backgroundOptions[i]).checked) {
+        let backgroundOptions: NodeListOf<HTMLElement> | null = document.getElementsByName(
+            "background");
+        for(let i = 0, length = backgroundOptions.length; i < length; i++) {
+            if((<HTMLInputElement>backgroundOptions[i]).checked) {
                 selectedBackgroundOption = (<HTMLInputElement>backgroundOptions[i]).value;
                 currentSettings.backgroundRadioSelected = i;
                 break;
             }
         }
 
-        switch (selectedBackgroundOption) {
-            case "file":
-                const convertToBase64 = function (file: File, callback: (result: string | ArrayBuffer | null, error: DOMException | null) => any) {
+        switch(selectedBackgroundOption) {
+            case "file": {
+                function convertToBase64(file: File,
+                    callback: (result: string | ArrayBuffer | null,
+                        error: DOMException | null) => void) {
                     let reader = new FileReader();
                     reader.onloadend = function () {
                         callback(reader.result, reader.error);
                     };
                     reader.readAsDataURL(file);
-                };
+                }
 
-                const backgroundFileInput: HTMLInputElement | null = document.querySelector("#background-file-value");
+                const backgroundFileInput: HTMLInputElement | null = document.querySelector(
+                    "#background-file-value");
                 let selectedFile = backgroundFileInput!.files![0];
                 // check if a file is selected
-                if (selectedFile) {
+                if(selectedFile) {
                     convertToBase64(selectedFile, function (base64) {
                         currentSettings.background = base64;
                         backgroundImg!.src = currentSettings.background;
                     });
                 }
                 break;
-            case "url":
-                let backgroundUrlValue = bgUrlVal!.value;
-                currentSettings.background = backgroundUrlValue;
+            }
+            case "url": {
+                currentSettings.background = bgUrlVal!.value;
                 break;
-            case "color":
+            }
+            case "color": {
                 currentSettings.background = "";
                 break;
+            }
             case "random":
-            default:
+            default: {
                 currentSettings.background = "https://source.unsplash.com/random/1920x1080";
                 break;
+            }
         }
         backgroundImg!.src = currentSettings.background;
         save();
@@ -194,40 +211,43 @@ let CTabSettings = (): CTabSettingsMenu => {
 
     function settingsToggle(): void {
         settingsActive = !settingsActive;
-        settingsActive ? settingsPaneDiv!.classList.remove("hidden") : settingsPaneDiv!.classList.add("hidden");
-        settingsActive ? modalBackdrop!.classList.remove("hidden") : modalBackdrop!.classList.add("hidden");
-        settingsActive ? modalBackdrop!.addEventListener("click", settingsToggle) : modalBackdrop!.removeEventListener("click", settingsToggle);
+        settingsActive ? settingsPaneDiv!.classList.remove("hidden") : settingsPaneDiv!.classList.add(
+            "hidden");
+        settingsActive ? modalBackdrop!.classList.remove("hidden") : modalBackdrop!.classList.add(
+            "hidden");
+        settingsActive ? modalBackdrop!.addEventListener("click",
+            settingsToggle) : modalBackdrop!.removeEventListener("click", settingsToggle);
     }
 
-    const getWeatherTimeoutValue = function (): number {
+    function getWeatherTimeoutValue(): number {
         return currentSettings.weatherTimeout * 1000;
-    };
+    }
 
-    const getTimezone = function () {
+    function getTimezone() {
         return currentSettings.timezone;
-    };
+    }
 
-    const getWeatherAPIKey = function () {
+    function getWeatherAPIKey() {
         return currentSettings.weatherAPIKey;
-    };
+    }
 
-    const getShowUnsavedWarning = function () {
+    function getShowUnsavedWarning() {
         return currentSettings.unsavedChangesWarningEnabled;
-    };
+    }
 
-    const getNewTab = function () {
+    function getNewTab() {
         return currentSettings.openInNewTab;
-    };
+    }
 
-    const getAddWidgetOnBookmarkIsDisabled = function () {
+    function getAddWidgetOnBookmarkIsDisabled() {
         return currentSettings.disableAddWidgetOnBookmark;
-    };
+    }
 
-    const getExperimentalFeatures = function () {
+    function getExperimentalFeatures() {
         return currentSettings.experimentalFeatures;
     }
 
-    const getMuuriFillgaps = function () {
+    function getMuuriFillgaps() {
         return currentSettings.muuriFillgaps;
     }
 
@@ -242,6 +262,6 @@ let CTabSettings = (): CTabSettingsMenu => {
         getExperimentalFeatures: getExperimentalFeatures,
         getMuuriFillgaps: getMuuriFillgaps,
     };
-};
+}
 
 export default CTabSettings();

@@ -36,10 +36,7 @@ export class GridWrapper {
             rounding: false
         },
         sortData: {
-            id: function (item: any, _element: any) {
-                return parseFloat(item._id);
-            },
-            title: function (_item: any, element: any) {
+            title: function (_item, element) {
                 const ctabBody: any = element.querySelector(".ctab-widget-body");
                 if(ctabBody.classList.contains("ctab-item-clock")) {
                     return "ZZZ";
@@ -49,8 +46,8 @@ export class GridWrapper {
                 }
                 return ctabBody.children[0].innerText.toUpperCase();
             },
-            tagAlpha: function (_item: any, element: any) {
-                let tagsAttr: string = element.getAttribute("data-tags");
+            tagAlpha: function (_item, element) {
+                let tagsAttr: string = element.getAttribute("data-tags")!;
                 return tagsAttr.split(",").sort(function (a: string, b: string) {
                     // sort alphabetically within tags
                     if(a < b) {
@@ -63,10 +60,10 @@ export class GridWrapper {
                     return 0;
                 });
             },
-            orderIndex: function (_item: any, element: any) {
-                let widgetBody = element.querySelector(".ctab-widget-body");
+            orderIndex: function (_item, element) {
+                let widgetBody = element.querySelector(".ctab-widget-body") as HTMLElement;
 
-                if (widgetBody && widgetBody.dataset.orderIndex != undefined) {
+                if (widgetBody && widgetBody.dataset.orderIndex != null) {
                     return parseFloat(widgetBody.dataset.orderIndex);
                 } else {
                     return Number.MAX_SAFE_INTEGER;

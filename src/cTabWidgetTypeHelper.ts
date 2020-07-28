@@ -1,5 +1,4 @@
-import {BaseSettings} from "./cTabWidgetTypeBase";
-import {CTabWidget} from "./cTabWidgetTypeBase";
+import {CTabWidget, BaseSettings} from "./cTabWidgetTypeBase";
 import * as widgetTypes from "./cTabWidgetType";
 
 interface WidgetConstructor {
@@ -7,7 +6,7 @@ interface WidgetConstructor {
 }
 
 
-export const widgetNameList: string[] = Object.keys(widgetTypes);
+export const widgetNameList: Array<string> = Object.keys(widgetTypes);
 
 export const cTabTypeMap: { [name: string]: WidgetConstructor } = widgetNameList.reduce((acc, widgetName) => {
     acc[widgetName] = (widgetTypes as any)[widgetName];
@@ -16,5 +15,5 @@ export const cTabTypeMap: { [name: string]: WidgetConstructor } = widgetNameList
 
 
 export function lookupConstructorName(cname: string): string {
-    return (Object.entries(widgetTypes) as [string, any][]).find(([_, w]) => w.name == cname)![0];
+    return (Object.entries(widgetTypes) as Array<[string, any]>).find(([_, w]) => w.name == cname)![0];
 }

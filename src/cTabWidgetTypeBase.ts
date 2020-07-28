@@ -80,7 +80,7 @@ export interface BaseSettings {
     height: number;
 
     // Tags allow users to categorize their widgets
-    tags: string[];
+    tags: Array<string>;
 
     // value used to enumerate where a cell should be ordered on the grid as decided by a user (after dragging
     // and dropping a cell)

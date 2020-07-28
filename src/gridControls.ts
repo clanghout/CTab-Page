@@ -8,17 +8,20 @@ import {
     TitleSettings,
 } from "./cTabWidgetTypeBase";
 import {cTabTypeMap, widgetNameList} from "./cTabWidgetTypeHelper";
-import Picker from "vanilla-picker";
-import CTabSettings from "./settingsMenu";
-import CTabFilterMenu from "./filterMenu";
+import vanillaPicker from "vanilla-picker";
+import settingsMenu from "./settingsMenu";
+import filterMenu from "./filterMenu";
 import * as weatherEl from "./weatherControls";
 import * as widgetTypes from "./cTabWidgetType";
-import BigText from "big-text.js-patched";
+import bigText from "big-text.js-patched";
 import { GridWrapper } from "./gridWrapper";
-import Muuri from "muuri";
+import muuri from "muuri";
 
-(window as any).browser = (() => {
-    return (window as any).browser || (window as any).chrome || (window as any).msBrowser;
+const availableWidgetTypes = widgetTypes as any;
+
+let windowWrapped = window as any;
+windowWrapped.browser = (() => {
+    return windowWrapped.browser || windowWrapped.chrome || windowWrapped.msBrowser;
 })();
 
 // HTML element
@@ -26,26 +29,26 @@ const styleElem = document.head.appendChild(document.createElement("style"));
 
 export class CTabGrid {
 
-    public grid: Muuri;
-    private widgets: CTabWidget[] = [];
+    public grid: muuri;
+    private widgets: Array<CTabWidget> = [];
     private widgetColorPickerOpen: boolean = false;
     private dirty: boolean = false;
 
 
     constructor() {
-        CTabSettings.initialize();
+        settingsMenu.initialize();
         this.grid = new GridWrapper(".grid").grid;
         this.loadModel();
 
         // start after Muuri initialized, because we need access to the widgets
-        CTabFilterMenu.initialize(this.widgets, this.grid);
+        filterMenu.initialize(this.widgets, this.grid);
 
 
         // @ts-ignore - no return for not showing a before-unload alert
         window.onbeforeunload = () => {
             // loosely implemented dirty state (did not care much before, dirty in the probability of change)
             // so an additional check is added as well comparing the current state to the saved state
-            if (this.hasChanges() && CTabSettings.getShowUnsavedWarning()) {
+            if (this.hasChanges() && settingsMenu.getShowUnsavedWarning()) {
                 // You have unsaved changes on this page. Do you want to leave this page and discard your changes or stay on this page?
                 return "";
             }
@@ -107,13 +110,13 @@ export class CTabGrid {
         });
         this.grid.add(itemElem.firstElementChild!, {index: widget.id});
 
-        new Picker({
+        new vanillaPicker({
             parent: document.getElementById(`${widget.id}-text-color`)!,
             popup: "right", // "right"(default), "left", "top", "bottom"
             editor: false,
             color: widget.textColor || "#000000",
             onChange: (newCol) => {
-                (document as any).documentElement.style.setProperty(`--${widget.id}-text-color`, newCol.rgbaString);
+                document.documentElement.style.setProperty(`--${widget.id}-text-color`, newCol.rgbaString);
                 widget.textColor = newCol.rgbaString;
             },
             onDone: (newCol) => {
@@ -128,13 +131,13 @@ export class CTabGrid {
                 textColOpen = false;
             }
         });
-        new Picker({
+        new vanillaPicker({
             parent: document.getElementById(`${widget.id}-background-color`)!,
             popup: "right", // "right"(default), "left", "top", "bottom"
             editor: false,
             color: widget.backgroundColor || "#000000",
             onChange: (newCol) => {
-                (document as any).documentElement.style.setProperty(`--${widget.id}-background-color`, newCol.rgbaString);
+                document.documentElement.style.setProperty(`--${widget.id}-background-color`, newCol.rgbaString);
 
                 let widgetElement = document.getElementById(`${widget.id}`);
                 if (widgetElement) {
@@ -172,19 +175,19 @@ export class CTabGrid {
 
         try {
             if (widget instanceof widgetTypes.LinkWidget) {
-                BigText(`#${widget.id} > span`, {
+                bigText(`#${widget.id} > span`, {
                     maximumFontSize: 45,
                     limitingDimension: "both",
                     verticalAlign: "center"
                 });
             } else if (widget instanceof widgetTypes.ClockWidget) {
-                BigText("#" + widget.id + " > span", {
+                bigText(`#${widget.id} > span`, {
                     maximumFontSize: 37,
                     limitingDimension: "both",
                     verticalAlign: "center"
                 });
             } else if (widget instanceof widgetTypes.WeatherWidget) {
-                BigText(`#${widget.id} > span`, {
+                bigText(`#${widget.id} > span`, {
                     maximumFontSize: 40,
                     limitingDimension: "both",
                     verticalAlign: "center"
@@ -260,13 +263,13 @@ export class CTabGrid {
                 ];
         }
 
-        widgetData.filter((a: any) => a !== null).forEach((widget: CTabWidgetSerialized) => {
+        widgetData.filter((a: CTabWidgetSerialized) => a !== null).forEach((widget: CTabWidgetSerialized) => {
             // what if widget does not have a type
             try {
                 if (widget.type === "LinkWidget") {
-                    (widget.settings as LinkSettings).newTab = CTabSettings.getNewTab();
+                    (widget.settings as LinkSettings).newTab = settingsMenu.getNewTab();
                 }
-                this.addWidgetToGrid(new (widgetTypes as any)[widget.type](widget.id, widget.settings, widget.backgroundColor, widget.textColor));
+                this.addWidgetToGrid(new availableWidgetTypes[widget.type](widget.id, widget.settings, widget.backgroundColor, widget.textColor));
             } catch (e) {
                 if (widget) {
                     console.log(`Widget type ${widget.type} does not exist.`);
@@ -281,9 +284,9 @@ export class CTabGrid {
     }
 
     // Retrieve the current config from the browser"s localstorage
-    public getConfig(): CTabWidgetSerialized[] {
+    public getConfig(): Array<CTabWidgetSerialized> {
         let lsConfig = window.localStorage.getItem("CTabConfig") || "{}";
-        let config: CTabWidgetSerialized[] = [];
+        let config: Array<CTabWidgetSerialized> = [];
         try {
             config = JSON.parse(lsConfig);
         } catch (error) {
@@ -308,7 +311,7 @@ export class CTabGrid {
     }
 
     // Write param to localStorage
-    public setConfig(config: CTabWidgetSerialized[]): void {
+    public setConfig(config: Array<CTabWidgetSerialized>): void {
         window.localStorage.setItem("CTabConfig", JSON.stringify(config));
     }
 
@@ -330,7 +333,7 @@ export class CTabGrid {
         this.dirty = true;
         try {
             this.addWidgetToGrid(
-                new (widgetTypes as any)[type]("i" + new Date().getTime().toString(), settings, backgroundColor, textColor));
+                new availableWidgetTypes[type](`i${new Date().getTime().toString()}`, settings, backgroundColor, textColor));
         } catch (e) {
             if (type) {
                 console.log(`Widget type ${type} does not exist.`);
@@ -349,7 +352,7 @@ export class CTabGrid {
     private initOrderingHook() {
         let self = this;
 
-        this.grid.on("dragEnd", function(_item: any, _event: any) {
+        this.grid.on("dragEnd", function(_item, _event) {
             self.updateWidgetOrderingData();
         });
     }
@@ -365,15 +368,15 @@ export class CTabGrid {
         let self = this;
 
         // add user ordering data
-        this.grid.getItems().forEach((gridItem: any) => {
-            let widgetBody = gridItem.getElement().querySelector(".ctab-widget-body");
-            let widgetId = widgetBody.id;
+        this.grid.getItems().forEach((gridItem) => {
+            let widgetBody = gridItem.getElement()!.querySelector(".ctab-widget-body");
+            let widgetId = widgetBody!.id;
             let matchingWidget = self.widgets.find((widget: CTabWidget) => {
                 return widget.id === widgetId;
             });
 
             if (matchingWidget) {
-                widgetBody.dataset.orderIndex = matchingWidget.settings.orderIndex;
+                (widgetBody as HTMLElement).dataset.orderIndex = `${matchingWidget.settings.orderIndex}`;
             }
         });
 
@@ -384,9 +387,9 @@ export class CTabGrid {
         let self = this;
         let updatedSortingData = false;
 
-        self.grid.getItems().forEach((gridItem: any, index: number) => {
-            let widgetBody = gridItem.getElement().querySelector(".ctab-widget-body");
-            let widgetId = widgetBody.id;
+        self.grid.getItems().forEach((gridItem, index) => {
+            let widgetBody = gridItem.getElement()!.querySelector(".ctab-widget-body");
+            let widgetId = widgetBody!.id;
             let matchingWidget = self.widgets.find((widget: CTabWidget) => {
                 return widget.id === widgetId;
             });
@@ -395,12 +398,12 @@ export class CTabGrid {
                 // this is the value used for saving and loading to localStorage
                 matchingWidget.settings.orderIndex = index;
                 // this is the value used by the grid for sorting
-                widgetBody.dataset.orderIndex = index;
+                (widgetBody as HTMLElement).dataset.orderIndex = `${index}`;
 
                 // we need to reset the sorting data, since we updated the orderIndex, used by one of the sorters
                 updatedSortingData = true;
             } else {
-                console.warn(`Didn"t find a matching widget for ${widgetBody.id}`);
+                console.warn(`Didn"t find a matching widget for ${widgetBody!.id}`);
             }
         })
 
@@ -439,7 +442,7 @@ export class CTabGrid {
 
 
     // Getter for the current config
-    private getDashboardConfig(): CTabWidgetSerialized[] {
+    private getDashboardConfig(): Array<CTabWidgetSerialized> {
         return this.widgets.map(widget => widget.getConfig());
     }
 
@@ -451,7 +454,7 @@ function startTime(): void {
     let clocks = document.querySelectorAll(".ctab-item-clock");
     if (clocks.length > 0) {
         const todayDate = new Date();
-        const timezone = CTabSettings.getTimezone();
+        const timezone = settingsMenu.getTimezone();
         const today = todayDate.toLocaleTimeString("en-US", {
             hour: "2-digit",
             minute: "2-digit",
