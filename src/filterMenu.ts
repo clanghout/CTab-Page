@@ -2,53 +2,50 @@ import {CTabWidget} from "./cTabWidgetTypeBase";
 import Grid from "muuri";
 
 interface Tags {
-    getEnabled: () => Array<string>;
-    getAvailable: () => Array<string>;
-    setAvailableAll: () => void;
-    setEnabled: (tagNames: Array<string>) => void;
+    getEnabled(): Array<string>;
+    getAvailable(): Array<string>;
+    setAvailableAll(): void;
+    setEnabled(tagNames: Array<string>): void;
 }
 
-let Tags = (widgets: Array<CTabWidget>): Tags => {
-    let allTags: Set<string> = new Set();
-    let enabledTags: Set<string> = new Set();
+class Tags implements Tags {
+constructor(private widgets: Array<CTabWidget>){
+
+}
+    private allTags: Set<string> = new Set();
+    private enabledTags: Set<string> = new Set();
+
 
 // return all tags which are linked to widgets which the user wants to keep
-    function getEnabled(): Array<string> {
-        return [...enabledTags]
+    getEnabled(): Array<string> {
+        return [...this.enabledTags];
     }
 
     // Get all unique available tags which are part of the grid.
 // A tag is "available" if any widget specifies a the tag name.
-    function getAvailable(): Array<string> {
-        setAvailableAll();
-        return [...allTags]
+    getAvailable(): Array<string> {
+        this.setAvailableAll();
+        return [...this.allTags]
     }
 
 // Add all unique tags which are part of the grid to the "available tags" set.
-    function setAvailableAll(): void {
-        allTags = new Set();
-        widgets.forEach(vi => {
+    setAvailableAll(): void {
+        this.allTags = new Set();
+        this.widgets.forEach(vi => {
             vi.settings.tags.forEach(vj => {
-                allTags.add(vj)
+                this.allTags.add(vj)
             });
         });
     }
 
 // Set the given tags as user enabled.
-    function setEnabled(toBeEnabled: Array<string>): void {
-        enabledTags = new Set();
+    setEnabled(toBeEnabled: Array<string>): void {
+        this.enabledTags = new Set();
         toBeEnabled.forEach(tagName => {
-            enabledTags.add(tagName);
+            this.enabledTags.add(tagName);
         });
     }
-
-    return {
-        getEnabled: getEnabled,
-        getAvailable: getAvailable,
-        setAvailableAll: setAvailableAll,
-        setEnabled: setEnabled
-    }
-};
+}
 
 interface CTabTagFilterMenu {
     initialize: (widgets: Array<CTabWidget>, grid: Grid) => void;
@@ -72,7 +69,7 @@ function CTabTagFilter(): CTabTagFilterMenu {
 
 // Should always be called before calling other functions.
     function initialize(widgets: Array<CTabWidget>, grid: Grid): void {
-        tagData = Tags(widgets);
+        tagData = new Tags(widgets);
         refGrid = grid;
         updateAvailableTagList();
     }
