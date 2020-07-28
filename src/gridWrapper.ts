@@ -1,14 +1,12 @@
 import settingsMenu from "./settingsMenu";
-// @ts-ignore Muuri does not export an object as of version 0.8; it is listed as a TODO in their source code
-import Muuri from "muuri";
+import Muuri, { GridOptions } from "muuri";
 
 export class GridWrapper {
-    private muuriOptions = {
+    private muuriOptions: GridOptions = {
         dragEnabled: true,
         dragStartPredicate: {
             distance: 0,
             delay: 0,
-            handle: '.ctab-widget-drag-handle'
         },
         dragSortHeuristics: {
             sortInterval: 10,
@@ -25,8 +23,6 @@ export class GridWrapper {
         },
         dragPlaceholder: {
             enabled: true,
-            duration: 300,
-            easing: 'ease',
             createElement: null,
             onCreate: null,
             onRemove: null
@@ -78,7 +74,7 @@ export class GridWrapper {
 
     public grid: Muuri;
 
-    constructor(gridIdentifier: string | Element) {
+    constructor(gridIdentifier: string | HTMLElement) {
         this.grid = new Muuri(gridIdentifier, this.muuriOptions);
     }
 
