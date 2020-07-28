@@ -182,7 +182,7 @@ export class CTabGrid {
                 });
             } else if (widget instanceof widgetTypes.ClockWidget) {
                 bigText(`#${widget.id} > span`, {
-                    maximumFontSize: 37,
+                    maximumFontSize: 36,
                     limitingDimension: "both",
                     verticalAlign: "center"
                 });
