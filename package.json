@@ -29,6 +29,7 @@
   "dependencies": {
     "big-text.js-patched": "^1.0.1",
     "muuri": "^0.9.1",
+    "rome": "^0.0.26",
     "streamsaver": "2.0.4",
     "vanilla-picker": "^2.10.1"
   },
