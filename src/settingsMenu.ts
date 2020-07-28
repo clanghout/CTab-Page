@@ -132,9 +132,9 @@ let CTabSettings = (): CTabSettingsMenu => {
     function getBackgroundSetting(): void {
         let selectedBackgroundOption: string = "";
         let backgroundOptions: NodeListOf<HTMLElement> | null = document.getElementsByName('background');
-        for (let i = 0, length = backgroundOptions!.length; i < length; i++) {
-            if ((<HTMLInputElement>backgroundOptions![i]).checked) {
-                selectedBackgroundOption = (<HTMLInputElement>backgroundOptions![i]).value;
+        for (let i = 0, length = backgroundOptions.length; i < length; i++) {
+            if ((<HTMLInputElement>backgroundOptions[i]).checked) {
+                selectedBackgroundOption = (<HTMLInputElement>backgroundOptions[i]).value;
                 currentSettings.backgroundRadioSelected = i;
                 break;
             }
@@ -226,7 +226,7 @@ let CTabSettings = (): CTabSettingsMenu => {
     const getExperimentalFeatures = function () {
         return currentSettings.experimentalFeatures;
     }
-   
+
     const getMuuriFillgaps = function () {
         return currentSettings.muuriFillgaps;
     }

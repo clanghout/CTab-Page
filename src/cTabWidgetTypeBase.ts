@@ -60,7 +60,7 @@ ${this.getHtmlControls()}
 export abstract class TitleWidget extends CTabWidget {
     protected constructor(public id: string, public settings: TitleSettings, public backgroundColor: string, public textColor: string) {
         super(id, settings, backgroundColor, textColor);
-    };
+    }
 
     getConfig = (): CTabWidgetSerialized => {
 

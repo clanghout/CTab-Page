@@ -14,9 +14,8 @@ import CTabFilterMenu from "./filterMenu";
 import * as weatherEl from './weatherControls';
 import * as widgetTypes from "./cTabWidgetType";
 import BigText from 'big-text.js-patched';
-// @ts-ignore Muuri does not export an object as of version 0.8; it is listed as a TODO in their source code
+import { GridWrapper } from "./gridWrapper";
 import Muuri from "muuri";
-import settingsMenu from "./settingsMenu";
 
 (window as any).browser = (() => {
     return (window as any).browser || (window as any).chrome || (window as any).msBrowser;
@@ -26,78 +25,8 @@ import settingsMenu from "./settingsMenu";
 const styleElem = document.head.appendChild(document.createElement('style'));
 
 export class CTabGrid {
-    public grid: any;
-    private muuriOptions = {
-        dragEnabled: true,
-        dragStartPredicate: {
-            distance: 0,
-            delay: 0,
-            handle: '.ctab-widget-drag-handle'
-        },
-        dragSortHeuristics: {
-            sortInterval: 10,
-            minDragDistance: 5,
-            minBounceBackAngle: Math.PI / 2
-        },
-        dragCssProps: {
-            touchAction: 'pan-y',
-            userSelect: '',
-            userDrag: '',
-            tapHighlightColor: '',
-            touchCallout: '',
-            contentZooming: ''
-        },
-        dragPlaceholder: {
-            enabled: true,
-            duration: 300,
-            easing: 'ease',
-            createElement: null,
-            onCreate: null,
-            onRemove: null
-        },
-        layoutOnInit: false,
-        layout: {
-            fillGaps: settingsMenu.getMuuriFillgaps(),
-            horizontal: false,
-            alignRight: false,
-            alignBottom: false,
-            rounding: false
-        },
-        sortData: {
-            id: function (item: any, _element: any) {
-                return parseFloat(item._id);
-            },
-            title: function (_item: any, element: any) {
-                const ctabBody: any = [].slice.call(element.children[0].children).filter((el: HTMLElement) => el.classList.contains("ctab-widget-body"))[0];
-                if (ctabBody.classList.contains('ctab-item-clock')) {
-                    return "ZZZ";
-                }
-                if (ctabBody.classList.contains('ctab-item-note')) {
-                    return "ZZZ";
-                }
-                return ctabBody.children[0].innerText.toUpperCase();
-            },
-            tagAlpha: function (_item: any, element: any) {
-                let tagsAttr: string = element.getAttribute("data-tags");
-                return tagsAttr.split(",").sort(function (a: string, b: string) {
-                    // sort alphabetically within tags
-                    if (a < b) return -1;
-                    if (a > b) return 1;
 
-                    return 0;
-                });
-            },
-            orderIndex: function (_item: any, element: any) {
-                let widgetBody = element.querySelector(".ctab-widget-body");
-
-                if (widgetBody && widgetBody.dataset.orderIndex != undefined) {
-                    return parseFloat(widgetBody.dataset.orderIndex);
-                } else {
-                    return Number.MAX_SAFE_INTEGER;
-                }
-            }
-        }
-    };
+    public grid: Muuri;
     private widgets: CTabWidget[] = [];
     private widgetColorPickerOpen: boolean = false;
     private dirty: boolean = false;
@@ -105,7 +34,7 @@ export class CTabGrid {
 
     constructor() {
         CTabSettings.initialize();
-        this.grid = new Muuri(".grid", this.muuriOptions);
+        this.grid = new GridWrapper(".grid").grid;
         this.loadModel();
 
         // start after Muuri initialized, because we need access to the widgets
@@ -164,7 +93,7 @@ export class CTabGrid {
         });
 
 
-        itemElem!.firstChild!.addEventListener('mouseout', () => {
+        itemElem.firstChild!.addEventListener('mouseout', () => {
             if (!textColOpen) {
                 const controlPanel = document.getElementById(`controls-${widget.id}`)!;
                 const controlDragHandle = document.getElementById(`drag-handle-${widget.id}`)!;
@@ -176,7 +105,7 @@ export class CTabGrid {
                 controlDragHandle.classList.add('hidden');
             }
         });
-        this.grid.add(itemElem.firstChild, {index: widget.id});
+        this.grid.add(itemElem.firstElementChild!, {index: widget.id});
 
         new Picker({
             parent: document.getElementById(`${widget.id}-text-color`)!,
@@ -267,7 +196,7 @@ export class CTabGrid {
         }
 
         this.widgets.push(widget);
-    };
+    }
 
     public loadModel(): void {
         let widgetData: CTabWidgetSerialized[] = this.getConfig();
@@ -349,7 +278,7 @@ export class CTabGrid {
             }
         });
 
-    };
+    }
 
     // Retrieve the current config from the browser's localstorage
     public getConfig(): CTabWidgetSerialized[] {
@@ -362,7 +291,7 @@ export class CTabGrid {
             console.error(error);
         }
         return config;
-    };
+    }
 
     public removeWidget(id: string): void {
         // Get the outer muuri cell
@@ -376,12 +305,12 @@ export class CTabGrid {
             this.widgets = this.widgets.filter((widget: CTabWidget) => widget.id !== id);
             this.dirty = true;
         }
-    };
+    }
 
     // Write param to localStorage
     public setConfig(config: CTabWidgetSerialized[]): void {
         window.localStorage.setItem("CTabConfig", JSON.stringify(config));
-    };
+    }
 
     // Returns message if save call is executed or not
     public saveGrid(): string {
@@ -394,7 +323,7 @@ export class CTabGrid {
         } else {
             return "Nothing to save.";
         }
-    };
+    }
 
     // Create a new widget object and add it to the dashboard.
     public createWidget(type: string, settings: BaseSettings, backgroundColor: string, textColor: string): void {
@@ -411,7 +340,7 @@ export class CTabGrid {
             console.log(widgetTypes);
             console.error(e);
         }
-    };
+    }
 
     // When dragging stops, we update the ordering indices for all elements
     // FIXME: This does mean that if we are in a different ordering view (e.g.
@@ -484,14 +413,14 @@ export class CTabGrid {
     // Toggle the color pickers
     private toggleWidgetColorPicker(isOpen: boolean): void {
         this.widgetColorPickerOpen = isOpen;
-    };
+    }
 
     // Listener for note widgets on change
 
     // Used to track whether changes have been made that need to be saved.
     private noteChanged(): void {
         this.dirty = true;
-    };
+    }
 
     // Check if the current state of the dashboard is different from the saved state
     private hasChanges(): boolean {
@@ -506,13 +435,13 @@ export class CTabGrid {
             return true;
         }
         return false;
-    };
+    }
 
 
     // Getter for the current config
     private getDashboardConfig(): CTabWidgetSerialized[] {
         return this.widgets.map(widget => widget.getConfig());
-    };
+    }
 
 }
 

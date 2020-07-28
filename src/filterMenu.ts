@@ -95,9 +95,9 @@ let CTabTagFilter = (): CTabTagFilterMenu => {
         let checks: string[] = [];
         checkboxes.forEach(elem => {
             let checkbox: HTMLInputElement | null = elem as HTMLInputElement;
-            let attr: string | null = checkbox!.getAttribute("data-tag-checkbox-name");
+            let attr: string | null = checkbox.getAttribute("data-tag-checkbox-name");
 
-            if (checkbox!.checked && attr) {
+            if (checkbox.checked && attr) {
                 checks.push(attr)
             }
         });

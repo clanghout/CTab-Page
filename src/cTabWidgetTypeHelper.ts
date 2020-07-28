@@ -10,7 +10,7 @@ interface WidgetConstructor {
 export const widgetNameList: string[] = Object.keys(widgetTypes);
 
 export const cTabTypeMap: { [name: string]: WidgetConstructor } = widgetNameList.reduce((acc, widgetName) => {
-    acc[widgetName] = ((widgetTypes as any)[widgetName] as any);
+    acc[widgetName] = (widgetTypes as any)[widgetName];
     return acc;
 }, {} as any);
 

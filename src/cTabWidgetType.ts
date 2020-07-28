@@ -45,7 +45,7 @@ export class LinkWidget extends TitleWidget {
     };
 
     private getTag = () => `<span style="line-height: 100%;">${this.settings.title}</span>
-<a href="${this.settings.url}" ${this.settings.newTab ? 'target="_blank"' : ""} id="${this.settings.title}">
+<a href="${this.settings.url}" ${this.settings.newTab ? 'target="_blank" rel="noopener noreferrer"' : ""} id="${this.settings.title}">
     <span class="ctab-widget-link"></span>
 </a>`;
 }
