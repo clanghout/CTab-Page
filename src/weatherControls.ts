@@ -1,5 +1,5 @@
 import settingsMenu from "./settingsMenu";
-import {WeatherWidget} from "./cTabWidgetType";
+import { WeatherWidget } from "./cTabWidgetType";
 
 const defaultWeatherTimeout = 1_000 * 60 * 15;
 
@@ -50,10 +50,10 @@ let weatherEmoji: {
 };
 
 let tempFormat = (data: OpenWeatherMapData): string => {
-    if (data.weather) {
+    if(data.weather) {
         let curTemp = (data.main.temp - 273.15).toFixed(2);
         let curWeather = data.weather.reduce((acc, weatherType: OpenWeatherMapWeather) => {
-            if (weatherEmoji.hasOwnProperty(weatherType.main)) {
+            if(weatherEmoji.hasOwnProperty(weatherType.main)) {
                 return acc + weatherEmoji[weatherType.main];
             }
             return acc + weatherEmoji.Error;
@@ -66,36 +66,34 @@ let tempFormat = (data: OpenWeatherMapData): string => {
 export function getWeather(id: string, city: string) {
 
     let weatherOutputElem: HTMLElement | null = document.getElementById(`${id}-output`);
-    let weatherTimeout = settingsMenu.getWeatherTimeoutValue() || defaultWeatherTimeout;
-    if(knownWeather && knownWeather.hasOwnProperty(city) && (new Date().getTime()
-        - knownWeather[city].retrievedAt) < weatherTimeout) {
-
-        if(weatherOutputElem !== null) {
+    if(weatherOutputElem) {
+        let weatherTimeout = settingsMenu.getWeatherTimeoutValue() || defaultWeatherTimeout;
+        if(
+            knownWeather &&
+            knownWeather.hasOwnProperty(city) &&
+            (new Date().getTime() - knownWeather[city].retrievedAt) < weatherTimeout
+        ) {
             weatherOutputElem.innerText = tempFormat(knownWeather[city]);
-        }
-    } else {
-        city = city === "" ? "delft" : city;
-        const apiKey = settingsMenu.getWeatherAPIKey();
-        fetch(`http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`)
-            .then(response =>
-                response.json().then(data => ({
-                        data: data,
-                        status: response.status
-                    })
-                ).then(res => {
-                    knownWeather[city] = res.data;
-                    knownWeather[city].retrievedAt = new Date().getTime();
-                    window.localStorage.setItem("weatherInfo", JSON.stringify(knownWeather));
-                    if(weatherOutputElem !== null) {
+        } else {
+            city = city === "" ? "delft" : city;
+            const apiKey = settingsMenu.getWeatherAPIKey();
+            fetch(`http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`)
+                .then(response =>
+                    response.json().then(data => ({
+                            data: data,
+                            status: response.status
+                        })
+                    ).then(res => {
+                        knownWeather[city] = res.data;
+                        knownWeather[city].retrievedAt = new Date().getTime();
+                        window.localStorage.setItem("weatherInfo", JSON.stringify(knownWeather));
                         weatherOutputElem.innerText = tempFormat(res.data);
-                    }
-                }))
-            .catch((err) => {
-                console.log(err);
-                if(weatherOutputElem !== null) {
+                    }))
+                .catch((err) => {
+                    console.log(err);
                     weatherOutputElem.innerText = `${weatherEmoji.Error} no (valid) key`;
-                }
-            });
+                });
+        }
     }
 }
 
@@ -103,7 +101,7 @@ export function getWeather(id: string, city: string) {
 // Export this function
 export function addWeatherListener(widget: WeatherWidget, id: string): void {
     const cityButton = document.getElementById(`${id}-cityInputButton`);
-    if (cityButton) {
+    if(cityButton) {
         cityButton.addEventListener("click", () => {
             const cityNameInput: HTMLElement | null = document.getElementById(`${id}-cityInput`);
             let city = (cityNameInput as HTMLInputElement).value;
