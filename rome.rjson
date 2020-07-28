@@ -1,1 +1,7 @@
 version: "^0.0.26"
+
+lint: {
+    ignore: [
+        "node_modules/", "scripts/", "modules/", "docs/", "dist/", ".idea/", ".cache/", "typings/"
+    ]
+}
