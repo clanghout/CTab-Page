@@ -258,8 +258,8 @@ devSwitch('none');
 
 backupButton!.addEventListener('click', saveCurrentConfig);
 devEnabledCheckbox!.addEventListener('change', (a) => {
-    if (a !== null && a.srcElement !== null)
-        if ((a.srcElement as HTMLInputElement).checked) {
+    if (a !== null && a.target !== null)
+        if ((a.target as HTMLInputElement).checked) {
             devSwitch('inline');
         } else {
             devSwitch('none');
@@ -305,8 +305,8 @@ function prettyPrintConfig(config: any): string {
 
 /// Chrome extension specific
 try {
-    (window as any).browser.commands.onCommand.addListener(saveGrid);
-    (window as any).browser.bookmarks.onCreated.addListener(function (_id: any, bookmark: any) {
+    (window as any).browser.commands.onCommand.addEventListener(saveGrid);
+    (window as any).browser.bookmarks.onCreated.addEventListener(function (_id: any, bookmark: any): any | null {
 
         // If user checks the disableAddWidgetOnBookmark setting, then we don't want to add a bookmark.
         // Hence, if it is not checked, we do want to add a bookmark.
