@@ -1,5 +1,5 @@
 import settingsMenu from "./settingsMenu";
-import Muuri, { GridOptions } from "muuri";
+import muuri, { GridOptions } from "muuri";
 
 export class GridWrapper {
     private muuriOptions: GridOptions = {
@@ -40,12 +40,11 @@ export class GridWrapper {
                 return parseFloat(item._id);
             },
             title: function (_item: any, element: any) {
-                const ctabBody: any = [].slice.call(element.children[0].children)
-                    .filter((el: HTMLElement) => el.classList.contains("ctab-widget-body"))[0];
-                if(ctabBody.classList.contains('ctab-item-clock')) {
+                const ctabBody: any = element.querySelector(".ctab-widget-body");
+                if(ctabBody.classList.contains("ctab-item-clock")) {
                     return "ZZZ";
                 }
-                if(ctabBody.classList.contains('ctab-item-note')) {
+                if(ctabBody.classList.contains("ctab-item-note")) {
                     return "ZZZ";
                 }
                 return ctabBody.children[0].innerText.toUpperCase();
@@ -54,8 +53,12 @@ export class GridWrapper {
                 let tagsAttr: string = element.getAttribute("data-tags");
                 return tagsAttr.split(",").sort(function (a: string, b: string) {
                     // sort alphabetically within tags
-                    if(a < b) return -1;
-                    if(a > b) return 1;
+                    if(a < b) {
+                        return -1;
+                    }
+                    if(a > b) {
+                        return 1;
+                    }
 
                     return 0;
                 });
@@ -72,10 +75,10 @@ export class GridWrapper {
         }
     };
 
-    public grid: Muuri;
+    public grid: muuri;
 
     constructor(gridIdentifier: string | HTMLElement) {
-        this.grid = new Muuri(gridIdentifier, this.muuriOptions);
+        this.grid = new muuri(gridIdentifier, this.muuriOptions);
     }
 
 }

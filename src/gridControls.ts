@@ -55,8 +55,8 @@ export class CTabGrid {
         // Start clocks
         startTime();
         document.querySelectorAll(".ctab-item-note").forEach(note => {
-            note.addEventListener('change', this.noteChanged);
-            note.addEventListener('keyup', this.noteChanged);
+            note.addEventListener("change", this.noteChanged);
+            note.addEventListener("keyup", this.noteChanged);
         });
         // Set dirty to false, since note widgets might have set the state to dirty
         this.dirty = false;
@@ -73,19 +73,19 @@ export class CTabGrid {
     // adding the control buttons to widgets,
     // and adapting the font size of the text using bigText
     public addWidgetToGrid(widget: CTabWidget): void {
-        let itemElem = document.createElement('div');
+        let itemElem = document.createElement("div");
         itemElem.innerHTML = widget.widgetTemplate();
 
         let textColOpen = false;
 
-        itemElem.firstChild!.addEventListener('mouseover', () => {
+        itemElem.firstChild!.addEventListener("mouseover", () => {
             if (!this.widgetColorPickerOpen) {
                 const controlPanel = document.getElementById(`controls-${widget.id}`)!;
                 const controlDragHandle = document.getElementById(`drag-handle-${widget.id}`)!;
                 const biggerZIndex = "4";
 
-                controlPanel.classList.remove('hidden');
-                controlDragHandle.classList.remove('hidden');
+                controlPanel.classList.remove("hidden");
+                controlDragHandle.classList.remove("hidden");
                 controlPanel.style.zIndex = biggerZIndex;
                 controlPanel.parentElement!.style.zIndex = biggerZIndex;
                 controlPanel.parentElement!.parentElement!.style.zIndex = biggerZIndex;
@@ -93,7 +93,7 @@ export class CTabGrid {
         });
 
 
-        itemElem.firstChild!.addEventListener('mouseout', () => {
+        itemElem.firstChild!.addEventListener("mouseout", () => {
             if (!textColOpen) {
                 const controlPanel = document.getElementById(`controls-${widget.id}`)!;
                 const controlDragHandle = document.getElementById(`drag-handle-${widget.id}`)!;
@@ -101,17 +101,17 @@ export class CTabGrid {
                 controlPanel.style.zIndex = smallerZIndex;
                 controlPanel.parentElement!.style.zIndex = smallerZIndex;
                 controlPanel.parentElement!.parentElement!.style.zIndex = smallerZIndex;
-                controlPanel.classList.add('hidden');
-                controlDragHandle.classList.add('hidden');
+                controlPanel.classList.add("hidden");
+                controlDragHandle.classList.add("hidden");
             }
         });
         this.grid.add(itemElem.firstElementChild!, {index: widget.id});
 
         new Picker({
             parent: document.getElementById(`${widget.id}-text-color`)!,
-            popup: 'right', // 'right'(default), 'left', 'top', 'bottom'
+            popup: "right", // 'right'(default), 'left', 'top', 'bottom'
             editor: false,
-            color: widget.textColor || '#000000',
+            color: widget.textColor || "#000000",
             onChange: (newCol) => {
                 (document as any).documentElement.style.setProperty(`--${widget.id}-text-color`, newCol.rgbaString);
                 widget.textColor = newCol.rgbaString;
@@ -130,7 +130,7 @@ export class CTabGrid {
         });
         new Picker({
             parent: document.getElementById(`${widget.id}-background-color`)!,
-            popup: 'right', // 'right'(default), 'left', 'top', 'bottom'
+            popup: "right", // 'right'(default), 'left', 'top', 'bottom'
             editor: false,
             color: widget.backgroundColor || '#000000',
             onChange: (newCol) => {
@@ -165,14 +165,14 @@ export class CTabGrid {
             widget.settings.city = widget.settings.city || "delft";
             setTimeout(() => {
                 weatherEl.addWeatherListener(widget, widget.id);
-                (document.getElementById(widget.id + '-cityInput') as HTMLInputElement).value = widget.settings.city;
+                (document.getElementById(`${widget.id}-cityInput`) as HTMLInputElement).value = widget.settings.city;
                 weatherEl.getWeather(widget.id, widget.settings.city);
             }, 100);
         }
 
         try {
             if (widget instanceof widgetTypes.LinkWidget) {
-                BigText('#' + widget.id + " > span", {
+                BigText(`#${widget.id} > span`, {
                     maximumFontSize: 45,
                     limitingDimension: "both",
                     verticalAlign: "center"
@@ -184,7 +184,7 @@ export class CTabGrid {
                     verticalAlign: "center"
                 });
             } else if (widget instanceof widgetTypes.WeatherWidget) {
-                BigText('#' + widget.id + " > span", {
+                BigText(`#${widget.id} > span`, {
                     maximumFontSize: 40,
                     limitingDimension: "both",
                     verticalAlign: "center"
@@ -199,7 +199,7 @@ export class CTabGrid {
     }
 
     public loadModel(): void {
-        let widgetData: CTabWidgetSerialized[] = this.getConfig();
+        let widgetData: Array<CTabWidgetSerialized> = this.getConfig();
         if (!Array.isArray(widgetData)) {
             // Set default settings
             const fbSetting: LinkSettings = {

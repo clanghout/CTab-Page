@@ -1,11 +1,10 @@
 import {BaseSettings, LinkSettings, TitleSettings} from "./cTabWidgetTypeBase";
 import {widgetNameList} from "./cTabWidgetTypeHelper";
-import CTabSettings from "./settingsMenu";
-import CTabFilterMenu from "./filterMenu";
-// @ts-ignore streamsaver is no module, but adds to global scope
-import streamSaver from 'streamsaver';
-import CTabGrid from "./gridControls";
 import settingsMenu from "./settingsMenu";
+import filterMenu from "./filterMenu";
+// @ts-ignore streamsaver is no module, but adds to global scope
+import streamsaver from 'streamsaver';
+import gridControls from "./gridControls";
 
 (window as any).browser = (() => {
     return (<any>window).browser || (<any>window).chrome || (<any>window).msBrowser;
@@ -31,12 +30,12 @@ function showToast(message: string): void {
 }
 
 
-let cTabGrid = new CTabGrid();
+let cTabGrid = new gridControls();
 
 // Save the grid and show the result to user using toastBox.
 function saveGrid(): void {
     const saveResult = cTabGrid.saveGrid();
-    CTabFilterMenu.updateAvailableTagList();
+    filterMenu.updateAvailableTagList();
     showToast(saveResult);
 }
 
@@ -281,7 +280,7 @@ configField!.value = prettyPrintConfig(cTabGrid.getConfig());
 
 // saving config to file
 function saveCurrentConfig() {
-    const fileStream = streamSaver.createWriteStream(`config-${new Date().valueOf()}.json`);
+    const fileStream = streamsaver.createWriteStream(`config-${new Date().valueOf()}.json`);
     const writer = fileStream.getWriter();
     const encoder = new TextEncoder;
     let data = JSON.stringify(cTabGrid.getConfig());
@@ -310,7 +309,7 @@ try {
 
         // If user checks the disableAddWidgetOnBookmark setting, then we don't want to add a bookmark.
         // Hence, if it is not checked, we do want to add a bookmark.
-        if (!CTabSettings.getAddWidgetOnBookmarkIsDisabled()) {
+        if (!settingsMenu.getAddWidgetOnBookmarkIsDisabled()) {
             cTabGrid.createWidget("LinkWidget", {
                 width: 1,
                 height: 1,
