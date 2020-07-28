@@ -27,7 +27,7 @@ interface OpenWeatherMapWeather {
 }
 
 // Retrieves the past information on weather from the local storage
-let knownWeather: { [city: string]: weatherDataSave; } = JSON.parse(window.localStorage.getItem('weatherInfo') || '{}');
+let knownWeather: { [city: string]: weatherDataSave; } = JSON.parse(window.localStorage.getItem("weatherInfo") || "{}");
 
 // Dictionary of weather type to emoji
 let weatherEmoji: { [weatherType: string]: string; } = {
@@ -61,7 +61,7 @@ let tempFormat = (data: OpenWeatherMapData): string => {
 
 export const getWeather = (id: string, city: string) => {
 
-    let weatherOutputElem: HTMLElement | null = document.getElementById(id + '-output');
+    let weatherOutputElem: HTMLElement | null = document.getElementById(id + "-output");
     let weatherTimeout = CTabSettings.getWeatherTimeoutValue() || defaultWeatherTimeout;
     if (knownWeather && knownWeather.hasOwnProperty(city) && (new Date().getTime() - knownWeather[city].retrievedAt) < weatherTimeout) {
 
@@ -79,7 +79,7 @@ export const getWeather = (id: string, city: string) => {
             ).then(res => {
                 knownWeather[city] = res.data;
                 knownWeather[city].retrievedAt = new Date().getTime();
-                window.localStorage.setItem('weatherInfo', JSON.stringify(knownWeather));
+                window.localStorage.setItem("weatherInfo", JSON.stringify(knownWeather));
                 if (weatherOutputElem !== null) {
                     weatherOutputElem.innerText = tempFormat(res.data);
                 }
@@ -95,15 +95,15 @@ export const getWeather = (id: string, city: string) => {
 
 // Export this function
 export function addWeatherListener(widget: WeatherWidget, id: string): void {
-    const cityButton = document.getElementById(id + '-cityInputButton');
+    const cityButton = document.getElementById(id + "-cityInputButton");
     if (cityButton) {
-        cityButton.addEventListener('click', () => {
-            const cityNameInput: HTMLElement | null = document.getElementById(id + '-cityInput');
+        cityButton.addEventListener("click", () => {
+            const cityNameInput: HTMLElement | null = document.getElementById(id + "-cityInput");
             let city = (cityNameInput as HTMLInputElement).value;
             widget.settings.city = city;
             getWeather(id, city);
         });
     } else {
-        console.log("Could not find the 'change' button corresponding to widget", id);
+        console.log("Could not find the \"change\" button corresponding to widget", id);
     }
 }

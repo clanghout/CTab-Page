@@ -14,12 +14,12 @@ export class GridWrapper {
             minBounceBackAngle: Math.PI / 2
         },
         dragCssProps: {
-            touchAction: 'pan-y',
-            userSelect: '',
-            userDrag: '',
-            tapHighlightColor: '',
-            touchCallout: '',
-            contentZooming: ''
+            touchAction: "pan-y",
+            userSelect: "",
+            userDrag: "",
+            tapHighlightColor: "",
+            touchCallout: "",
+            contentZooming: ""
         },
         dragPlaceholder: {
             enabled: true,

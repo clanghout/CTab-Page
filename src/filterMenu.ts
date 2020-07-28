@@ -18,13 +18,13 @@ let Tags = (widgets: CTabWidget[]): Tags => {
     };
 
     // Get all unique available tags which are part of the grid.
-    // A tag is 'available' if any widget specifies a the tag name.
+    // A tag is "available" if any widget specifies a the tag name.
     const getAvailable = (): string[] => {
         setAvailableAll();
         return [...allTags]
     };
 
-    // Add all unique tags which are part of the grid to the 'available tags' set.
+    // Add all unique tags which are part of the grid to the "available tags" set.
     const setAvailableAll = (): void => {
         allTags = new Set();
         widgets.forEach(vi => {
@@ -56,11 +56,11 @@ interface CTabTagFilterMenu {
 }
 
 let CTabTagFilter = (): CTabTagFilterMenu => {
-    const filterMenuToggleButton: HTMLButtonElement | null = document.querySelector('#filter-menu-toggle');
-    const filterMenuPaneDiv: HTMLDivElement | null = document.querySelector('#filter-menu');
-    const modalBackdrop: HTMLDivElement | null = document.querySelector('#modal-backdrop');
-    const tagListDiv: HTMLDivElement | null = document.querySelector('#filter-menu-tag-list');
-    const filterMenuSaveButton: HTMLButtonElement | null = document.querySelector('#filter-menu-save-button');
+    const filterMenuToggleButton: HTMLButtonElement | null = document.querySelector("#filter-menu-toggle");
+    const filterMenuPaneDiv: HTMLDivElement | null = document.querySelector("#filter-menu");
+    const modalBackdrop: HTMLDivElement | null = document.querySelector("#modal-backdrop");
+    const tagListDiv: HTMLDivElement | null = document.querySelector("#filter-menu-tag-list");
+    const filterMenuSaveButton: HTMLButtonElement | null = document.querySelector("#filter-menu-save-button");
 
     // Warning: should only be read from here.
     let refGrid: any;
@@ -90,7 +90,7 @@ let CTabTagFilter = (): CTabTagFilterMenu => {
     // Check the filter list for tags which a user wants to keep (i.e. widgets which include the tag should be shown)
     // Returns the amount of selected tags.
     const updateEnabledTagList = (): number => {
-        let checkboxes = document.querySelectorAll('.filter-menu-tag-checkbox');
+        let checkboxes = document.querySelectorAll(".filter-menu-tag-checkbox");
 
         let checks: string[] = [];
         checkboxes.forEach(elem => {
@@ -116,7 +116,7 @@ let CTabTagFilter = (): CTabTagFilterMenu => {
         filterGridByTags(showAll);
     };
 
-    filterMenuSaveButton!.addEventListener('click', updateGridOnSave);
+    filterMenuSaveButton!.addEventListener("click", updateGridOnSave);
 
     // This function uses the enabled tag list to show/hide widgets within the grid.
     const filterGridByTags = (showAll: boolean): void => {
@@ -142,13 +142,13 @@ let CTabTagFilter = (): CTabTagFilterMenu => {
     };
 
     // open/close filter menu
-    filterMenuToggleButton!.addEventListener('click', () => filterMenuToggle());
+    filterMenuToggleButton!.addEventListener("click", () => filterMenuToggle());
 
     function filterMenuToggle(): void {
         filterMenuActive = !filterMenuActive;
-        filterMenuActive ? filterMenuPaneDiv!.classList.remove('hidden') : filterMenuPaneDiv!.classList.add('hidden');
-        filterMenuActive ? modalBackdrop!.classList.remove('hidden') : modalBackdrop!.classList.add('hidden');
-        filterMenuActive ? modalBackdrop!.addEventListener('click', filterMenuToggle) : modalBackdrop!.removeEventListener('click', filterMenuToggle);
+        filterMenuActive ? filterMenuPaneDiv!.classList.remove("hidden") : filterMenuPaneDiv!.classList.add("hidden");
+        filterMenuActive ? modalBackdrop!.classList.remove("hidden") : modalBackdrop!.classList.add("hidden");
+        filterMenuActive ? modalBackdrop!.addEventListener("click", filterMenuToggle) : modalBackdrop!.removeEventListener("click", filterMenuToggle);
     }
     return {
         initialize: initialize,

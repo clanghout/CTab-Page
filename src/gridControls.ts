@@ -8,12 +8,12 @@ import {
     TitleSettings,
 } from "./cTabWidgetTypeBase";
 import {cTabTypeMap, widgetNameList} from "./cTabWidgetTypeHelper";
-import Picker from 'vanilla-picker';
+import Picker from "vanilla-picker";
 import CTabSettings from "./settingsMenu";
 import CTabFilterMenu from "./filterMenu";
-import * as weatherEl from './weatherControls';
+import * as weatherEl from "./weatherControls";
 import * as widgetTypes from "./cTabWidgetType";
-import BigText from 'big-text.js-patched';
+import BigText from "big-text.js-patched";
 import { GridWrapper } from "./gridWrapper";
 import Muuri from "muuri";
 
@@ -22,7 +22,7 @@ import Muuri from "muuri";
 })();
 
 // HTML element
-const styleElem = document.head.appendChild(document.createElement('style'));
+const styleElem = document.head.appendChild(document.createElement("style"));
 
 export class CTabGrid {
 
@@ -109,7 +109,7 @@ export class CTabGrid {
 
         new Picker({
             parent: document.getElementById(`${widget.id}-text-color`)!,
-            popup: "right", // 'right'(default), 'left', 'top', 'bottom'
+            popup: "right", // "right"(default), "left", "top", "bottom"
             editor: false,
             color: widget.textColor || "#000000",
             onChange: (newCol) => {
@@ -130,9 +130,9 @@ export class CTabGrid {
         });
         new Picker({
             parent: document.getElementById(`${widget.id}-background-color`)!,
-            popup: "right", // 'right'(default), 'left', 'top', 'bottom'
+            popup: "right", // "right"(default), "left", "top", "bottom"
             editor: false,
-            color: widget.backgroundColor || '#000000',
+            color: widget.backgroundColor || "#000000",
             onChange: (newCol) => {
                 (document as any).documentElement.style.setProperty(`--${widget.id}-background-color`, newCol.rgbaString);
 
@@ -157,7 +157,7 @@ export class CTabGrid {
         });
 
 
-        document.getElementById(`delete-${widget.id}`)!.addEventListener('click', () => this.removeWidget(widget.id));
+        document.getElementById(`delete-${widget.id}`)!.addEventListener("click", () => this.removeWidget(widget.id));
 
         if (widget instanceof widgetTypes.WeatherWidget) {
             widget.settings.width = widget.settings.width > 1 ? widget.settings.width : 2;
@@ -178,7 +178,7 @@ export class CTabGrid {
                     verticalAlign: "center"
                 });
             } else if (widget instanceof widgetTypes.ClockWidget) {
-                BigText('#' + widget.id + " > span", {
+                BigText("#" + widget.id + " > span", {
                     maximumFontSize: 37,
                     limitingDimension: "both",
                     verticalAlign: "center"
@@ -280,7 +280,7 @@ export class CTabGrid {
 
     }
 
-    // Retrieve the current config from the browser's localstorage
+    // Retrieve the current config from the browser"s localstorage
     public getConfig(): CTabWidgetSerialized[] {
         let lsConfig = window.localStorage.getItem("CTabConfig") || "{}";
         let config: CTabWidgetSerialized[] = [];
@@ -344,12 +344,12 @@ export class CTabGrid {
 
     // When dragging stops, we update the ordering indices for all elements
     // FIXME: This does mean that if we are in a different ordering view (e.g.
-    //   "date added", we'll update the ordering to the currently active view);
+    //   "date added", we"ll update the ordering to the currently active view);
     //   whether that is the intended action is to be decided...
     private initOrderingHook() {
         let self = this;
 
-        this.grid.on('dragEnd', function(_item: any, _event: any) {
+        this.grid.on("dragEnd", function(_item: any, _event: any) {
             self.updateWidgetOrderingData();
         });
     }
@@ -400,7 +400,7 @@ export class CTabGrid {
                 // we need to reset the sorting data, since we updated the orderIndex, used by one of the sorters
                 updatedSortingData = true;
             } else {
-                console.warn(`Didn't find a matching widget for ${widgetBody.id}`);
+                console.warn(`Didn"t find a matching widget for ${widgetBody.id}`);
             }
         })
 
@@ -448,14 +448,14 @@ export class CTabGrid {
 // Independent functions
 // From w3 to add clock
 function startTime(): void {
-    let clocks = document.querySelectorAll('.ctab-item-clock');
+    let clocks = document.querySelectorAll(".ctab-item-clock");
     if (clocks.length > 0) {
         const todayDate = new Date();
         const timezone = CTabSettings.getTimezone();
-        const today = todayDate.toLocaleTimeString('en-US', {
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
+        const today = todayDate.toLocaleTimeString("en-US", {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
             timeZone: timezone,
             hour12: false
         });

@@ -3,7 +3,7 @@ import {widgetNameList} from "./cTabWidgetTypeHelper";
 import settingsMenu from "./settingsMenu";
 import filterMenu from "./filterMenu";
 // @ts-ignore streamsaver is no module, but adds to global scope
-import streamsaver from 'streamsaver';
+import streamsaver from "streamsaver";
 import gridControls from "./gridControls";
 
 (window as any).browser = (() => {
@@ -15,14 +15,14 @@ import gridControls from "./gridControls";
 const toastBox: HTMLElement | null = document.querySelector("#toast");
 const today = new Date();
 const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-const months = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-const dateField: HTMLElement = document.querySelector('#currDate') as HTMLElement;
+const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+const dateField: HTMLElement = document.querySelector("#currDate") as HTMLElement;
 dateField.innerText = `${weekdays[today.getDay()]} ${today.getDate()} ${months[today.getMonth()]} ${today.getFullYear()}`;
 
 function showToast(message: string): void {
     if (toastBox !== null) {
         toastBox.innerText = message;
-        toastBox.classList.remove('hidden');
+        toastBox.classList.remove("hidden");
         setTimeout(() => {
             toastBox.classList.add("hidden");
         }, 2000);
@@ -41,11 +41,13 @@ function saveGrid(): void {
 
 
 const saveButton: HTMLButtonElement = document.querySelector("#saveButton") as HTMLButtonElement;
-saveButton.addEventListener('click', saveGrid);
+saveButton.addEventListener("click", saveGrid);
 
+//default sort
+cTabGrid.grid.sort("orderIndex");
 
-const sortingDropdown: HTMLSelectElement | null = document.querySelector('#sortingDropdown');
-sortingDropdown!.addEventListener('change', () => {
+const sortingDropdown: HTMLSelectElement | null = document.querySelector("#sortingDropdown");
+sortingDropdown!.addEventListener("change", () => {
     let sortMode = sortingDropdown!.value;
     switch (sortMode) {
         case "id-desc" :
@@ -60,12 +62,12 @@ sortingDropdown!.addEventListener('change', () => {
         case "tag-alpha":
             cTabGrid.grid.sort("tagAlpha");
             break;
-        case "user-order":
-            cTabGrid.grid.sort("orderIndex");
-            break;
-        case "id-asc" :
-        default:
+        case "id-asc":
             cTabGrid.grid.sort("id");
+            break;
+        case "user-order":
+        default:
+            cTabGrid.grid.sort("orderIndex");
             break;
     }
 });
@@ -74,7 +76,7 @@ sortingDropdown!.addEventListener('change', () => {
 /// Adding Widgets
 const widgetTypeChanger: HTMLSelectElement = document.querySelector("#typeDropdown") as HTMLSelectElement;
 widgetNameList.forEach((widget) => {
-    let option: HTMLOptionElement = document.createElement('option');
+    let option: HTMLOptionElement = document.createElement("option");
     option.innerText = widget.replace("Widget", "");
     option.value = widget;
     widgetTypeChanger.add(option);
@@ -110,14 +112,14 @@ function widgetTypeFieldVisibilityControl(showTitle: boolean, showUrl: boolean):
 }
 
 // set css property to show or hide experimental features
-(document as any).documentElement.style.setProperty('--experimental-features-display',
+(document as any).documentElement.style.setProperty("--experimental-features-display",
     settingsMenu.getExperimentalFeatures() ? "initial" : "none");
 
 widgetTypeFieldVisibilityControl(false, false);
 
 
 if (widgetTypeChanger !== null) {
-    widgetTypeChanger.addEventListener('change', () => {
+    widgetTypeChanger.addEventListener("change", () => {
         const curVal = widgetTypeChanger.value;
 
         if (curVal === "LinkWidget") {
@@ -129,18 +131,18 @@ if (widgetTypeChanger !== null) {
 }
 
 // New Add button
-const modalBackdrop: HTMLDivElement | null = document.querySelector('#modal-backdrop');
-const addMenu: HTMLElement | null = document.querySelector('#addMenu');
-const floatingAddButton: HTMLButtonElement | null = document.querySelector('#floatingAddButton');
-const addCancelButton: HTMLButtonElement | null = document.querySelector('#addCancelButton');
-const widgetAddButton: HTMLButtonElement | null = document.querySelector('#widgetAddButton');
+const modalBackdrop: HTMLDivElement | null = document.querySelector("#modal-backdrop");
+const addMenu: HTMLElement | null = document.querySelector("#addMenu");
+const floatingAddButton: HTMLButtonElement | null = document.querySelector("#floatingAddButton");
+const addCancelButton: HTMLButtonElement | null = document.querySelector("#addCancelButton");
+const widgetAddButton: HTMLButtonElement | null = document.querySelector("#widgetAddButton");
 
 // Add the configured widget to the dashboard
 function addWidget(): void {
     let title: HTMLInputElement | null = document.querySelector("#addTitle");
     let url: HTMLInputElement | null = document.querySelector("#addUrl");
-    let bgcolor: HTMLInputElement | null = document.querySelector('#addBGC');
-    let textcolor: HTMLInputElement | null = document.querySelector('#addTC');
+    let bgcolor: HTMLInputElement | null = document.querySelector("#addBGC");
+    let textcolor: HTMLInputElement | null = document.querySelector("#addTC");
 
     let settings: BaseSettings = {width: 1, height: 1, tags: [], orderIndex: Number.MAX_SAFE_INTEGER};
     let errorList: string[] = [];
@@ -191,30 +193,30 @@ function addWidget(): void {
     }
 }
 
-addMenu!.classList.add('hidden');
-widgetAddButton!.addEventListener('click', addWidget);
+addMenu!.classList.add("hidden");
+widgetAddButton!.addEventListener("click", addWidget);
 const closeAdd = () => {
-    floatingAddButton!.classList.remove('hidden');
-    addMenu!.classList.add('hidden');
-    modalBackdrop!.classList.add('hidden');
+    floatingAddButton!.classList.remove("hidden");
+    addMenu!.classList.add("hidden");
+    modalBackdrop!.classList.add("hidden");
 };
-floatingAddButton!.addEventListener('click', () => {
-    floatingAddButton!.classList.add('hidden');
-    addMenu!.classList.remove('hidden');
-    modalBackdrop!.classList.remove('hidden');
-    modalBackdrop!.addEventListener('click', closeAdd);
+floatingAddButton!.addEventListener("click", () => {
+    floatingAddButton!.classList.add("hidden");
+    addMenu!.classList.remove("hidden");
+    modalBackdrop!.classList.remove("hidden");
+    modalBackdrop!.addEventListener("click", closeAdd);
 });
-addCancelButton!.addEventListener('click', () => {
+addCancelButton!.addEventListener("click", () => {
     closeAdd();
     modalBackdrop!.removeEventListener("click", closeAdd);
 });
 
 
-// Accept the 'Enter' key as alternative to clicking on the 'Add' button with the mouse, when interacting with the 'addMenu'.
-// Doesn't work for the background/text backgroundColor selectors as the browser seems to override the 'Enter' key for it (i.e. opens the backgroundColor palette).
-['#typeDropdown', '#addTitle', '#addUrl', '#widgetAddButton'].forEach((item) => {
+// Accept the "Enter" key as alternative to clicking on the "Add" button with the mouse, when interacting with the "addMenu".
+// Doesn"t work for the background/text backgroundColor selectors as the browser seems to override the "Enter" key for it (i.e. opens the backgroundColor palette).
+["#typeDropdown", "#addTitle", "#addUrl", "#widgetAddButton"].forEach((item) => {
     const itemElem: HTMLElement | null = document.querySelector(item);
-    itemElem!.addEventListener('keydown', (e) => {
+    itemElem!.addEventListener("keydown", (e) => {
         if (e.key === "Enter") {
             addWidget();
         }
@@ -231,7 +233,7 @@ const devEnabledCheckbox: HTMLInputElement | null = document.querySelector("#dev
 const devOpacityButton: HTMLButtonElement | null = document.querySelector("#opacityButton");
 const configField: HTMLInputElement | null = document.querySelector("#configFieldInput");
 const devSaveButton: HTMLButtonElement | null = document.querySelector("#saveDevConfig");
-const loadBackupButton: HTMLInputElement | null = document.querySelector('#loadBackupButton');
+const loadBackupButton: HTMLInputElement | null = document.querySelector("#loadBackupButton");
 
 // Show or hide developer mode specific buttons
 function devSwitch(displayStyle: string): void {
@@ -241,7 +243,7 @@ function devSwitch(displayStyle: string): void {
     devArea!.classList.remove("hidden");
 }
 
-loadBackupButton!.addEventListener('change', () => {
+loadBackupButton!.addEventListener("change", () => {
     if (loadBackupButton!.files!.length > 0) {
         let file = loadBackupButton!.files![0];
         let fr = new FileReader();
@@ -253,24 +255,24 @@ loadBackupButton!.addEventListener('change', () => {
 });
 
 // disable dev mode by default
-devSwitch('none');
+devSwitch("none");
 
-backupButton!.addEventListener('click', saveCurrentConfig);
-devEnabledCheckbox!.addEventListener('change', (a) => {
+backupButton!.addEventListener("click", saveCurrentConfig);
+devEnabledCheckbox!.addEventListener("change", (a) => {
     if (a !== null && a.target !== null)
         if ((a.target as HTMLInputElement).checked) {
-            devSwitch('inline');
+            devSwitch("inline");
         } else {
-            devSwitch('none');
+            devSwitch("none");
         }
 });
 
-devSaveButton!.addEventListener('click', () => {
+devSaveButton!.addEventListener("click", () => {
     let config = JSON.parse(configField!.value);
     cTabGrid.setConfig(config);
 });
 
-devOpacityButton!.addEventListener('click', () => {
+devOpacityButton!.addEventListener("click", () => {
     let config = configField!.value;
     configField!.value = config.replace(/(backgroundColor":"rgba\([0-9]+,[0-9]+,[0-9]+,)([0-9.]+)((?=\)"))/gm, "$1 0.5$3");
 
@@ -307,7 +309,7 @@ try {
     (window as any).browser.commands.onCommand.addEventListener(saveGrid);
     (window as any).browser.bookmarks.onCreated.addEventListener(function (_id: any, bookmark: any): any | null {
 
-        // If user checks the disableAddWidgetOnBookmark setting, then we don't want to add a bookmark.
+        // If user checks the disableAddWidgetOnBookmark setting, then we don"t want to add a bookmark.
         // Hence, if it is not checked, we do want to add a bookmark.
         if (!settingsMenu.getAddWidgetOnBookmarkIsDisabled()) {
             cTabGrid.createWidget("LinkWidget", {
