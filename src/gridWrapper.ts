@@ -8,6 +8,7 @@ export class GridWrapper {
             distance: 0,
             delay: 0,
         },
+        dragHandle: '.ctab-widget-drag-handle',
         dragSortHeuristics: {
             sortInterval: 10,
             minDragDistance: 5,
