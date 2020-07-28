@@ -36,6 +36,8 @@ export class GridWrapper {
             alignBottom: false,
             rounding: false
         },
+        layoutEasing : 'ease',
+        layoutDuration : 300,
         sortData: {
             title: function (_item, element) {
                 const ctabBody: any = element.querySelector(".ctab-widget-body");

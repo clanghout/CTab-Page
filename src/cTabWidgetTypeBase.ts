@@ -3,6 +3,7 @@ import * as Helper from "./cTabWidgetTypeHelper";
 export abstract class CTabWidget {
 
     abstract getTemplateCore: () => string;
+
     getType = this.constructor.name.replace("cTabWidgetType_", "");
 
     constructor(public id: string, public settings: BaseSettings, public backgroundColor: string, public textColor: string) {
@@ -36,7 +37,6 @@ ${this.getHtmlControls()}
             textColor: this.textColor,
             id: this.id,
             type: Helper.lookupConstructorName(this.constructor.name.replace("cTabWidgetType_", ""))
-            // type: this.constructor.name.replace("cTabWidgetType_", "")
         };
     };
 
