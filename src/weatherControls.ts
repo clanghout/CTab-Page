@@ -64,39 +64,35 @@ let tempFormat = (data: OpenWeatherMapData): string => {
 };
 
 export function getWeather(id: string, city: string) {
-
-    let weatherOutputElem: HTMLElement | null = document.getElementById(`${id}-output`);
-    if(weatherOutputElem) {
-        let weatherTimeout = settingsMenu.getWeatherTimeoutValue() || defaultWeatherTimeout;
-        if(
-            knownWeather &&
-            knownWeather.hasOwnProperty(city) &&
-            (new Date().getTime() - knownWeather[city].retrievedAt) < weatherTimeout
-        ) {
-            weatherOutputElem.innerText = tempFormat(knownWeather[city]);
-        } else {
-            city = city === "" ? "delft" : city;
-            const apiKey = settingsMenu.getWeatherAPIKey();
-            fetch(`http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`)
-                .then(response =>
-                    response.json().then(data => ({
-                            data: data,
-                            status: response.status
-                        })
-                    ).then(res => {
-                        knownWeather[city] = res.data;
-                        knownWeather[city].retrievedAt = new Date().getTime();
-                        window.localStorage.setItem("weatherInfo", JSON.stringify(knownWeather));
-                        weatherOutputElem.innerText = tempFormat(res.data);
-                    }))
-                .catch((err) => {
-                    console.log(err);
-                    weatherOutputElem.innerText = `${weatherEmoji.Error} no (valid) key`;
-                });
-        }
+    let weatherOutputElem: HTMLElement = document.getElementById(`${id}-output`)!;
+    let weatherTimeout = settingsMenu.getWeatherTimeoutValue() || defaultWeatherTimeout;
+    if(
+        knownWeather &&
+        knownWeather.hasOwnProperty(city) &&
+        (new Date().getTime() - knownWeather[city].retrievedAt) < weatherTimeout
+    ) {
+        weatherOutputElem.innerText = tempFormat(knownWeather[city]);
+    } else {
+        city = city === "" ? "delft" : city;
+        const apiKey = settingsMenu.getWeatherAPIKey();
+        fetch(`http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`)
+            .then(response =>
+                response.json().then(data => ({
+                        data: data,
+                        status: response.status
+                    })
+                ).then(res => {
+                    knownWeather[city] = res.data;
+                    knownWeather[city].retrievedAt = new Date().getTime();
+                    window.localStorage.setItem("weatherInfo", JSON.stringify(knownWeather));
+                    weatherOutputElem.innerText = tempFormat(res.data);
+                }))
+            .catch((err) => {
+                console.log(err);
+                weatherOutputElem.innerText = `${weatherEmoji.Error} no (valid) key`;
+            });
     }
 }
-
 
 // Export this function
 export function addWeatherListener(widget: WeatherWidget, id: string): void {
