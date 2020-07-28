@@ -3275,10 +3275,10 @@ ms@^2.1.1:
   resolved "https://registry.yarnpkg.com/ms/-/ms-2.1.2.tgz#d09d1f357b443f493382a8eb3ccd183872ae6009"
   integrity sha512-sGkPx+VjMtmA6MX27oA4FBFELFCZZ4S4XqeGOXCv68tT+jb3vk/RyaKWP0PTKyWtmLSM0b+adUTEvbs1PEaH2w==
 
-muuri@^0.8.0:
-  version "0.8.0"
-  resolved "https://registry.yarnpkg.com/muuri/-/muuri-0.8.0.tgz#60e84d2d322fa207efd113905eeb5d9750005a53"
-  integrity sha512-uqTi91q6mEKfHNHutlcDu3dS8/DXnxoWFh6fhUVJr426yaO4G/p2/LMoOeFb5Tl1hWzx7qoxl2v9RTJVFuskpQ==
+muuri@^0.9.1:
+  version "0.9.1"
+  resolved "https://artifactory.tools.bol.com:443/artifactory/api/npm/npm-bol/muuri/-/muuri-0.9.1.tgz#a08861116c17a20beda19e16f477284fb2587fbc"
+  integrity sha1-oIhhEWwXogvtoZ4W9HcoT7JYf7w=
 
 nan@^2.12.1:
   version "2.14.0"
