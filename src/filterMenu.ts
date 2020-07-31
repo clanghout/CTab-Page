@@ -1,4 +1,4 @@
-import {CTabWidget} from "./cTabWidgetTypeBase";
+import {CTabWidgetElement} from "./cTabWidgetTypeBase";
 import Grid from "muuri";
 
 interface Tags {
@@ -9,7 +9,7 @@ interface Tags {
 }
 
 class Tags implements Tags {
-constructor(private widgets: Array<CTabWidget>){
+constructor(private widgets: Array<CTabWidgetElement>){
 
 }
     private allTags: Set<string> = new Set();
@@ -48,7 +48,7 @@ constructor(private widgets: Array<CTabWidget>){
 }
 
 interface CTabTagFilterMenu {
-    initialize: (widgets: Array<CTabWidget>, grid: Grid) => void;
+    initialize: (widgets: Array<CTabWidgetElement>, grid: Grid) => void;
     updateAvailableTagList: () => void;
 }
 
@@ -68,7 +68,7 @@ function CTabTagFilter(): CTabTagFilterMenu {
     let tagData: Tags | null = null;
 
 // Should always be called before calling other functions.
-    function initialize(widgets: Array<CTabWidget>, grid: Grid): void {
+    function initialize(widgets: Array<CTabWidgetElement>, grid: Grid): void {
         tagData = new Tags(widgets);
         refGrid = grid;
         updateAvailableTagList();

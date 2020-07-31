@@ -1,6 +1,6 @@
 import {
     BaseSettings,
-    CTabWidget,
+    CTabWidgetElement,
     CTabWidgetSerialized,
     LinkSettings,
     TitleSettings,
@@ -8,7 +8,7 @@ import {
     TitleWidget
 } from "./cTabWidgetTypeBase";
 
-export class WeatherWidget extends CTabWidget {
+export class WeatherWidget extends CTabWidgetElement {
     constructor(public id: string, public settings: WeatherSettings, public backgroundColor: string, public textColor: string) {
         super(id, settings, backgroundColor, textColor);
     }
@@ -50,7 +50,7 @@ export class LinkWidget extends TitleWidget {
 </a>`;
 }
 
-export class ClockWidget extends CTabWidget {
+export class ClockWidget extends CTabWidgetElement {
     constructor(public id: string, public settings: BaseSettings, public backgroundColor: string, public textColor: string) {
         super(id, settings, backgroundColor, textColor);
     }
@@ -61,7 +61,7 @@ export class ClockWidget extends CTabWidget {
 
 }
 
-export class BuienradarWidget extends CTabWidget {
+export class BuienradarWidget extends CTabWidgetElement {
     constructor(public id: string, public settings: BaseSettings, public backgroundColor: string, public textColor: string) {
         super(id, settings, backgroundColor, textColor);
     }

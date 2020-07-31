@@ -1,8 +1,8 @@
-import {CTabWidget, BaseSettings} from "./cTabWidgetTypeBase";
+import {CTabWidgetElement, BaseSettings} from "./cTabWidgetTypeBase";
 import * as widgetTypes from "./cTabWidgetType";
 
 interface WidgetConstructor {
-    new(id: string, settings: BaseSettings, backgroundColor: string, textColor: string): CTabWidget;
+    new(id: string, settings: BaseSettings, backgroundColor: string, textColor: string): CTabWidgetElement;
 }
 
 

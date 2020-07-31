@@ -2,7 +2,7 @@
 
 import {
     BaseSettings,
-    CTabWidget,
+    CTabWidgetElement,
     CTabWidgetSerialized,
     LinkSettings,
     TitleSettings,
@@ -14,8 +14,9 @@ import filterMenu from "./filterMenu";
 import * as weatherEl from "./weatherControls";
 import * as widgetTypes from "./cTabWidgetType";
 import bigText from "big-text.js-patched";
-import { GridWrapper } from "./gridWrapper";
+import {GridWrapper} from "./gridWrapper";
 import muuri from "muuri";
+import {CTabWidget, WidgetCollection} from "./cTabWidget";
 
 const availableWidgetTypes = widgetTypes as any;
 
@@ -30,7 +31,8 @@ const styleElem = document.head.appendChild(document.createElement("style"));
 export class CTabGrid {
 
     public grid: muuri;
-    private widgets: Array<CTabWidget> = [];
+    private widgets: WidgetCollection = WidgetCollection.empty();
+    // private widgets: Array<CTabWidgetElements> = [];
     private widgetColorPickerOpen: boolean = false;
     private dirty: boolean = false;
 
@@ -41,7 +43,7 @@ export class CTabGrid {
         this.loadModel();
 
         // start after Muuri initialized, because we need access to the widgets
-        filterMenu.initialize(this.widgets, this.grid);
+        filterMenu.initialize(this.widgets.getWidgetElements(), this.grid);
 
 
         // @ts-ignore - no return for not showing a before-unload alert
@@ -75,7 +77,7 @@ export class CTabGrid {
     // setting the body of the widget,
     // adding the control buttons to widgets,
     // and adapting the font size of the text using bigText
-    public addWidgetToGrid(widget: CTabWidget): void {
+    public addWidgetToGrid(widget: CTabWidgetElement): void {
         let itemElem = document.createElement("div");
         itemElem.innerHTML = widget.widgetTemplate();
 
@@ -108,7 +110,7 @@ export class CTabGrid {
                 controlDragHandle.classList.add("hidden");
             }
         });
-        this.grid.add(itemElem.firstElementChild!, {index: widget.id});
+        let addedGridItems = this.grid.add(itemElem.firstElementChild!, {index: widget.id});
 
         new vanillaPicker({
             parent: document.getElementById(`${widget.id}-text-color`)!,
@@ -198,7 +200,7 @@ export class CTabGrid {
             console.log(widget.id, widget.getType, e);
         }
 
-        this.widgets.push(widget);
+        this.widgets.push(new CTabWidget(addedGridItems[0], widget));
     }
 
     public loadModel(): void {
@@ -298,16 +300,24 @@ export class CTabGrid {
 
     public removeWidget(id: string): void {
         // Get the outer muuri cell
-        let innerId = document.getElementById(id);
-        let cell = innerId!.parentElement!.parentElement;
+        //let innerId = document.getElementById(id);
+        // let cell = innerId!.parentElement!.parentElement;
 
-        if (cell) {
-            // remove from the grid (ui only)
-            this.grid.remove([cell], {removeElements: true, layout: true});
-            // also remove from widgets, otherwise no changes will be detected on saving.
-            this.widgets = this.widgets.filter((widget: CTabWidget) => widget.id !== id);
+
+        let item = this.widgets.removeById(id);
+
+        if (item) {
+            this.grid.remove([item], {removeElements: true, layout: true});
             this.dirty = true;
         }
+
+        // if (cell) {
+        //     // remove from the grid (ui only)
+        //     this.grid.remove([cell], {removeElements: true, layout: true});
+        //     // also remove from widgets, otherwise no changes will be detected on saving.
+        //     this.widgets = this.widgets.filter((widget: CTabWidgetElement) => widget.id !== id);
+        //     this.dirty = true;
+        // }
     }
 
     // Write param to localStorage
@@ -371,12 +381,10 @@ export class CTabGrid {
         this.grid.getItems().forEach((gridItem) => {
             let widgetBody = gridItem.getElement()!.querySelector(".ctab-widget-body");
             let widgetId = widgetBody!.id;
-            let matchingWidget = self.widgets.find((widget: CTabWidget) => {
-                return widget.id === widgetId;
-            });
+            let matchingWidget = self.widgets.getWidgetForId(widgetId);
 
             if (matchingWidget) {
-                (widgetBody as HTMLElement).dataset.orderIndex = `${matchingWidget.settings.orderIndex}`;
+                (widgetBody as HTMLElement).dataset.orderIndex = `${matchingWidget.widgetElement.settings.orderIndex}`;
             }
         });
 
@@ -390,13 +398,11 @@ export class CTabGrid {
         self.grid.getItems().forEach((gridItem, index) => {
             let widgetBody = gridItem.getElement()!.querySelector(".ctab-widget-body");
             let widgetId = widgetBody!.id;
-            let matchingWidget = self.widgets.find((widget: CTabWidget) => {
-                return widget.id === widgetId;
-            });
+            let matchingWidget = self.widgets.getWidgetForId(widgetId);
 
             if (matchingWidget) {
                 // this is the value used for saving and loading to localStorage
-                matchingWidget.settings.orderIndex = index;
+                matchingWidget.widgetElement.settings.orderIndex = index;
                 // this is the value used by the grid for sorting
                 (widgetBody as HTMLElement).dataset.orderIndex = `${index}`;
 
@@ -443,7 +449,7 @@ export class CTabGrid {
 
     // Getter for the current config
     private getDashboardConfig(): Array<CTabWidgetSerialized> {
-        return this.widgets.map(widget => widget.getConfig());
+        return this.widgets.getWidgetElements().map(widget => widget.getConfig());
     }
 
 }

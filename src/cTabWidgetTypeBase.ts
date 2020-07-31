@@ -1,6 +1,6 @@
 import * as Helper from "./cTabWidgetTypeHelper";
 
-export abstract class CTabWidget {
+export abstract class CTabWidgetElement {
 
     abstract getTemplateCore: () => string;
 
@@ -57,7 +57,7 @@ ${this.getHtmlControls()}
                 </div>`;
 }
 
-export abstract class TitleWidget extends CTabWidget {
+export abstract class TitleWidget extends CTabWidgetElement {
     protected constructor(public id: string, public settings: TitleSettings, public backgroundColor: string, public textColor: string) {
         super(id, settings, backgroundColor, textColor);
     }
