@@ -228,7 +228,7 @@ addCancelButton!.addEventListener("click", () => {
 
 
 // Accept the "Enter" key as alternative to clicking on the "Add" button with the mouse, when interacting with the "addMenu".
-// Doesn"t work for the background/text backgroundColor selectors as the browser seems to override the "Enter" key for it (i.e. opens the backgroundColor palette).
+// Doesn't work for the background/text backgroundColor selectors as the browser seems to override the "Enter" key for it (i.e. opens the backgroundColor palette).
 ["#typeDropdown", "#addTitle", "#addUrl", "#widgetAddButton"].forEach((item) => {
     const itemElem: HTMLElement | null = document.querySelector(item);
     itemElem!.addEventListener("keydown", (e) => {
@@ -328,7 +328,7 @@ try {
     windowWrapper.browser.commands.onCommand.addEventListener(saveGrid);
     windowWrapper.browser.bookmarks.onCreated.addEventListener(function (_id: any, bookmark: any): any | null {
 
-        // If user checks the disableAddWidgetOnBookmark setting, then we don"t want to add a bookmark.
+        // If user checks the disableAddWidgetOnBookmark setting, then we don't want to add a bookmark.
         // Hence, if it is not checked, we do want to add a bookmark.
         if (!settingsMenu.getAddWidgetOnBookmarkIsDisabled()) {
             cTabGrid.createWidget("LinkWidget", {

@@ -285,7 +285,7 @@ export class CTabGrid {
 
     }
 
-    // Retrieve the current config from the browser"s localstorage
+    // Retrieve the current config from the browser's localstorage
     public getConfig(): Array<CTabWidgetSerialized> {
         let lsConfig = window.localStorage.getItem("CTabConfig") || "{}";
         let config: Array<CTabWidgetSerialized> = [];
@@ -299,25 +299,12 @@ export class CTabGrid {
     }
 
     public removeWidget(id: string): void {
-        // Get the outer muuri cell
-        //let innerId = document.getElementById(id);
-        // let cell = innerId!.parentElement!.parentElement;
-
-
         let item = this.widgets.removeById(id);
 
         if (item) {
             this.grid.remove([item], {removeElements: true, layout: true});
             this.dirty = true;
         }
-
-        // if (cell) {
-        //     // remove from the grid (ui only)
-        //     this.grid.remove([cell], {removeElements: true, layout: true});
-        //     // also remove from widgets, otherwise no changes will be detected on saving.
-        //     this.widgets = this.widgets.filter((widget: CTabWidgetElement) => widget.id !== id);
-        //     this.dirty = true;
-        // }
     }
 
     // Write param to localStorage
@@ -357,7 +344,7 @@ export class CTabGrid {
 
     // When dragging stops, we update the ordering indices for all elements
     // FIXME: This does mean that if we are in a different ordering view (e.g.
-    //   "date added", we"ll update the ordering to the currently active view);
+    //   "date added", we'll update the ordering to the currently active view);
     //   whether that is the intended action is to be decided...
     private initOrderingHook() {
         let self = this;
@@ -409,7 +396,7 @@ export class CTabGrid {
                 // we need to reset the sorting data, since we updated the orderIndex, used by one of the sorters
                 updatedSortingData = true;
             } else {
-                console.warn(`Didn"t find a matching widget for ${widgetBody!.id}`);
+                console.warn(`Didn't find a matching widget for ${widgetBody!.id}`);
             }
         })
 
