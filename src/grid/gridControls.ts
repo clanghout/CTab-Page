@@ -31,7 +31,6 @@ export class CTabGrid {
 
     public grid: muuri;
     private widgets: WidgetCollection = WidgetCollection.empty();
-    // private widgets: Array<CTabWidgetElements> = [];
     private widgetColorPickerOpen: boolean = false;
     private dirty: boolean = false;
     public filterMenu: TagFilterMenu;

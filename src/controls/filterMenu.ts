@@ -73,7 +73,7 @@ export default class TagFilterMenu {
         this.filterMenuToggleButton!.addEventListener("click", this.filterMenuToggle);
     }
 
-    public updateAvailableTagList() {
+    updateAvailableTagList() {
         function template(name: string): string {
             return `<div class="filter-menu-tag-list-item"><label><input type="checkbox" class="filter-menu-tag-checkbox" data-tag-checkbox-name="${name}">${name}</label></div>`;
         }
