@@ -900,10 +900,10 @@
   resolved "https://registry.npmjs.org/@sphinxxxx/color-conversion/-/color-conversion-2.2.2.tgz#03ecc29279e3c0c832f6185a5bfa3497858ac8ca"
   integrity sha512-XExJS3cLqgrmNBIP3bBw6+1oQ1ksGjFh0+oClDKFYpCCqx/hlqwWO5KO/S63fzUo67SxI9dMrF0y5T/Ey7h8Zw==
 
-"@types/node@^14.0.11":
-  version "14.0.26"
-  resolved "https://registry.npmjs.org/@types/node/-/node-14.0.26.tgz#22a3b8a46510da8944b67bfc27df02c34a35331c"
-  integrity sha512-W+fpe5s91FBGE0pEa0lnqGLL4USgpLgs4nokw16SrBBco/gQxuua7KnArSEOd5iaMqbbSHV10vUDkJYJJqpXKA==
+"@types/node@^14.0.27":
+  version "14.0.27"
+  resolved "https://registry.npmjs.org/@types/node/-/node-14.0.27.tgz#a151873af5a5e851b51b3b065c9e63390a9e0eb1"
+  integrity sha512-kVrqXhbclHNHGu9ztnAwSncIgJv/FaxmzXJvGXNdcCpV1b8u1/Mi6z6m0vwy0LzKeXFTPLH0NzwmoJ3fNCIq0g==
 
 "@types/q@^1.5.1":
   version "1.5.4"
@@ -4398,10 +4398,10 @@ ripemd160@^2.0.0, ripemd160@^2.0.1:
     hash-base "^3.0.0"
     inherits "^2.0.1"
 
-rome@^0.0.26:
-  version "0.0.26"
-  resolved "https://registry.npmjs.org/rome/-/rome-0.0.26.tgz#3c045803e55cd41c24061807dc432e6be33ffb50"
-  integrity sha512-Nd2qnl91B5DBtD4ZQ+Ps2R7219IZt737m7y4zxW37avLNPyylAKKTf2Kv5fcPa5QuxuIZxnqsiJJWHVQcSeBEg==
+rome@^10.0.3-beta:
+  version "10.0.3-beta"
+  resolved "https://registry.npmjs.org/rome/-/rome-10.0.3-beta.tgz#631b7f1d3f2e951026dc04f96d68d3dd677c5b79"
+  integrity sha512-X/H8iZt+yJr1M9sU4F4sIBOBSUNZdlR2rZvIPNaOKkIT7lNvZSnTiLHVYsa6Ffc7COLa1pBbjSfCcx+7FZEp2A==
 
 safe-buffer@^5.0.1, safe-buffer@^5.1.0, safe-buffer@^5.1.1, safe-buffer@^5.1.2, safe-buffer@^5.2.0, safe-buffer@~5.2.0:
   version "5.2.1"

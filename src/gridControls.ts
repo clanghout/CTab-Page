@@ -143,7 +143,7 @@ export class CTabGrid {
 
                 let widgetElement = document.getElementById(`${widget.id}`);
                 if (widgetElement) {
-                    widgetElement.style.setProperty(`--item-background-color`, newCol.rgbaString);
+                    widgetElement.style.setProperty("--item-background-color", newCol.rgbaString);
                     styleElem.innerHTML = `#${widget.id}:before {background-color: ${newCol.rgbaString}`;
                 }
                 widget.backgroundColor = newCol.rgbaString;
@@ -276,7 +276,7 @@ export class CTabGrid {
                 if (widget) {
                     console.log(`Widget type ${widget.type} does not exist.`);
                 }
-                console.log(`Existing types are:`, widgetNameList);
+                console.log("Existing types are:", widgetNameList);
                 console.log(widgetTypes);
                 console.error(e);
 
@@ -292,7 +292,7 @@ export class CTabGrid {
         try {
             config = JSON.parse(lsConfig);
         } catch (error) {
-            console.error(`Config could not be parsed, found configuration:`, lsConfig);
+            console.error("Config could not be parsed, found configuration:", lsConfig);
             console.error(error);
         }
         return config;
