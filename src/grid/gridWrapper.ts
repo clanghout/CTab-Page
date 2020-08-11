@@ -1,4 +1,4 @@
-import settingsMenu from "./settingsMenu";
+import settingsMenu from "../controls/settingsMenu";
 import muuri, { GridOptions } from "muuri";
 
 export class GridWrapper {

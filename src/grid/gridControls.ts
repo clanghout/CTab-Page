@@ -2,21 +2,20 @@
 
 import {
     BaseSettings,
-    CTabWidgetElement,
+    WidgetElement,
     CTabWidgetSerialized,
     LinkSettings,
     TitleSettings,
-} from "./cTabWidgetTypeBase";
-import {cTabTypeMap, widgetNameList} from "./cTabWidgetTypeHelper";
+} from "../widgets/widgetElement";
 import vanillaPicker from "vanilla-picker";
-import settingsMenu from "./settingsMenu";
-import filterMenu from "./filterMenu";
-import * as weatherEl from "./weatherControls";
-import * as widgetTypes from "./cTabWidgetType";
+import settingsMenu from "../controls/settingsMenu";
+import filterMenu from "../controls/filterMenu";
+import * as weatherEl from "../controls/weatherControls";
+import * as widgetTypes from "../widgets/widgets";
 import bigText from "big-text.js-patched";
 import {GridWrapper} from "./gridWrapper";
 import muuri from "muuri";
-import {CTabWidget, WidgetCollection} from "./cTabWidget";
+import {Widget, WidgetCollection} from "../widgets/widgetCollection";
 
 const availableWidgetTypes = widgetTypes as any;
 
@@ -77,7 +76,7 @@ export class CTabGrid {
     // setting the body of the widget,
     // adding the control buttons to widgets,
     // and adapting the font size of the text using bigText
-    public addWidgetToGrid(widget: CTabWidgetElement): void {
+    public addWidgetToGrid(widget: WidgetElement): void {
         let itemElem = document.createElement("div");
         itemElem.innerHTML = widget.widgetTemplate();
 
@@ -200,7 +199,7 @@ export class CTabGrid {
             console.log(widget.id, widget.getType, e);
         }
 
-        this.widgets.push(new CTabWidget(addedGridItems[0], widget));
+        this.widgets.push(new Widget(addedGridItems[0], widget));
     }
 
     public loadModel(): void {
@@ -276,10 +275,6 @@ export class CTabGrid {
                 if (widget) {
                     console.log(`Widget type ${widget.type} does not exist.`);
                 }
-                console.log("Existing types are:", widgetNameList);
-                console.log(widgetTypes);
-                console.error(e);
-
             }
         });
 
@@ -335,9 +330,7 @@ export class CTabGrid {
             if (type) {
                 console.log(`Widget type ${type} does not exist.`);
             }
-            console.log(`Existing types are:`, widgetNameList);
-            console.log(cTabTypeMap);
-            console.log(widgetTypes);
+            console.log(`Existing types are:`, widgetTypes);
             console.error(e);
         }
     }

@@ -1,6 +1,6 @@
-import * as Helper from "./cTabWidgetTypeHelper";
+import * as widgetTypes from "./widgets";
 
-export abstract class CTabWidgetElement {
+export abstract class WidgetElement {
 
     abstract getTemplateCore: () => string;
 
@@ -31,12 +31,16 @@ ${this.getHtmlControls()}
     };
 
     getConfig = (): CTabWidgetSerialized => {
+        let type = Object.entries(widgetTypes).find(([_, w]) => {
+            return w.name == this.constructor.name.replace("cTabWidgetType_", "");
+        })![0];
+
         return {
             settings: this.settings,
             backgroundColor: this.backgroundColor,
             textColor: this.textColor,
             id: this.id,
-            type: Helper.lookupConstructorName(this.constructor.name.replace("cTabWidgetType_", ""))
+            type: type,
         };
     };
 
@@ -57,7 +61,7 @@ ${this.getHtmlControls()}
                 </div>`;
 }
 
-export abstract class TitleWidget extends CTabWidgetElement {
+export abstract class TitleWidget extends WidgetElement {
     protected constructor(public id: string, public settings: TitleSettings, public backgroundColor: string, public textColor: string) {
         super(id, settings, backgroundColor, textColor);
     }
@@ -96,7 +100,7 @@ export interface CTabWidgetSerialized {
     type: string;
 }
 
-// Settings can differ per widget type, since the `cTabWidgetType.ts` file is used only for the widget classes itself
+// Settings can differ per widget type, since the `widgets.ts` file is used only for the widget classes itself
 // the specific settings are defined here.
 export interface WeatherSettings extends BaseSettings {
     city: string;

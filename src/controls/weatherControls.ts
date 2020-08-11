@@ -1,5 +1,5 @@
 import settingsMenu from "./settingsMenu";
-import { WeatherWidget } from "./cTabWidgetType";
+import { WeatherWidget } from "../widgets/widgets";
 
 const defaultWeatherTimeout = 1_000 * 60 * 15;
 

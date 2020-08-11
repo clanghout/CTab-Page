@@ -1,10 +1,10 @@
-import { BaseSettings, CTabWidgetSerialized, LinkSettings, TitleSettings } from "./cTabWidgetTypeBase";
-import {widgetNameList} from "./cTabWidgetTypeHelper";
-import settingsMenu from "./settingsMenu";
-import filterMenu from "./filterMenu";
+import { BaseSettings, CTabWidgetSerialized, LinkSettings, TitleSettings } from "./widgets/widgetElement";
+import * as widgetTypes from "./widgets/widgets";
+import settingsMenu from "./controls/settingsMenu";
+import filterMenu from "./controls/filterMenu";
 // @ts-ignore streamsaver is no module, but adds to global scope
 import streamsaver from "streamsaver";
-import gridControls from "./gridControls";
+import gridControls from "./grid/gridControls";
 
 let windowWrapper = window as any;
 windowWrapper.browser = (() => {
@@ -82,7 +82,7 @@ sortingDropdown!.addEventListener("change", () => {
 
 /// Adding Widgets
 const widgetTypeChanger: HTMLSelectElement = document.querySelector("#typeDropdown") as HTMLSelectElement;
-widgetNameList.forEach((widget) => {
+Object.keys(widgetTypes).forEach((widget) => {
     let option: HTMLOptionElement = document.createElement("option");
     option.innerText = widget.replace("Widget", "");
     option.value = widget;

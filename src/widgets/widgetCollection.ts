@@ -1,14 +1,14 @@
-import {CTabWidgetElement} from "./cTabWidgetTypeBase";
+import {WidgetElement} from "./widgetElement";
 import {Item} from "muuri";
 
 export class WidgetCollection {
-    constructor(public collection: Array<CTabWidget>) {}
+    constructor(public collection: Array<Widget>) {}
 
     static empty(): WidgetCollection {
         return new WidgetCollection([]);
     }
 
-    push(widget: CTabWidget) {
+    push(widget: Widget) {
         this.collection.push(widget);
     }
 
@@ -28,22 +28,22 @@ export class WidgetCollection {
         return null;
     }
 
-    getWidgetElements(): Array<CTabWidgetElement> {
+    getWidgetElements(): Array<WidgetElement> {
         return this.collection.map((val) => {
             return val.widgetElement
         })
     }
 
-    getWidgetForId(searchId: string): CTabWidget | undefined {
+    getWidgetForId(searchId: string): Widget | undefined {
         return this.collection.find((item) => {
             return item.getWidgetId() == searchId;
         })
     }
 }
 
-export class CTabWidget {
+export class Widget {
 
-    constructor(public item: Item, public widgetElement: CTabWidgetElement){}
+    constructor(public item: Item, public widgetElement: WidgetElement){}
 
     getWidgetId(): string {
         return this.widgetElement.id;
