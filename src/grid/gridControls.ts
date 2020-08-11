@@ -9,13 +9,13 @@ import {
 } from "../widgets/widgetElement";
 import vanillaPicker from "vanilla-picker";
 import settingsMenu from "../controls/settingsMenu";
-import filterMenu from "../controls/filterMenu";
 import * as weatherEl from "../controls/weatherControls";
 import * as widgetTypes from "../widgets/widgets";
 import bigText from "big-text.js-patched";
 import {GridWrapper} from "./gridWrapper";
 import muuri from "muuri";
 import {Widget, WidgetCollection} from "../widgets/widgetCollection";
+import TagFilterMenu from "../controls/filterMenu";
 
 const availableWidgetTypes = widgetTypes as any;
 
@@ -34,7 +34,7 @@ export class CTabGrid {
     // private widgets: Array<CTabWidgetElements> = [];
     private widgetColorPickerOpen: boolean = false;
     private dirty: boolean = false;
-
+    public filterMenu: TagFilterMenu;
 
     constructor() {
         settingsMenu.initialize();
@@ -42,8 +42,7 @@ export class CTabGrid {
         this.loadModel();
 
         // start after Muuri initialized, because we need access to the widgets
-        filterMenu.initialize(this.widgets.getWidgetElements(), this.grid);
-
+        this.filterMenu = new TagFilterMenu(this.widgets.getWidgetElements(), this.grid);
 
         // @ts-ignore - no return for not showing a before-unload alert
         window.onbeforeunload = () => {

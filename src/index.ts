@@ -1,7 +1,7 @@
 import { BaseSettings, CTabWidgetSerialized, LinkSettings, TitleSettings } from "./widgets/widgetElement";
 import * as widgetTypes from "./widgets/widgets";
 import settingsMenu from "./controls/settingsMenu";
-import filterMenu from "./controls/filterMenu";
+
 // @ts-ignore streamsaver is no module, but adds to global scope
 import streamsaver from "streamsaver";
 import gridControls from "./grid/gridControls";
@@ -36,7 +36,7 @@ let cTabGrid = new gridControls();
 // Save the grid and show the result to user using toastBox.
 function saveGrid(): void {
     const saveResult = cTabGrid.saveGrid();
-    filterMenu.updateAvailableTagList();
+    cTabGrid.filterMenu.updateAvailableTagList();
     showToast(saveResult);
 }
 
