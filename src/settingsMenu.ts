@@ -46,7 +46,7 @@ function CTabSettings(): CTabSettingsMenu {
             parent: document.getElementById("widget-border-color")!,
             popup: "bottom", // "right"(default), "left", "top", "bottom"
             editor: true,
-            color: currentSettings.borderColor || "#02151a40",
+            color: currentSettings.borderColor ?? "#02151a40",
             onChange: (newColor) => {
                 document.documentElement.style.setProperty("--widget-border-color",
                     newColor.rgbaString);
@@ -62,7 +62,7 @@ function CTabSettings(): CTabSettingsMenu {
             parent: document.getElementById("background-color-picker")!,
             popup: "bottom", // "right"(default), "left", "top", "bottom"
             editor: true,
-            color: currentSettings.backgroundColor || "#6abbd0ff",
+            color: currentSettings.backgroundColor ?? "#6abbd0ff",
             onChange: (newColor) => {
                 document.documentElement.style.setProperty("--background-color",
                     newColor.rgbaString);
@@ -81,31 +81,31 @@ function CTabSettings(): CTabSettingsMenu {
         if(typeof currentSettings.backgroundRadioSelected === "number") {
             (<HTMLInputElement>document.getElementsByName("background")[currentSettings.backgroundRadioSelected]).checked = true;
             if(currentSettings.backgroundRadioSelected === 2) {
-                bgUrlVal!.value = currentSettings.background || "#6abbd0ff";
+                bgUrlVal!.value = currentSettings.background ?? "#6abbd0ff";
             }
         }
 
         unsavedChangesWarningCheckbox!.checked = currentSettings.unsavedChangesWarningEnabled
-            || false;
+            ?? false;
         unsavedChangesWarningCheckbox!.addEventListener("click", () => {
             currentSettings.unsavedChangesWarningEnabled = unsavedChangesWarningCheckbox!.checked;
             save();
         });
 
-        openInNewTabCheckbox!.checked = currentSettings.openInNewTab || false;
+        openInNewTabCheckbox!.checked = currentSettings.openInNewTab ?? false;
         openInNewTabCheckbox!.addEventListener("click", () => {
             currentSettings.openInNewTab = openInNewTabCheckbox!.checked;
             save();
         });
 
         disableAddWidgetOnBookmarkCheckbox!.checked = currentSettings.disableAddWidgetOnBookmark
-            || false;
+            ?? false;
         disableAddWidgetOnBookmarkCheckbox!.addEventListener("click", () => {
             currentSettings.disableAddWidgetOnBookmark = disableAddWidgetOnBookmarkCheckbox!.checked;
             save();
         });
 
-        weatherAPIKeyInput!.value = currentSettings.weatherAPIKey || "";
+        weatherAPIKeyInput!.value = currentSettings.weatherAPIKey ?? "";
         weatherAPIKeyInput!.addEventListener("change", () => {
             currentSettings.weatherAPIKey = weatherAPIKeyInput!.value;
             save();
@@ -113,26 +113,26 @@ function CTabSettings(): CTabSettingsMenu {
 
 
         // weather timeout
-        weatherTimeoutInput!.value = currentSettings.weatherTimeout || 60 * 15;
+        weatherTimeoutInput!.value = currentSettings.weatherTimeout ?? 60 * 15;
         weatherTimeoutInput!.addEventListener("change", () => {
             currentSettings.weatherTimeout = weatherTimeoutInput!.value;
             save();
         });
 
         // Timezone
-        timezoneSelect!.selectedIndex = currentSettings.timezoneIndex || 374; //default to Europe/Amsterdam
+        timezoneSelect!.selectedIndex = currentSettings.timezoneIndex ?? 374; //default to Europe/Amsterdam
         timezoneSelect!.addEventListener("change", () => {
             currentSettings.timezone = timezoneSelect!.options[timezoneSelect!.selectedIndex].innerText;
             currentSettings.timezoneIndex = timezoneSelect!.selectedIndex;
             save();
         });
-        muuriFillgaps!.checked = currentSettings.muuriFillgaps || false;
+        muuriFillgaps!.checked = currentSettings.muuriFillgaps ?? false;
         muuriFillgaps!.addEventListener("click", () => {
             currentSettings.muuriFillgaps = muuriFillgaps!.checked;
             save();
         });
         // experimental features check
-        experimentalFeaturesCheckbox!.checked = currentSettings.experimentalFeatures || false;
+        experimentalFeaturesCheckbox!.checked = currentSettings.experimentalFeatures ?? false;
         experimentalFeaturesCheckbox!.addEventListener("change", () => {
             currentSettings.experimentalFeatures = experimentalFeaturesCheckbox!.checked;
             save();
