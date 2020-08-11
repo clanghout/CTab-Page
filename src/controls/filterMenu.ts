@@ -1,4 +1,4 @@
-import {WidgetElement} from "../widgets/widgetElement";
+import  {WidgetElement} from "../widgets/widgetElement";
 import Grid from "muuri";
 
 interface Tags {
@@ -51,16 +51,8 @@ class Tags implements Tags {
 }
 
 export default class TagFilterMenu {
-    filterMenuToggleButton: HTMLButtonElement | null = document.querySelector(
-        "#filter-menu-toggle");
-    filterMenuPaneDiv: HTMLDivElement | null = document.querySelector("#filter-menu");
-    modalBackdrop: HTMLDivElement | null = document.querySelector("#modal-backdrop");
-    tagListDiv: HTMLDivElement | null = document.querySelector("#filter-menu-tag-list");
-    filterMenuSaveButton: HTMLButtonElement | null = document.querySelector(
-        "#filter-menu-save-button");
-
     filterMenuActive: boolean = false;
-    tagData: Tags | null = null;
+    tagData: Tags;
 
     constructor(widgets: Array<WidgetElement>, readonly grid: Grid) {
         this.tagData = new Tags(widgets);
@@ -69,8 +61,8 @@ export default class TagFilterMenu {
     }
 
     initializeEventListeners() {
-        this.filterMenuSaveButton!.addEventListener("click", this.updateGridOnSave);
-        this.filterMenuToggleButton!.addEventListener("click", this.filterMenuToggle);
+        document.querySelector("#filter-menu-save-button")!.addEventListener("click", () => this.updateGridOnSave());
+        document.querySelector("#filter-menu-toggle")!.addEventListener("click", () => this.filterMenuToggle());
     }
 
     updateAvailableTagList() {
@@ -82,12 +74,13 @@ export default class TagFilterMenu {
             return tags.map(tag => template(tag)).join("");
         }
 
-        this.tagListDiv!.innerHTML = mkCheckboxes(this.tagData!.getAvailable());
+        let tagList = document.querySelector("#filter-menu-tag-list");
+        tagList!.innerHTML = mkCheckboxes(this.tagData!.getAvailable());
     }
 
     // Check the filter list for tags which a user wants to keep (i.e. widgets which include the tag should be shown)
     // Returns the amount of selected tags.
-    updateEnabledTagList(): number {
+    public updateEnabledTagList(): number {
         let checkboxes = document.querySelectorAll(".filter-menu-tag-checkbox");
 
         let checks: Array<string> = [];
@@ -141,11 +134,14 @@ export default class TagFilterMenu {
 
     // open/close filter menu
     filterMenuToggle(): void {
+        let filterMenuPaneDiv = document.querySelector("#filter-menu");
+        let modalBackdrop = document.querySelector("#modal-backdrop");
+
         this.filterMenuActive = !this.filterMenuActive;
-        this.filterMenuActive ? this.filterMenuPaneDiv!.classList.remove("hidden") : this.filterMenuPaneDiv!.classList.add("hidden");
-        this.filterMenuActive ? this.modalBackdrop!.classList.remove("hidden") : this.modalBackdrop!.classList.add("hidden");
-        this.filterMenuActive ? this.modalBackdrop!.addEventListener("click", this.filterMenuToggle)
-            : this.modalBackdrop!.removeEventListener("click", this.filterMenuToggle);
+        this.filterMenuActive ? filterMenuPaneDiv!.classList.remove("hidden") : filterMenuPaneDiv!.classList.add("hidden");
+        this.filterMenuActive ? modalBackdrop!.classList.remove("hidden") : modalBackdrop!.classList.add("hidden");
+        this.filterMenuActive ? modalBackdrop!.addEventListener("click", this.filterMenuToggle)
+            : modalBackdrop!.removeEventListener("click", this.filterMenuToggle);
     }
 }
 
