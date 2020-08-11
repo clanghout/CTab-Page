@@ -2,121 +2,52 @@
 
 import {
     BaseSettings,
-    CTabWidget,
+    WidgetElement,
     CTabWidgetSerialized,
     LinkSettings,
     TitleSettings,
-} from "./cTabWidgetTypeBase";
-import {cTabTypeMap, widgetNameList} from "./cTabWidgetTypeHelper";
-import Picker from 'vanilla-picker';
-import CTabSettings from "./settingsMenu";
-import CTabFilterMenu from "./filterMenu";
-import * as weatherEl from './weatherControls';
-import * as widgetTypes from "./cTabWidgetType";
-import BigText from 'big-text.js-patched';
-// @ts-ignore Muuri does not export an object as of version 0.8; it is listed as a TODO in their source code
-import Muuri from "muuri";
-import settingsMenu from "./settingsMenu";
+} from "../widgets/widgetElement";
+import vanillaPicker from "vanilla-picker";
+import settingsMenu from "../controls/settingsMenu";
+import * as weatherEl from "../controls/weatherControls";
+import * as widgetTypes from "../widgets/widgets";
+import bigText from "big-text.js-patched";
+import {GridWrapper} from "./gridWrapper";
+import muuri from "muuri";
+import {Widget, WidgetCollection} from "../widgets/widgetCollection";
+import TagFilterMenu from "../controls/filterMenu";
 
-(window as any).browser = (() => {
-    return (window as any).browser || (window as any).chrome || (window as any).msBrowser;
+const availableWidgetTypes = widgetTypes as any;
+
+let windowWrapped = window as any;
+windowWrapped.browser = (() => {
+    return windowWrapped.browser || windowWrapped.chrome || windowWrapped.msBrowser;
 })();
 
 // HTML element
-const styleElem = document.head.appendChild(document.createElement('style'));
+const styleElem = document.head.appendChild(document.createElement("style"));
 
 export class CTabGrid {
-    public grid: any;
-    private muuriOptions = {
-        dragEnabled: true,
-        dragStartPredicate: {
-            distance: 0,
-            delay: 0,
-            handle: '.ctab-widget-drag-handle'
-        },
-        dragSortHeuristics: {
-            sortInterval: 10,
-            minDragDistance: 5,
-            minBounceBackAngle: Math.PI / 2
-        },
-        dragCssProps: {
-            touchAction: 'pan-y',
-            userSelect: '',
-            userDrag: '',
-            tapHighlightColor: '',
-            touchCallout: '',
-            contentZooming: ''
-        },
-        dragPlaceholder: {
-            enabled: true,
-            duration: 300,
-            easing: 'ease',
-            createElement: null,
-            onCreate: null,
-            onRemove: null
-        },
-        layoutOnInit: false,
-        layout: {
-            fillGaps: settingsMenu.getMuuriFillgaps(),
-            horizontal: false,
-            alignRight: false,
-            alignBottom: false,
-            rounding: false
-        },
-        sortData: {
-            id: function (item: any, _element: any) {
-                return parseFloat(item._id);
-            },
-            title: function (_item: any, element: any) {
-                const ctabBody: any = [].slice.call(element.children[0].children).filter((el: HTMLElement) => el.classList.contains("ctab-widget-body"))[0];
-                if (ctabBody.classList.contains('ctab-item-clock')) {
-                    return "ZZZ";
-                }
-                if (ctabBody.classList.contains('ctab-item-note')) {
-                    return "ZZZ";
-                }
-                return ctabBody.children[0].innerText.toUpperCase();
-            },
-            tagAlpha: function (_item: any, element: any) {
-                let tagsAttr: string = element.getAttribute("data-tags");
-                return tagsAttr.split(",").sort(function (a: string, b: string) {
-                    // sort alphabetically within tags
-                    if (a < b) return -1;
-                    if (a > b) return 1;
 
-                    return 0;
-                });
-            },
-            orderIndex: function (_item: any, element: any) {
-                let widgetBody = element.querySelector(".ctab-widget-body");
-
-                if (widgetBody && widgetBody.dataset.orderIndex != undefined) {
-                    return parseFloat(widgetBody.dataset.orderIndex);
-                } else {
-                    return Number.MAX_SAFE_INTEGER;
-                }
-            }
-        }
-    };
-    private widgets: CTabWidget[] = [];
+    public grid: muuri;
+    private widgets: WidgetCollection = WidgetCollection.empty();
     private widgetColorPickerOpen: boolean = false;
     private dirty: boolean = false;
-
+    public filterMenu: TagFilterMenu;
 
     constructor() {
-        CTabSettings.initialize();
-        this.grid = new Muuri(".grid", this.muuriOptions);
+        settingsMenu.initialize();
+        this.grid = new GridWrapper(".grid").grid;
         this.loadModel();
 
         // start after Muuri initialized, because we need access to the widgets
-        CTabFilterMenu.initialize(this.widgets, this.grid);
-
+        this.filterMenu = new TagFilterMenu(this.widgets.getWidgetElements(), this.grid);
 
         // @ts-ignore - no return for not showing a before-unload alert
         window.onbeforeunload = () => {
             // loosely implemented dirty state (did not care much before, dirty in the probability of change)
             // so an additional check is added as well comparing the current state to the saved state
-            if (this.hasChanges() && CTabSettings.getShowUnsavedWarning()) {
+            if (this.hasChanges() && settingsMenu.getShowUnsavedWarning()) {
                 // You have unsaved changes on this page. Do you want to leave this page and discard your changes or stay on this page?
                 return "";
             }
@@ -126,8 +57,8 @@ export class CTabGrid {
         // Start clocks
         startTime();
         document.querySelectorAll(".ctab-item-note").forEach(note => {
-            note.addEventListener('change', this.noteChanged);
-            note.addEventListener('keyup', this.noteChanged);
+            note.addEventListener("change", this.noteChanged);
+            note.addEventListener("keyup", this.noteChanged);
         });
         // Set dirty to false, since note widgets might have set the state to dirty
         this.dirty = false;
@@ -143,20 +74,20 @@ export class CTabGrid {
     // setting the body of the widget,
     // adding the control buttons to widgets,
     // and adapting the font size of the text using bigText
-    public addWidgetToGrid(widget: CTabWidget): void {
-        let itemElem = document.createElement('div');
+    public addWidgetToGrid(widget: WidgetElement): void {
+        let itemElem = document.createElement("div");
         itemElem.innerHTML = widget.widgetTemplate();
 
         let textColOpen = false;
 
-        itemElem.firstChild!.addEventListener('mouseover', () => {
+        itemElem.firstChild!.addEventListener("mouseover", () => {
             if (!this.widgetColorPickerOpen) {
                 const controlPanel = document.getElementById(`controls-${widget.id}`)!;
                 const controlDragHandle = document.getElementById(`drag-handle-${widget.id}`)!;
                 const biggerZIndex = "4";
 
-                controlPanel.classList.remove('hidden');
-                controlDragHandle.classList.remove('hidden');
+                controlPanel.classList.remove("hidden");
+                controlDragHandle.classList.remove("hidden");
                 controlPanel.style.zIndex = biggerZIndex;
                 controlPanel.parentElement!.style.zIndex = biggerZIndex;
                 controlPanel.parentElement!.parentElement!.style.zIndex = biggerZIndex;
@@ -164,7 +95,7 @@ export class CTabGrid {
         });
 
 
-        itemElem!.firstChild!.addEventListener('mouseout', () => {
+        itemElem.firstChild!.addEventListener("mouseout", () => {
             if (!textColOpen) {
                 const controlPanel = document.getElementById(`controls-${widget.id}`)!;
                 const controlDragHandle = document.getElementById(`drag-handle-${widget.id}`)!;
@@ -172,19 +103,19 @@ export class CTabGrid {
                 controlPanel.style.zIndex = smallerZIndex;
                 controlPanel.parentElement!.style.zIndex = smallerZIndex;
                 controlPanel.parentElement!.parentElement!.style.zIndex = smallerZIndex;
-                controlPanel.classList.add('hidden');
-                controlDragHandle.classList.add('hidden');
+                controlPanel.classList.add("hidden");
+                controlDragHandle.classList.add("hidden");
             }
         });
-        this.grid.add(itemElem.firstChild, {index: widget.id});
+        let addedGridItems = this.grid.add(itemElem.firstElementChild!, {index: widget.id});
 
-        new Picker({
+        new vanillaPicker({
             parent: document.getElementById(`${widget.id}-text-color`)!,
-            popup: 'right', // 'right'(default), 'left', 'top', 'bottom'
+            popup: "right", // "right"(default), "left", "top", "bottom"
             editor: false,
-            color: widget.textColor || '#000000',
+            color: widget.textColor || "#000000",
             onChange: (newCol) => {
-                (document as any).documentElement.style.setProperty(`--${widget.id}-text-color`, newCol.rgbaString);
+                document.documentElement.style.setProperty(`--${widget.id}-text-color`, newCol.rgbaString);
                 widget.textColor = newCol.rgbaString;
             },
             onDone: (newCol) => {
@@ -199,17 +130,17 @@ export class CTabGrid {
                 textColOpen = false;
             }
         });
-        new Picker({
+        new vanillaPicker({
             parent: document.getElementById(`${widget.id}-background-color`)!,
-            popup: 'right', // 'right'(default), 'left', 'top', 'bottom'
+            popup: "right", // "right"(default), "left", "top", "bottom"
             editor: false,
-            color: widget.backgroundColor || '#000000',
+            color: widget.backgroundColor || "#000000",
             onChange: (newCol) => {
-                (document as any).documentElement.style.setProperty(`--${widget.id}-background-color`, newCol.rgbaString);
+                document.documentElement.style.setProperty(`--${widget.id}-background-color`, newCol.rgbaString);
 
                 let widgetElement = document.getElementById(`${widget.id}`);
                 if (widgetElement) {
-                    widgetElement.style.setProperty(`--item-background-color`, newCol.rgbaString);
+                    widgetElement.style.setProperty("--item-background-color", newCol.rgbaString);
                     styleElem.innerHTML = `#${widget.id}:before {background-color: ${newCol.rgbaString}`;
                 }
                 widget.backgroundColor = newCol.rgbaString;
@@ -228,7 +159,7 @@ export class CTabGrid {
         });
 
 
-        document.getElementById(`delete-${widget.id}`)!.addEventListener('click', () => this.removeWidget(widget.id));
+        document.getElementById(`delete-${widget.id}`)!.addEventListener("click", () => this.removeWidget(widget.id));
 
         if (widget instanceof widgetTypes.WeatherWidget) {
             widget.settings.width = widget.settings.width > 1 ? widget.settings.width : 2;
@@ -236,26 +167,26 @@ export class CTabGrid {
             widget.settings.city = widget.settings.city || "delft";
             setTimeout(() => {
                 weatherEl.addWeatherListener(widget, widget.id);
-                (document.getElementById(widget.id + '-cityInput') as HTMLInputElement).value = widget.settings.city;
+                (document.getElementById(`${widget.id}-cityInput`) as HTMLInputElement).value = widget.settings.city;
                 weatherEl.getWeather(widget.id, widget.settings.city);
             }, 100);
         }
 
         try {
             if (widget instanceof widgetTypes.LinkWidget) {
-                BigText('#' + widget.id + " > span", {
+                bigText(`#${widget.id} > span`, {
                     maximumFontSize: 45,
                     limitingDimension: "both",
                     verticalAlign: "center"
                 });
             } else if (widget instanceof widgetTypes.ClockWidget) {
-                BigText('#' + widget.id + " > span", {
-                    maximumFontSize: 37,
+                bigText(`#${widget.id} > span`, {
+                    maximumFontSize: 36,
                     limitingDimension: "both",
                     verticalAlign: "center"
                 });
             } else if (widget instanceof widgetTypes.WeatherWidget) {
-                BigText('#' + widget.id + " > span", {
+                bigText(`#${widget.id} > span`, {
                     maximumFontSize: 40,
                     limitingDimension: "both",
                     verticalAlign: "center"
@@ -266,11 +197,11 @@ export class CTabGrid {
             console.log(widget.id, widget.getType, e);
         }
 
-        this.widgets.push(widget);
-    };
+        this.widgets.push(new Widget(addedGridItems[0], widget));
+    }
 
     public loadModel(): void {
-        let widgetData: CTabWidgetSerialized[] = this.getConfig();
+        let widgetData: Array<CTabWidgetSerialized> = this.getConfig();
         if (!Array.isArray(widgetData)) {
             // Set default settings
             const fbSetting: LinkSettings = {
@@ -331,57 +262,48 @@ export class CTabGrid {
                 ];
         }
 
-        widgetData.filter((a: any) => a !== null).forEach((widget: CTabWidgetSerialized) => {
+        widgetData.filter((a: CTabWidgetSerialized) => a !== null).forEach((widget: CTabWidgetSerialized) => {
             // what if widget does not have a type
             try {
                 if (widget.type === "LinkWidget") {
-                    (widget.settings as LinkSettings).newTab = CTabSettings.getNewTab();
+                    (widget.settings as LinkSettings).newTab = settingsMenu.getNewTab();
                 }
-                this.addWidgetToGrid(new (widgetTypes as any)[widget.type](widget.id, widget.settings, widget.backgroundColor, widget.textColor));
+                this.addWidgetToGrid(new availableWidgetTypes[widget.type](widget.id, widget.settings, widget.backgroundColor, widget.textColor));
             } catch (e) {
                 if (widget) {
                     console.log(`Widget type ${widget.type} does not exist.`);
                 }
-                console.log(`Existing types are:`, widgetNameList);
-                console.log(widgetTypes);
-                console.error(e);
-
             }
         });
 
-    };
+    }
 
     // Retrieve the current config from the browser's localstorage
-    public getConfig(): CTabWidgetSerialized[] {
+    public getConfig(): Array<CTabWidgetSerialized> {
         let lsConfig = window.localStorage.getItem("CTabConfig") || "{}";
-        let config: CTabWidgetSerialized[] = [];
+        let config: Array<CTabWidgetSerialized> = [];
         try {
             config = JSON.parse(lsConfig);
         } catch (error) {
-            console.error(`Config could not be parsed, found configuration:`, lsConfig);
+            console.error("Config could not be parsed, found configuration:", lsConfig);
             console.error(error);
         }
         return config;
-    };
+    }
 
     public removeWidget(id: string): void {
-        // Get the outer muuri cell
-        let innerId = document.getElementById(id);
-        let cell = innerId!.parentElement!.parentElement;
+        let item = this.widgets.removeById(id);
 
-        if (cell) {
-            // remove from the grid (ui only)
-            this.grid.remove([cell], {removeElements: true, layout: true});
-            // also remove from widgets, otherwise no changes will be detected on saving.
-            this.widgets = this.widgets.filter((widget: CTabWidget) => widget.id !== id);
+        if (item) {
+            this.grid.remove([item], {removeElements: true, layout: true});
             this.dirty = true;
         }
-    };
+    }
 
     // Write param to localStorage
-    public setConfig(config: CTabWidgetSerialized[]): void {
+    public setConfig(config: Array<CTabWidgetSerialized>): void {
         window.localStorage.setItem("CTabConfig", JSON.stringify(config));
-    };
+    }
 
     // Returns message if save call is executed or not
     public saveGrid(): string {
@@ -394,24 +316,22 @@ export class CTabGrid {
         } else {
             return "Nothing to save.";
         }
-    };
+    }
 
     // Create a new widget object and add it to the dashboard.
     public createWidget(type: string, settings: BaseSettings, backgroundColor: string, textColor: string): void {
         this.dirty = true;
         try {
             this.addWidgetToGrid(
-                new (widgetTypes as any)[type]("i" + new Date().getTime().toString(), settings, backgroundColor, textColor));
+                new availableWidgetTypes[type](`i${new Date().getTime().toString()}`, settings, backgroundColor, textColor));
         } catch (e) {
             if (type) {
                 console.log(`Widget type ${type} does not exist.`);
             }
-            console.log(`Existing types are:`, widgetNameList);
-            console.log(cTabTypeMap);
-            console.log(widgetTypes);
+            console.log(`Existing types are:`, widgetTypes);
             console.error(e);
         }
-    };
+    }
 
     // When dragging stops, we update the ordering indices for all elements
     // FIXME: This does mean that if we are in a different ordering view (e.g.
@@ -420,7 +340,7 @@ export class CTabGrid {
     private initOrderingHook() {
         let self = this;
 
-        this.grid.on('dragEnd', function(_item: any, _event: any) {
+        this.grid.on("dragEnd", function(_item, _event) {
             self.updateWidgetOrderingData();
         });
     }
@@ -436,15 +356,13 @@ export class CTabGrid {
         let self = this;
 
         // add user ordering data
-        this.grid.getItems().forEach((gridItem: any) => {
-            let widgetBody = gridItem.getElement().querySelector(".ctab-widget-body");
-            let widgetId = widgetBody.id;
-            let matchingWidget = self.widgets.find((widget: CTabWidget) => {
-                return widget.id === widgetId;
-            });
+        this.grid.getItems().forEach((gridItem) => {
+            let widgetBody = gridItem.getElement()!.querySelector(".ctab-widget-body");
+            let widgetId = widgetBody!.id;
+            let matchingWidget = self.widgets.getWidgetForId(widgetId);
 
             if (matchingWidget) {
-                widgetBody.dataset.orderIndex = matchingWidget.settings.orderIndex;
+                (widgetBody as HTMLElement).dataset.orderIndex = `${matchingWidget.widgetElement.settings.orderIndex}`;
             }
         });
 
@@ -455,23 +373,21 @@ export class CTabGrid {
         let self = this;
         let updatedSortingData = false;
 
-        self.grid.getItems().forEach((gridItem: any, index: number) => {
-            let widgetBody = gridItem.getElement().querySelector(".ctab-widget-body");
-            let widgetId = widgetBody.id;
-            let matchingWidget = self.widgets.find((widget: CTabWidget) => {
-                return widget.id === widgetId;
-            });
+        self.grid.getItems().forEach((gridItem, index) => {
+            let widgetBody = gridItem.getElement()!.querySelector(".ctab-widget-body");
+            let widgetId = widgetBody!.id;
+            let matchingWidget = self.widgets.getWidgetForId(widgetId);
 
             if (matchingWidget) {
                 // this is the value used for saving and loading to localStorage
-                matchingWidget.settings.orderIndex = index;
+                matchingWidget.widgetElement.settings.orderIndex = index;
                 // this is the value used by the grid for sorting
-                widgetBody.dataset.orderIndex = index;
+                (widgetBody as HTMLElement).dataset.orderIndex = `${index}`;
 
                 // we need to reset the sorting data, since we updated the orderIndex, used by one of the sorters
                 updatedSortingData = true;
             } else {
-                console.warn(`Didn't find a matching widget for ${widgetBody.id}`);
+                console.warn(`Didn't find a matching widget for ${widgetBody!.id}`);
             }
         })
 
@@ -484,14 +400,14 @@ export class CTabGrid {
     // Toggle the color pickers
     private toggleWidgetColorPicker(isOpen: boolean): void {
         this.widgetColorPickerOpen = isOpen;
-    };
+    }
 
     // Listener for note widgets on change
 
     // Used to track whether changes have been made that need to be saved.
     private noteChanged(): void {
         this.dirty = true;
-    };
+    }
 
     // Check if the current state of the dashboard is different from the saved state
     private hasChanges(): boolean {
@@ -506,27 +422,27 @@ export class CTabGrid {
             return true;
         }
         return false;
-    };
+    }
 
 
     // Getter for the current config
-    private getDashboardConfig(): CTabWidgetSerialized[] {
-        return this.widgets.map(widget => widget.getConfig());
-    };
+    private getDashboardConfig(): Array<CTabWidgetSerialized> {
+        return this.widgets.getWidgetElements().map(widget => widget.getConfig());
+    }
 
 }
 
 // Independent functions
 // From w3 to add clock
 function startTime(): void {
-    let clocks = document.querySelectorAll('.ctab-item-clock');
+    let clocks = document.querySelectorAll(".ctab-item-clock");
     if (clocks.length > 0) {
         const todayDate = new Date();
-        const timezone = CTabSettings.getTimezone();
-        const today = todayDate.toLocaleTimeString('en-US', {
-            hour: '2-digit',
-            minute: '2-digit',
-            second: '2-digit',
+        const timezone = settingsMenu.getTimezone();
+        const today = todayDate.toLocaleTimeString("en-US", {
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
             timeZone: timezone,
             hour12: false
         });

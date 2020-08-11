@@ -2,106 +2,106 @@ $break-small: 320px;
 $break-large: 1200px;
 
 :root {
-  --ctab-widget-controls-width: 60px;
-  --topbar-height: 55px;
-  --widget-border-color: #222;
-  --background-color: #fff;
+    --ctab-widget-controls-width: 60px;
+    --topbar-height: 55px;
+    --widget-border-color: #222222;
+    --background-color: #FFFFFF;
 }
 
 * {
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
 }
 
 body {
-  font-family: "DejaVu Sans Condensed", "Helvetica Neue", Helvetica, Arial, sans-serif;
-  overflow-x: hidden;
+    font-family: "DejaVu Sans Condensed", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    overflow-x: hidden;
 }
 
 button, input, optgroup, select, textarea {
-  color: inherit;
-  margin: 0;
-  font-family: inherit;
-  line-height: inherit;
+    font-family: inherit;
+    line-height: inherit;
+    margin: 0;
+    color: inherit;
 }
 
 .bold {
-  font-weight: bold;
+    font-weight: bold;
 }
 
 .note {
-  font-size: .8em;
-  font-style: italic;
+    font-size: .8em;
+    font-style: italic;
 }
 
 #background {
-  width: 100%;
-  height: 100%;
-  z-index: -1;
-  position: fixed;
-  top: 0;
-  left: 0;
-  background-color: var(--background-color);
+    position: fixed;
+    z-index: -1;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--background-color);
 }
 
 #background-color-picker {
-  background-color: var(--background-color);
+    background-color: var(--background-color);
 }
 
 #widget-border-color {
-  background-color: var(--widget-border-color);
+    background-color: var(--widget-border-color);
 }
 
 .vanilla-color-picker {
-  border: 2px solid #e5e5e5;
-  min-width: 15px;
-  width: max-content;
-  opacity: 1;
-  z-index: 6;
-  overflow: visible !important;
+    z-index: 6;
+    overflow: visible !important;
+    width: max-content;
+    min-width: 15px;
+    opacity: 1;
+    border: 2px solid #E5E5E5;
 }
 
 .settings-pane-background {
-  display: grid;
-  grid-template-columns: 20px 400px;
-  grid-template-rows: repeat(2, 30px) 50px repeat(3, 30px);
+    display: grid;
+    grid-template-columns: 20px 400px;
+    grid-template-rows: repeat(2, 30px) 50px repeat(3, 30px);
 }
 
 .setting {
-  width: 100%;
-  float: left;
-  margin-bottom: 5px;
+    float: left;
+    width: 100%;
+    margin-bottom: 5px;
 }
 
 .settings-pane {
-  top: var(--topbar-height);
-  right: 10px;
+    top: var(--topbar-height);
+    right: 10px;
 
-  grid-template-columns: 400px 420px;
+    grid-template-columns: 400px 420px;
 }
 
 #filter-menu-toggle {
-  display: var(--experimental-features-display);
+    display: var(--experimental-features-display);
 }
 
 .filter-menu-pane {
-  top: var(--topbar-height);
-  right: 10em;
+    top: var(--topbar-height);
+    right: 10em;
 
-  grid-template-columns: 100px 200px;
+    grid-template-columns: 100px 200px;
 }
 
 .filter-menu-tag-list {
-  padding: 10px;
+    padding: 10px;
 }
 
 .filter-menu-tag-list-item label input {
-  margin-right: 40px;
+    margin-right: 40px;
 }
 
 .hidden {
-  display: none !important;
+    display: none !important;
 }
 
 .grid-stack {
@@ -110,39 +110,39 @@ button, input, optgroup, select, textarea {
 
 /*Muuri styles*/
 .grid {
-  padding: 10px 0;
-  margin-top: 60px;
-  position: relative;
+    position: relative;
+    margin-top: 60px;
+    padding: 10px 0;
 }
 
 .item {
-  display: block;
-  position: absolute;
-  width: 100px;
-  height: 100px;
-  margin: 5px;
-  z-index: 1;
-  background: transparent;
-  color: #000000;
+    position: absolute;
+    z-index: 1;
+    display: block;
+    width: 100px;
+    height: 100px;
+    margin: 5px;
+    color: #000000;
+    background: transparent;
 
 
-  .muuri-item-dragging {
-    z-index: 3;
-  }
+    .muuri-item-dragging {
+        z-index: 3;
+    }
 
-  .muuri-item-releasing {
-    z-index: 2;
-  }
+    .muuri-item-releasing {
+        z-index: 2;
+    }
 
-  .muuri-item-hidden {
-    z-index: 0;
-  }
+    .muuri-item-hidden {
+        z-index: 0;
+    }
 }
 
 // Styling of the drag placeholder
 div.muuri-item-placeholder {
-  border: 2px #777 dashed;
-  border-radius: 4px;
+    border: 2px #777777 dashed;
+    border-radius: 4px;
 }
 
 
@@ -150,321 +150,332 @@ div.muuri-item-placeholder {
 
 
 .top-bar {
-  position: fixed;
-  top: 0;
-  left: 0;
-  height: var(--topbar-height);
-  width: 100%;
-  background-color: #000000;
-  z-index: 5;
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  overflow: hidden;
-  padding: 5px 0;
-
-  div {
-    float: left;
-    margin: 0 10px;
-  }
-
-  #logo1 {
-    font-size: 2em;
-
-    a {
-      color: #f5f5f5;
-      text-decoration: none;
-
-      :hover {
-        text-decoration: underline;
-      }
-
-      :visited {
-        color: #f5f5f5;
-      }
-    }
-  }
-
-  .clockdate {
-    text-align: right;
-    font-size: 1.5em;
-
-    .clock, .date {
-      color: #ffffff;
-      float: right;
-      width: 100%;
-    }
-  }
-
-  button {
-    border: 1px solid lightslategrey;
-    border-radius: 3px;
-    font-weight: bold;
+    position: fixed;
     z-index: 5;
-    margin: 10px 2px 0;
-    padding: 5px;
-  }
+    top: 0;
+    left: 0;
+    display: flex;
+    overflow: hidden;
+    align-items: flex-end;
+    justify-content: space-between;
+    width: 100%;
+    height: var(--topbar-height);
+    padding: 5px 0;
+    background-color: #000000;
 
-  .buttonBar {
-    float: left;
-    width: 300px;
+    div {
+        float: left;
+        margin: 0 10px;
+    }
+
+    #logo1 {
+        font-size: 2em;
+
+        a {
+            text-decoration: none;
+            color: #F5F5F5;
+
+            :hover {
+                text-decoration: underline;
+            }
+
+            :visited {
+                color: #F5F5F5;
+            }
+        }
+    }
+
+    .clockdate {
+        font-size: 1.5em;
+        text-align: right;
+
+        .clock, .date {
+            float: right;
+            width: 100%;
+            color: #FFFFFF;
+        }
+    }
 
     button {
-      background-color: lightblue;
+        font-weight: bold;
+        z-index: 5;
+        margin: 10px 2px 0;
+        padding: 5px;
+        border: 1px solid lightslategrey;
+        border-radius: 3px;
     }
 
-    #saveButton, #backupButton {
-      background-color: lightgreen;
+    .buttonBar {
+        float: left;
+        width: 300px;
+
+        button {
+            background-color: lightblue;
+        }
+
+        #saveButton, #backupButton {
+            background-color: lightgreen;
+        }
+
+        #clearButton {
+            background-color: lightcoral;
+        }
+
+        #debugButton, #widescreenButton {
+            background-color: yellow;
+        }
     }
 
-    #clearButton {
-      background-color: lightcoral;
+    #settings-toggle {
+        background-color: lightblue;
     }
 
-    #debugButton, #widescreenButton {
-      background-color: yellow;
+    .dev-toggle {
+        display: var(--experimental-features-display);
+        color: white;
     }
-  }
-
-  #settings-toggle {
-    background-color: lightblue;
-  }
-
-  .dev-toggle {
-    color: white;
-    display: var(--experimental-features-display);
-  }
 }
 
 .sortingDropdown {
-  padding-right: 40px;
-  cursor: pointer;
-  position: relative;
-  padding-left: 40px;
-  z-index: 4;
-  height: 40px;
-  line-height: 16px;
-  border: 2px solid #e5e5e5;
-  border-radius: 4px;
-  align-items: center;
-  margin-top: 5px;
-  display: var(--experimental-features-display);
+    line-height: 16px;
+    position: relative;
+    z-index: 4;
+    display: var(--experimental-features-display);
+    align-items: center;
+    height: 40px;
+    margin-top: 5px;
+    padding-right: 40px;
+    padding-left: 40px;
+    cursor: pointer;
+    border: 2px solid #E5E5E5;
+    border-radius: 4px;
 }
 
 .item-content {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  right: 0 !important;
-  border: 2px solid var(--widget-border-color);
-  border-radius: 4px;
+    position: relative;
+    right: 0 !important;
+    display: inline-block;
+    width: 100%;
+    height: 100%;
+    border: 2px solid var(--widget-border-color);
 
-  display: inline-block;
+    border-radius: 4px;
 
-  /*Set a barely visible text stroke so dark text on dark background is somewhat readable
-  TODO: Not sure yet if this is too ugly*/
-  -webkit-text-stroke-width: 1px;
-  -webkit-text-stroke-color: rgba(255, 255, 255, 0.2);
+    /*Set a barely visible text stroke so dark text on dark background is somewhat readable
+    TODO: Not sure yet if this is too ugly*/
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: rgba(255, 255, 255, 0.2);
 }
 
 .left {
-  float: left;
-  width: max-content;
+    float: left;
+    width: max-content;
 }
 
 .ctab-widget-body {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  text-align: center;
-  vertical-align: middle;
-  overflow: hidden;
-  padding: 5px;
-  float: left;
+    position: relative;
+    float: left;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    padding: 5px;
+    text-align: center;
 }
 
 .ctab-item-clock span {
-  width: 100%;
-  height: 100%;
-  line-height: 100%;
-  top: 0;
-  left: 0;
+    line-height: 100%;
+    width: 100%;
+    height: 100%;
 }
 
 .ctab-widget-controls {
-  height: 19px;
-  padding-left: 2px;
-  padding-bottom: 2px;
-  right: 0;
-  width: var(--ctab-widget-controls-width);
-  border-bottom: 1px solid #00000080;
-  border-left: 1px solid #00000080;
-  border-radius: 0 0 0 5px;
-  position: absolute;
-  background: rgba(0, 0, 0, .4);
-  z-index: 3;
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  grid-template-rows: 100%;
+    position: absolute;
+    z-index: 3;
+    right: 0;
+    display: grid;
+    width: var(--ctab-widget-controls-width);
+    height: 19px;
+    padding-bottom: 2px;
+    padding-left: 2px;
+    border-bottom: 1px solid #00000080;
+    border-left: 1px solid #00000080;
+    border-radius: 0 0 0 5px;
+    background: rgba(0, 0, 0, .4);
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: 100%;
 
-  div {
-    margin: 2px;
-  }
+    div {
+        margin: 2px;
+    }
 
-  .widget-control-picker {
-    width: 90%;
-    height: 96%;
-    max-height: 20px;
-    line-height: 15px;
-    border-radius: 3px;
-    border-width: 1px;
-  }
+    .widget-control-picker {
+        line-height: 15px;
+        width: 90%;
+        height: 96%;
+        max-height: 20px;
+        border-width: 1px;
+        border-radius: 3px;
+    }
+
+    .deletebutton {
+        button {
+            line-height: 0;
+            vertical-align: middle;
+            padding: 0;
+            border: 0;
+        }
+    }
 }
 
 .ctab-widget-drag-handle {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 16px;
-  height: 17px;
-  margin: 3px;
-  line-height: 11px;
-  z-index: 3;
-  cursor: grab;
-
-  :active {
-    cursor: grabbing;
-  }
-
-  span {
+    line-height: 11px;
     position: absolute;
-    color: black;
-    font-weight: bold;
-    background-color: rgba(255, 255, 255, 0.5);
-  }
+    z-index: 3;
+    top: 0;
+    left: 0;
+    width: 16px;
+    height: 17px;
+    margin: 3px;
+    padding: 8px;
+    cursor: grab;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 3px;
+
+    :active {
+        cursor: grabbing;
+    }
+
+    span {
+        font-weight: bold;
+        position: absolute;
+        color: black;
+        padding: 0;
+        width: 10px;
+        height: 11px;
+        line-height: 100%;
+    }
 
 }
 
 /*Invisible overlay containing the link*/
 .ctab-widget-link {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  z-index: 1;
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
 }
 
 /*DEBUG STYLES*/
 #devConfig #configField #configFieldInput {
-  width: calc(100% - 15px);
-  resize: none;
+    width: calc(100% - 15px);
+    resize: none;
 }
 
 .others {
-  border: 1px solid dimgray;
-  border-radius: 3px;
-  background-color: rgba(255, 255, 255, 0.5);
-  max-width: 80%;
-  z-index: 6;
+    z-index: 6;
+    max-width: 80%;
+    border: 1px solid dimgray;
+    border-radius: 3px;
+    background-color: rgba(255, 255, 255, 0.5);
 }
 
 .addButton {
-  position: fixed;
-  bottom: 25px;
-  right: 25px;
-  width: 70px;
-  height: 70px;
-  background: rgba(255, 0, 0, 0.8);
-  border: 2px solid #ff0000;
-  border-radius: 50%;
-  z-index: 4;
+    position: fixed;
+    z-index: 4;
+    right: 25px;
+    bottom: 25px;
+    width: 70px;
+    height: 70px;
+    border: 2px solid #FF0000;
+    border-radius: 50%;
+    background: rgba(255, 0, 0, 0.8);
 }
 
 .add-pane {
-  bottom: 25px;
-  right: 25px;
+    right: 25px;
+    bottom: 25px;
 
-  grid-template-columns: 120px 150px;
-  grid-template-rows: repeat(2, 20px);
+    grid-template-columns: 120px 150px;
+    grid-template-rows: repeat(2, 20px);
 }
 
 
 .pane {
-  display: grid;
-  width: min-content;
-  position: fixed;
-  padding: 5px;
-  border: 1px solid #ff0011;
-  border-radius: 3px;
-  background-color: rgba(255, 255, 255, 0.9);
-  z-index: 6;
+    position: fixed;
+    z-index: 6;
+    display: grid;
+    width: min-content;
+    padding: 5px;
+    border: 1px solid #FF0011;
+    border-radius: 3px;
+    background-color: rgba(255, 255, 255, 0.9);
 
-  label, button {
-    display: inline-block;
-    font-weight: bolder;
-    vertical-align: middle;
-    line-height: 23px;
-  }
+    label, button {
+        font-weight: bolder;
+        line-height: 23px;
+        display: inline-block;
+        vertical-align: middle;
+    }
 }
 
 #modal-backdrop {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 6;
-  background-color: rgba(123, 123, 123, 0.6);
+    position: fixed;
+    z-index: 6;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(123, 123, 123, 0.6);
 }
 
 /*The plus sign in the add button*/
 .addSign {
-  position: absolute;
-  top: calc(50% - 3px);
-  left: calc(50% - 15px);
-  height: 6px;
-  width: 30px;
-  border-radius: 3px;
-  background: rgba(255, 255, 255, 1);
+    position: absolute;
+    top: calc(50% - 3px);
+    left: calc(50% - 15px);
+    width: 30px;
+    height: 6px;
+    border-radius: 3px;
+    background: rgba(255, 255, 255, 1);
 }
 
 .addSign:before {
-  content: '';
-  z-index: -1;
-  position: absolute;
-  height: 6px;
-  width: 30px;
-  border-radius: 3px;
-  background: white;
-  transform: rotate(90deg);
+    position: absolute;
+    z-index: -1;
+    width: 30px;
+    height: 6px;
+    content: '';
+    transform: rotate(90deg);
+    border-radius: 3px;
+    background: white;
 }
 
 .ctab-item-note {
-  font-size: 1em;
-  text-align: left;
-  word-wrap: break-word;
-  vertical-align: top;
+    font-size: 1em;
+    text-align: left;
+    word-wrap: break-word;
 }
 
 .ctab-item-note textarea {
-  width: 100%;
-  height: 100%;
-  resize: none;
-  overflow: hidden;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    resize: none;
 }
 
 #toast {
-  min-width: 250px;
-  margin-left: -125px; /* half of min-width*/
-  background-color: #333333;
-  border-radius: 5px;
-  border: 1px solid white;
-  color: #ffffff;
-  text-align: center;
-  padding: 16px;
-  position: fixed;
-  z-index: 10;
-  left: 50%;
-  top: 30px;
+    position: fixed;
+    z-index: 10;
+    top: 30px;
+    left: 50%;
+    min-width: 250px;
+    margin-left: -125px; /* half of min-width*/
+    padding: 16px;
+    text-align: center;
+    color: #FFFFFF;
+    border: 1px solid white;
+    border-radius: 5px;
+    background-color: #333333;
 }

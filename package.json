@@ -28,15 +28,16 @@
   },
   "dependencies": {
     "big-text.js-patched": "^1.0.1",
-    "muuri": "^0.8.0",
+    "muuri": "^0.9.1",
+    "rome": "^10.0.3-beta",
     "streamsaver": "2.0.4",
     "vanilla-picker": "^2.10.1"
   },
   "devDependencies": {
-    "@types/node": "^14.0.11",
-    "parcel-bundler": "^1.12.3",
+    "@types/node": "^14.0.27",
+    "parcel-bundler": "^1.12.4",
     "parcel-plugin-web-extension": "^1.6.1",
-    "sass": "^1.26.8",
+    "sass": "^1.26.10",
     "typescript": "^3.9.5"
   },
   "private": true

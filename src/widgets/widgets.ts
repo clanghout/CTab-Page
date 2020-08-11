@@ -1,14 +1,14 @@
 import {
     BaseSettings,
-    CTabWidget,
+    WidgetElement,
     CTabWidgetSerialized,
     LinkSettings,
     TitleSettings,
     WeatherSettings,
     TitleWidget
-} from "./cTabWidgetTypeBase";
+} from "./widgetElement";
 
-export class WeatherWidget extends CTabWidget {
+export class WeatherWidget extends WidgetElement {
     constructor(public id: string, public settings: WeatherSettings, public backgroundColor: string, public textColor: string) {
         super(id, settings, backgroundColor, textColor);
     }
@@ -45,12 +45,12 @@ export class LinkWidget extends TitleWidget {
     };
 
     private getTag = () => `<span style="line-height: 100%;">${this.settings.title}</span>
-<a href="${this.settings.url}" ${this.settings.newTab ? 'target="_blank"' : ""} id="${this.settings.title}">
+<a href="${this.settings.url}" ${this.settings.newTab ? 'target="_blank" rel="noopener noreferrer"' : ""} id="${this.settings.title}">
     <span class="ctab-widget-link"></span>
 </a>`;
 }
 
-export class ClockWidget extends CTabWidget {
+export class ClockWidget extends WidgetElement {
     constructor(public id: string, public settings: BaseSettings, public backgroundColor: string, public textColor: string) {
         super(id, settings, backgroundColor, textColor);
     }
@@ -61,7 +61,7 @@ export class ClockWidget extends CTabWidget {
 
 }
 
-export class BuienradarWidget extends CTabWidget {
+export class BuienradarWidget extends WidgetElement {
     constructor(public id: string, public settings: BaseSettings, public backgroundColor: string, public textColor: string) {
         super(id, settings, backgroundColor, textColor);
     }

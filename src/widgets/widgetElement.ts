@@ -1,8 +1,9 @@
-import * as Helper from './cTabWidgetTypeHelper';
+import * as widgetTypes from "./widgets";
 
-export abstract class CTabWidget {
+export abstract class WidgetElement {
 
     abstract getTemplateCore: () => string;
+
     getType = this.constructor.name.replace("cTabWidgetType_", "");
 
     constructor(public id: string, public settings: BaseSettings, public backgroundColor: string, public textColor: string) {
@@ -30,13 +31,16 @@ ${this.getHtmlControls()}
     };
 
     getConfig = (): CTabWidgetSerialized => {
+        let type = Object.entries(widgetTypes).find(([_, w]) => {
+            return w.name == this.constructor.name.replace("cTabWidgetType_", "");
+        })![0];
+
         return {
             settings: this.settings,
             backgroundColor: this.backgroundColor,
             textColor: this.textColor,
             id: this.id,
-            type: Helper.lookupConstructorName(this.constructor.name.replace("cTabWidgetType_", ""))
-            // type: this.constructor.name.replace("cTabWidgetType_", "")
+            type: type,
         };
     };
 
@@ -52,19 +56,19 @@ ${this.getHtmlControls()}
                     <div class="vanilla-color-picker widget-control-picker" id="${this.id}-text-color" style="color:var(--${this.id}-text-color); border-color: var(--${this.id}-text-color); background-color: rgba(255,255,255,.8)">tc</div>
                     <div class="vanilla-color-picker widget-control-picker" id="${this.id}-background-color" style="background-color: var(--${this.id}-background-color); border-color: var(--${this.id}-background-color);">bg</div>
                     <div class="deletebutton">
-                        <button id="delete-${this.id}" style="padding: 0; border: 0; background: transparent;">❌</button>
+                        <button id="delete-${this.id}">❌</button>
                     </div>
                 </div>`;
 }
 
-export abstract class TitleWidget extends CTabWidget {
+export abstract class TitleWidget extends WidgetElement {
     protected constructor(public id: string, public settings: TitleSettings, public backgroundColor: string, public textColor: string) {
         super(id, settings, backgroundColor, textColor);
-    };
+    }
 
     getConfig = (): CTabWidgetSerialized => {
 
-        this.settings.title = (document.querySelector('#note-' + this.id) as HTMLTextAreaElement).value.replace(/\s\s/g, '\s');
+        this.settings.title = (document.querySelector(`#note-${this.id}`) as HTMLTextAreaElement).value.replace(/\s\s/g, "\s");
         return {
             settings: this.settings,
             backgroundColor: this.backgroundColor,
@@ -80,7 +84,7 @@ export interface BaseSettings {
     height: number;
 
     // Tags allow users to categorize their widgets
-    tags: string[];
+    tags: Array<string>;
 
     // value used to enumerate where a cell should be ordered on the grid as decided by a user (after dragging
     // and dropping a cell)
@@ -96,7 +100,7 @@ export interface CTabWidgetSerialized {
     type: string;
 }
 
-// Settings can differ per widget type, since the `cTabWidgetType.ts` file is used only for the widget classes itself
+// Settings can differ per widget type, since the `widgets.ts` file is used only for the widget classes itself
 // the specific settings are defined here.
 export interface WeatherSettings extends BaseSettings {
     city: string;
