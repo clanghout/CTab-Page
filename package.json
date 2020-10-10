@@ -28,10 +28,12 @@
   },
   "dependencies": {
     "big-text.js-patched": "^1.0.1",
+    "lit-element": "^2.4.0",
     "muuri": "^0.9.3",
     "rome": "^10.0.4-beta",
     "streamsaver": "2.0.4",
-    "vanilla-picker": "^2.10.1"
+    "vanilla-picker": "^2.10.1",
+    "web-animations-js": "^2.3.2"
   },
   "devDependencies": {
     "@types/node": "^14.11.2",

@@ -1,6 +1,5 @@
 import { BaseSettings, CTabWidgetSerialized, LinkSettings, TitleSettings } from "./widgets/widgetElement";
 import * as widgetTypes from "./widgets/widgets";
-import settingsMenu from "./controls/settingsMenu";
 
 // @ts-ignore streamsaver is no module, but adds to global scope
 import streamsaver from "streamsaver";
@@ -14,11 +13,6 @@ windowWrapper.browser = (() => {
 
 // The toast box that can be used to show a message to the user.
 const toastBox: HTMLElement | null = document.querySelector("#toast");
-const today = new Date();
-const weekdays = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
-const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-const dateField: HTMLElement = document.querySelector("#currDate") as HTMLElement;
-dateField.innerText = `${weekdays[today.getDay()]} ${today.getDate()} ${months[today.getMonth()]} ${today.getFullYear()}`;
 
 function showToast(message: string): void {
     if (toastBox !== null) {
