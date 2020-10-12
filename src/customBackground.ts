@@ -8,8 +8,11 @@ export class CustomBackground extends LitElement {
     }
 
     static get styles() {
-        const backgroundColor = JSON.parse(window.localStorage?.getItem('CTab-settings') ?? "")?.backgroundColor ?? 'black';
-
+        let backgroundColor = 'black';
+        try {
+            backgroundColor = JSON.parse(window.localStorage?.getItem('CTab-settings') ?? "")?.backgroundColor;
+        } catch(e) {
+        }
         return css`       
             #background {
                 position: fixed;
