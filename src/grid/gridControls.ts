@@ -8,7 +8,6 @@ import {
     TitleSettings,
 } from "../widgets/widgetElement";
 import vanillaPicker from "vanilla-picker";
-import settingsMenu from "../controls/settingsMenu";
 import * as weatherEl from "../controls/weatherControls";
 import * as widgetTypes from "../widgets/widgets";
 import bigText from "big-text.js-patched";
@@ -54,8 +53,6 @@ export class CTabGrid {
             // service.saveGrid(); // Disabled to enable dev edit | possibly reenable with an autosave option in settings
         };
 
-        // Start clocks
-        startTime();
         document.querySelectorAll(".ctab-item-note").forEach(note => {
             note.addEventListener("change", this.noteChanged);
             note.addEventListener("keyup", this.noteChanged);
@@ -430,25 +427,6 @@ export class CTabGrid {
         return this.widgets.getWidgetElements().map(widget => widget.getConfig());
     }
 
-}
-
-// Independent functions
-// From w3 to add clock
-function startTime(): void {
-    let clocks = document.querySelectorAll(".ctab-item-clock");
-    if (clocks.length > 0) {
-        const todayDate = new Date();
-        const timezone = settingsMenu.getTimezone();
-        const today = todayDate.toLocaleTimeString("en-US", {
-            hour: "2-digit",
-            minute: "2-digit",
-            second: "2-digit",
-            timeZone: timezone,
-            hour12: false
-        });
-        clocks.forEach(a => a.children[0].innerHTML = today);
-        setTimeout(startTime, 500);
-    }
 }
 
 export default CTabGrid;
