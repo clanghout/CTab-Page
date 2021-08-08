@@ -1,5 +1,14 @@
 # CTab-Page
 
+## move from master to main
+run:
+```
+git branch -m master main
+git fetch origin
+git branch -u origin/main main
+git remote set-head origin -a
+```
+
 :warning: Reminder to back up grid config regularly if it is important to you.
 
 :warning: Refresh extension in chrome://extensions/ after editing manifest.json
