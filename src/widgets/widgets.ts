@@ -9,8 +9,8 @@ import {
 } from "./widgetElement";
 
 export class WeatherWidget extends WidgetElement {
-    constructor(public id: string, public settings: WeatherSettings, public backgroundColor: string, public textColor: string) {
-        super(id, settings, backgroundColor, textColor);
+    constructor(public muuriId: number, public settings: WeatherSettings, public backgroundColor: string, public textColor: string) {
+        super(muuriId, settings, backgroundColor, textColor);
     }
 
     getTemplateCore = () => {
@@ -24,8 +24,8 @@ export class WeatherWidget extends WidgetElement {
 }
 
 export class LinkWidget extends TitleWidget {
-    constructor(public id: string, public settings: LinkSettings, public backgroundColor: string, public textColor: string) {
-        super(id, settings, backgroundColor, textColor);
+    constructor(public muuriId: number, public settings: LinkSettings, public backgroundColor: string, public textColor: string) {
+        super(muuriId, settings, backgroundColor, textColor);
     }
 
     getTemplateCore = () => {
@@ -39,7 +39,7 @@ export class LinkWidget extends TitleWidget {
             settings: this.settings,
             backgroundColor: this.backgroundColor,
             textColor: this.textColor,
-            id: this.id,
+            id: this.muuriId,
             type: this.constructor.name.replace("cTabWidgetType_", "")
         };
     };
@@ -51,8 +51,8 @@ export class LinkWidget extends TitleWidget {
 }
 
 export class ClockWidget extends WidgetElement {
-    constructor(public id: string, public settings: BaseSettings, public backgroundColor: string, public textColor: string) {
-        super(id, settings, backgroundColor, textColor);
+    constructor(public muuriId: number, public settings: BaseSettings, public backgroundColor: string, public textColor: string) {
+        super(muuriId, settings, backgroundColor, textColor);
     }
 
     getTemplateCore = () => {
@@ -62,8 +62,8 @@ export class ClockWidget extends WidgetElement {
 }
 
 export class BuienradarWidget extends WidgetElement {
-    constructor(public id: string, public settings: BaseSettings, public backgroundColor: string, public textColor: string) {
-        super(id, settings, backgroundColor, textColor);
+    constructor(public muuriId: number, public settings: BaseSettings, public backgroundColor: string, public textColor: string) {
+        super(muuriId, settings, backgroundColor, textColor);
     }
 
     getTemplateCore = () => {
@@ -74,8 +74,8 @@ export class BuienradarWidget extends WidgetElement {
 }
 
 export class NoteWidget extends TitleWidget {
-    constructor(public id: string, public settings: TitleSettings, public backgroundColor: string, public textColor: string) {
-        super(id, settings, backgroundColor, textColor);
+    constructor(public muuriId: number, public settings: TitleSettings, public backgroundColor: string, public textColor: string) {
+        super(muuriId, settings, backgroundColor, textColor);
     }
 
     getTemplateCore = () => {

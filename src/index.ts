@@ -1,6 +1,8 @@
 import { BaseSettings, CTabWidgetSerialized, LinkSettings, TitleSettings } from "./widgets/widgetElement";
 import * as widgetTypes from "./widgets/widgets";
 import settingsMenu from "./controls/settingsMenu";
+//@ts-ignore
+import "./style.scss";
 
 // @ts-ignore streamsaver is no module, but adds to global scope
 import streamsaver from "streamsaver";

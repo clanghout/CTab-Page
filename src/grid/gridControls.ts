@@ -12,9 +12,9 @@ import settingsMenu from "../controls/settingsMenu";
 import * as weatherEl from "../controls/weatherControls";
 import * as widgetTypes from "../widgets/widgets";
 import bigText from "big-text.js-patched";
-import {GridWrapper} from "./gridWrapper";
+import { GridWrapper } from "./gridWrapper";
 import muuri from "muuri";
-import {Widget, WidgetCollection} from "../widgets/widgetCollection";
+import { Widget, WidgetCollection } from "../widgets/widgetCollection";
 import TagFilterMenu from "../controls/filterMenu";
 
 const availableWidgetTypes = widgetTypes as any;
@@ -107,7 +107,7 @@ export class CTabGrid {
                 controlDragHandle.classList.add("hidden");
             }
         });
-        let addedGridItems = this.grid.add(itemElem.firstElementChild!, {index: widget.id});
+        let addedGridItems = this.grid.add(itemElem.firstElementChild as HTMLDivElement, { index: widget.muuriId });
 
         new vanillaPicker({
             parent: document.getElementById(`${widget.id}-text-color`)!,
@@ -166,9 +166,9 @@ export class CTabGrid {
             widget.settings.height = widget.settings.height > 1 ? widget.settings.height : 2;
             widget.settings.city = widget.settings.city || "delft";
             setTimeout(() => {
-                weatherEl.addWeatherListener(widget, widget.id);
+                weatherEl.addWeatherListener(widget, widget.muuriId);
                 (document.getElementById(`${widget.id}-cityInput`) as HTMLInputElement).value = widget.settings.city;
-                weatherEl.getWeather(widget.id, widget.settings.city);
+                weatherEl.getWeather(widget.muuriId, widget.settings.city);
             }, 100);
         }
 
@@ -194,7 +194,7 @@ export class CTabGrid {
             }
 
         } catch (e) {
-            console.log(widget.id, widget.getType, e);
+            console.log(widget.muuriId, widget.getType, e);
         }
 
         this.widgets.push(new Widget(addedGridItems[0], widget));
@@ -235,28 +235,28 @@ export class CTabGrid {
                         settings: fbSetting,
                         backgroundColor: "rgba(67,146,241,0.5)",
                         textColor: "rgba(255,255,255,1)",
-                        id: "i1559213769276",
+                        id: 1559213769276,
                         type: "LinkWidget"
                     },
                     {
                         settings: twSetting,
                         backgroundColor: "rgba(67,228,247,0.5)"
                         , textColor: "rgba(255,255,255,1)",
-                        id: "i1559213802713",
+                        id: 1559213802713,
                         type: "LinkWidget"
                     },
                     {
                         settings: noteSetting,
                         backgroundColor: "rgba(255,255,255,0.5)",
-                        id: "i1559214281406",
+                        id: 1559214281406,
                         textColor: "rgba(0,0,0,1)",
                         type: "NoteWidget"
                     },
                     {
-                        settings: {width: 1, height: 1, tags: [], orderIndex: Number.MAX_SAFE_INTEGER},
+                        settings: { width: 1, height: 1, tags: [], orderIndex: Number.MAX_SAFE_INTEGER },
                         backgroundColor: "rgba(255,255,255,0.5)",
                         textColor: "rgba(0,0,0,1)",
-                        id: "i1559060644840",
+                        id: 1559060644840,
                         type: "ClockWidget"
                     },
                 ];
@@ -295,7 +295,7 @@ export class CTabGrid {
         let item = this.widgets.removeById(id);
 
         if (item) {
-            this.grid.remove([item], {removeElements: true, layout: true});
+            this.grid.remove([item], { removeElements: true, layout: true });
             this.dirty = true;
         }
     }
@@ -340,7 +340,7 @@ export class CTabGrid {
     private initOrderingHook() {
         let self = this;
 
-        this.grid.on("dragEnd", function(_item, _event) {
+        this.grid.on("dragEnd", function (_item, _event) {
             self.updateWidgetOrderingData();
         });
     }
@@ -358,7 +358,7 @@ export class CTabGrid {
         // add user ordering data
         this.grid.getItems().forEach((gridItem) => {
             let widgetBody = gridItem.getElement()!.querySelector(".ctab-widget-body");
-            let widgetId = widgetBody!.id;
+            let widgetId = (widgetBody!.id);
             let matchingWidget = self.widgets.getWidgetForId(widgetId);
 
             if (matchingWidget) {

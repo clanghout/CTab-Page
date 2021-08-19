@@ -63,7 +63,7 @@ let tempFormat = (data: OpenWeatherMapData): string => {
     return "invalid key";
 };
 
-export function getWeather(id: string, city: string) {
+export function getWeather(id: number, city: string) {
     let weatherOutputElem: HTMLElement = document.getElementById(`${id}-output`)!;
     let weatherTimeout = settingsMenu.getWeatherTimeoutValue() || defaultWeatherTimeout;
     if(
@@ -95,7 +95,7 @@ export function getWeather(id: string, city: string) {
 }
 
 // Export this function
-export function addWeatherListener(widget: WeatherWidget, id: string): void {
+export function addWeatherListener(widget: WeatherWidget, id: number): void {
     const cityButton = document.getElementById(`${id}-cityInputButton`);
     if(cityButton) {
         cityButton.addEventListener("click", () => {

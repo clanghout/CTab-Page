@@ -2,14 +2,22 @@ import * as widgetTypes from "./widgets";
 
 export abstract class WidgetElement {
 
+    public id: string;
+
     abstract getTemplateCore: () => string;
 
     getType = this.constructor.name.replace("cTabWidgetType_", "");
 
-    constructor(public id: string, public settings: BaseSettings, public backgroundColor: string, public textColor: string) {
+    constructor(
+        public muuriId: number,
+        public settings: BaseSettings,
+        public backgroundColor: string,
+        public textColor: string
+    ) {
         if (!settings.tags) {
             this.settings.tags = []
         }
+        this.id = `${muuriId}`
     }
 
     widgetTemplate: () => string = () => {
@@ -17,16 +25,17 @@ export abstract class WidgetElement {
 
         let template =
             `<div class="item he${this.settings.height} w${this.settings.width}" data-tags="${joinedTags}">
-                        <div class="item-content" ${this.colorInfo()}>
-${this.getHtmlControls()}
-<div class="ctab-widget-drag-handle hidden" id="drag-handle-${this.id}">
-<span style="top:0; left: 0;">&#8598</span>
-<span style="top:0; right: 0;">&#8599</span>
-<span style="bottom:0; right: 0;">&#8600</span>
-<span style="bottom:0; left: 0;">&#8601</span>
-</div>`;
-        template += this.getTemplateCore();
-        template += `</div></div>`;
+                <div class="item-content" ${this.colorInfo()}>
+                    ${this.getHtmlControls()}
+                    <div class="ctab-widget-drag-handle hidden" id="drag-handle-${this.id}">
+                        <span style="top:0; left: 0;">&#8598</span>
+                        <span style="top:0; right: 0;">&#8599</span>
+                        <span style="bottom:0; right: 0;">&#8600</span>
+                        <span style="bottom:0; left: 0;">&#8601</span>
+                    </div>
+                    ${this.getTemplateCore()}
+                </div>
+            </div>`;
         return template;
     };
 
@@ -39,7 +48,7 @@ ${this.getHtmlControls()}
             settings: this.settings,
             backgroundColor: this.backgroundColor,
             textColor: this.textColor,
-            id: this.id,
+            id: this.muuriId,
             type: type,
         };
     };
@@ -62,17 +71,17 @@ ${this.getHtmlControls()}
 }
 
 export abstract class TitleWidget extends WidgetElement {
-    protected constructor(public id: string, public settings: TitleSettings, public backgroundColor: string, public textColor: string) {
-        super(id, settings, backgroundColor, textColor);
+    protected constructor(public muuriId: number, public settings: TitleSettings, public backgroundColor: string, public textColor: string) {
+        super(muuriId, settings, backgroundColor, textColor);
     }
 
     getConfig = (): CTabWidgetSerialized => {
 
-        this.settings.title = (document.querySelector(`#note-${this.id}`) as HTMLTextAreaElement).value.replace(/\s\s/g, "\s");
+        this.settings.title = (document.querySelector(`#note-${this.muuriId}`) as HTMLTextAreaElement).value.replace(/\s\s/g, "\s");
         return {
             settings: this.settings,
             backgroundColor: this.backgroundColor,
-            id: this.id,
+            id: this.muuriId,
             textColor: this.textColor,
             type: this.constructor.name.replace("cTabWidgetType_", "")
         };
@@ -93,7 +102,7 @@ export interface BaseSettings {
 
 // Serialized version of a CTab Widget
 export interface CTabWidgetSerialized {
-    id: string;
+    id: number;
     settings: BaseSettings;
     backgroundColor: string;
     textColor: string;

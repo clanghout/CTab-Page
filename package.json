@@ -17,13 +17,10 @@
   "files": [
     "dist/"
   ],
-  "main": "dist/index.js",
-  "man": "README.md",
   "scripts": {
     "dev": "parcel src/index.html",
-    "start": "rm -rf dist/ && mkdir dist && node scripts/createSizeStyles.js && parcel src/index.html",
-    "build": "rm -rf dist/ && mkdir dist && node scripts/createSizeStyles.js && parcel build src/manifest.json --dist-dir dist",
-    "clean": "rm -rf dist/ && mkdir dist",
+    "start": "node scripts/createSizeStyles.js && webpack --mode=development",
+    "build": "node scripts/createSizeStyles.js && webpack --mode=production",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -34,12 +31,19 @@
     "vanilla-picker": "^2.11.2"
   },
   "devDependencies": {
-    "@parcel/transformer-sass": "2.0.0-beta.2",
-    "@types/node": "^16.4.7",
-    "parcel": "^2.0.0-beta.2",
-    "parcel-plugin-web-extension-2": "^2.0.3",
-    "sass": "^1.36.0",
-    "typescript": "^4.3.5"
+    "@types/node": "^16.6.1",
+    "css-loader": "^6.2.0",
+    "file-loader": "^6.2.0",
+    "mini-css-extract-plugin": "^2.2.0",
+    "sass": "^1.37.5",
+    "sass-loader": "^12.1.0",
+    "style-loader": "^3.2.1",
+    "ts-loader": "^9.2.5",
+    "typescript": "^4.3.5",
+    "webpack": "^5.50.0",
+    "webpack-cli": "^4.7.2",
+    "webpack-dev-server": "^3.11.2",
+    "webpack-extension-manifest-plugin": "^0.8.0"
   },
   "private": true
 }
