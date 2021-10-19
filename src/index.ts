@@ -4,6 +4,7 @@ import * as widgetTypes from "./widgets/widgets";
 // @ts-ignore streamsaver is no module, but adds to global scope
 import streamsaver from "streamsaver";
 import gridControls from "./grid/gridControls";
+import settingsPane from "./topBar/settingsPane/settings-pane";
 
 let windowWrapper = window as any;
 windowWrapper.browser = (() => {
@@ -114,7 +115,7 @@ function widgetTypeFieldVisibilityControl(showTitle: boolean, showUrl: boolean):
 
 // set css property to show or hide experimental features
 document.documentElement.style.setProperty("--experimental-features-display",
-    settingsMenu.getExperimentalFeatures() ? "initial" : "none");
+    settingsPane.getExperimentalFeatures() ? "initial" : "none");
 
 widgetTypeFieldVisibilityControl(false, false);
 
@@ -324,7 +325,7 @@ try {
 
         // If user checks the disableAddWidgetOnBookmark setting, then we don't want to add a bookmark.
         // Hence, if it is not checked, we do want to add a bookmark.
-        if (!settingsMenu.getAddWidgetOnBookmarkIsDisabled()) {
+        if (!settingsPane.getAddWidgetOnBookmarkIsDisabled()) {
             cTabGrid.createWidget("LinkWidget", {
                 width: 1,
                 height: 1,

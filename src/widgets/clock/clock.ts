@@ -1,4 +1,5 @@
 import { css, customElement, html, internalProperty, LitElement, property } from "lit-element";
+import bigText from "big-text.js-patched";
 
 @customElement('clock-element')
 export class Clock extends LitElement {
@@ -9,6 +10,9 @@ export class Clock extends LitElement {
 
     @property({attribute: "show-date", type: Boolean})
     showDate = false;
+
+    @property({attribute: "id", type: String})
+    id = '';
 
     @internalProperty()
     private _currentTime: string = "";
@@ -26,6 +30,13 @@ export class Clock extends LitElement {
     constructor() {
         super();
         this.startTime();
+        if(this.id) {
+            bigText(`#${this.id} > span`, {
+                maximumFontSize: 36,
+                limitingDimension: "both",
+                verticalAlign: "center"
+            })
+        }
     }
 
     private startTime(): void {
@@ -49,8 +60,8 @@ export class Clock extends LitElement {
     }
 
     render() {
-        return html`<div class="clock">
-                ${this.currentTime} <br />
+        return html`<div class="clock" id="${this.id}">
+                <span>${this.currentTime}</span> <br />
                 ${this.showDate ? this.date() : ""}
             </div>`;
     }

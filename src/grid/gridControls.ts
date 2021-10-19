@@ -15,6 +15,7 @@ import {GridWrapper} from "./gridWrapper";
 import muuri from "muuri";
 import {Widget, WidgetCollection} from "../widgets/widgetCollection";
 import TagFilterMenu from "../controls/filterMenu";
+import settingsPane from "../topBar/settingsPane/settings-pane";
 
 const availableWidgetTypes = widgetTypes as any;
 
@@ -35,7 +36,7 @@ export class CTabGrid {
     public filterMenu: TagFilterMenu;
 
     constructor() {
-        settingsMenu.initialize();
+        settingsPane.initialize();
         this.grid = new GridWrapper(".grid").grid;
         this.loadModel();
 
@@ -46,7 +47,7 @@ export class CTabGrid {
         window.onbeforeunload = () => {
             // loosely implemented dirty state (did not care much before, dirty in the probability of change)
             // so an additional check is added as well comparing the current state to the saved state
-            if (this.hasChanges() && settingsMenu.getShowUnsavedWarning()) {
+            if (this.hasChanges() && settingsPane.getShowUnsavedWarning()) {
                 // You have unsaved changes on this page. Do you want to leave this page and discard your changes or stay on this page?
                 return "";
             }
@@ -71,7 +72,7 @@ export class CTabGrid {
     // setting the body of the widget,
     // adding the control buttons to widgets,
     // and adapting the font size of the text using bigText
-    public addWidgetToGrid(widget: WidgetElement): void {
+    private addWidgetToGrid(widget: WidgetElement): void {
         let itemElem = document.createElement("div");
         itemElem.innerHTML = widget.widgetTemplate();
 
@@ -234,7 +235,43 @@ export class CTabGrid {
                         textColor: "rgba(255,255,255,1)",
                         id: "i1559213769276",
                         type: "LinkWidget"
-                    },
+                    }, {
+                    settings: fbSetting,
+                    backgroundColor: "rgba(67,146,241,0.5)",
+                    textColor: "rgba(255,255,255,1)",
+                    id: "i1559213769276",
+                    type: "LinkWidget"
+                }, {
+                    settings: fbSetting,
+                    backgroundColor: "rgba(67,146,241,0.5)",
+                    textColor: "rgba(255,255,255,1)",
+                    id: "i1559213769276",
+                    type: "LinkWidget"
+                }, {
+                    settings: fbSetting,
+                    backgroundColor: "rgba(67,146,241,0.5)",
+                    textColor: "rgba(255,255,255,1)",
+                    id: "i1559213769276",
+                    type: "LinkWidget"
+                }, {
+                    settings: fbSetting,
+                    backgroundColor: "rgba(67,146,241,0.5)",
+                    textColor: "rgba(255,255,255,1)",
+                    id: "i1559213769276",
+                    type: "LinkWidget"
+                }, {
+                    settings: fbSetting,
+                    backgroundColor: "rgba(67,146,241,0.5)",
+                    textColor: "rgba(255,255,255,1)",
+                    id: "i1559213769276",
+                    type: "LinkWidget"
+                }, {
+                    settings: fbSetting,
+                    backgroundColor: "rgba(67,146,241,0.5)",
+                    textColor: "rgba(255,255,255,1)",
+                    id: "i1559213769276",
+                    type: "LinkWidget"
+                },
                     {
                         settings: twSetting,
                         backgroundColor: "rgba(67,228,247,0.5)"
@@ -263,7 +300,7 @@ export class CTabGrid {
             // what if widget does not have a type
             try {
                 if (widget.type === "LinkWidget") {
-                    (widget.settings as LinkSettings).newTab = settingsMenu.getNewTab();
+                    (widget.settings as LinkSettings).newTab = settingsPane.getNewTab();
                 }
                 this.addWidgetToGrid(new availableWidgetTypes[widget.type](widget.id, widget.settings, widget.backgroundColor, widget.textColor));
             } catch (e) {

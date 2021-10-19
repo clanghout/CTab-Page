@@ -1,8 +1,8 @@
 import { customElement, html, LitElement, property } from "lit-element";
-import vanillaPicker from "../../../typings/vanilla-picker";
+import vanillaPicker from "vanilla-picker";
 
 @customElement('settings-pane')
-export class SettingsPane extends LitElement {
+export default class SettingsPane extends LitElement {
     // Declare observed properties
     @property()
     adjective = 'awesome';
