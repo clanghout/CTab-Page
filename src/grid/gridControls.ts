@@ -105,7 +105,7 @@ export class CTabGrid {
                 controlDragHandle.classList.add("hidden");
             }
         });
-        let addedGridItems = this.grid.add(itemElem.firstElementChild!, {index: widget.id});
+        let addedGridItem = this.grid.add(itemElem.firstElementChild! as HTMLElement, {index: widget.id})[0];
 
         new vanillaPicker({
             parent: document.getElementById(`${widget.id}-text-color`)!,
@@ -195,7 +195,7 @@ export class CTabGrid {
             console.log(widget.id, widget.getType, e);
         }
 
-        this.widgets.push(new Widget(addedGridItems[0], widget));
+        this.widgets.push(new Widget(addedGridItem, widget));
     }
 
     public loadModel(): void {

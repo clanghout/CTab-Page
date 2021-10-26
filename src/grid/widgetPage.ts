@@ -2,7 +2,7 @@ import { css, CSSResult, customElement, html, LitElement, property } from 'lit-e
 import muuri, { GridOptions } from "muuri";
 
 type WidgetType = {
-    id: string,
+    id: number,
     type: string,
     width: number,
     height: number,
@@ -21,7 +21,7 @@ export class WidgetPage extends LitElement {
 
     @property({attribute: false})
     private _widgets: WidgetType[] = [{
-        id: "i1",
+        id: 1,
         type: "linkWidget",
         width: 1,
         height: 1,
@@ -30,7 +30,7 @@ export class WidgetPage extends LitElement {
         tags: ["socials"],
         orderIndex: Number.MAX_SAFE_INTEGER - 2
     }, {
-        id: "i2",
+        id: 2,
         type: "linkWidget",
         width: 1,
         height: 1,
@@ -39,7 +39,7 @@ export class WidgetPage extends LitElement {
         tags: ["socials"],
         orderIndex: Number.MAX_SAFE_INTEGER - 2
     }, {
-        id: "i3",
+        id: 3,
         type: "linkWidget",
         width: 1,
         height: 1,
@@ -48,7 +48,7 @@ export class WidgetPage extends LitElement {
         tags: ["socials"],
         orderIndex: Number.MAX_SAFE_INTEGER - 2
     }, {
-        id: "i4",
+        id: 4,
         type: "linkWidget",
         width: 4,
         height: 4,
@@ -57,7 +57,7 @@ export class WidgetPage extends LitElement {
         tags: ["socials"],
         orderIndex: Number.MAX_SAFE_INTEGER - 2
     }, {
-        id: "i5",
+        id: 5,
         type: "linkWidget",
         width: 2,
         height: 2,
@@ -66,7 +66,7 @@ export class WidgetPage extends LitElement {
         tags: ["socials"],
         orderIndex: Number.MAX_SAFE_INTEGER - 2
     }, {
-        id: "i6",
+        id: 6,
         type: "linkWidget",
         width: 2,
         height: 2,
@@ -81,6 +81,7 @@ export class WidgetPage extends LitElement {
         WidgetPage._newWidget(widget, this.grid!);
     }
 
+    // temp function to instantiate simple new widgets and check if adding works correct
     private static _newWidget(widget: WidgetType, grid: muuri): void {
 
         // private colorInfo() { // check litElement styleMap. then set on item-content
@@ -89,7 +90,7 @@ export class WidgetPage extends LitElement {
         //     --item-background-color:${'red'}//this.backgroundColor};
         //     "`;
         // };
-        let itemElem = document.createElement("div");
+        let itemElem = document.createElement("null");
 
         itemElem.innerHTML = `<div class="item he${widget.height} w${widget.width}">
             <div class="item-content">
@@ -97,7 +98,9 @@ export class WidgetPage extends LitElement {
                 <clock-element id="${widget.id}"></clock-element>
             </div>
         </div>`;
-        grid.add(itemElem);
+        let items = grid.add(itemElem.firstElementChild! as HTMLElement, {index: widget.id});
+        grid.refreshItems(items);
+
     }
 
     private muuriOptions: GridOptions = {
@@ -186,7 +189,9 @@ export class WidgetPage extends LitElement {
         );
     }
 
+    // determine params
     public add() {
+        // instantiate the specific WidgetType
         // this.addWidget()
     }
 

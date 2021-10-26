@@ -1,4 +1,5 @@
-import { css, customElement, html, internalProperty, LitElement, property } from "lit-element";
+import { css, html, LitElement } from 'lit';
+import { customElement, property, state } from 'lit-element';
 import bigText from "big-text.js-patched";
 
 @customElement('clock-element')
@@ -14,7 +15,7 @@ export class Clock extends LitElement {
     @property({attribute: "id", type: String})
     id = '';
 
-    @internalProperty()
+    @state()
     private _currentTime: string = "";
 
     get currentTime(): string {
@@ -40,7 +41,7 @@ export class Clock extends LitElement {
     }
 
     private startTime(): void {
-        this.currentTime = new Date().toLocaleTimeString("en-US", {
+        this.currentTime = new Date().toLocaleTimeString("nl-NL", {
             hour: "2-digit",
             minute: "2-digit",
             second: "2-digit",
