@@ -1,4 +1,4 @@
-import settingsMenu from "./settingsMenu";
+import settingsPane from "../topBar/settingsPane/settings-pane";
 import { WeatherWidget } from "../widgets/widgets";
 
 const defaultWeatherTimeout = 1_000 * 60 * 15;
@@ -65,32 +65,32 @@ let tempFormat = (data: OpenWeatherMapData): string => {
 
 export function getWeather(id: string, city: string) {
     let weatherOutputElem: HTMLElement = document.getElementById(`${id}-output`)!;
-    let weatherTimeout = settingsMenu.getWeatherTimeoutValue() || defaultWeatherTimeout;
+    // let weatherTimeout = settingsPane.getWeatherTimeoutValue() || defaultWeatherTimeout; // TODO: you need a state object for this?
     if(
-        knownWeather &&
-        knownWeather.hasOwnProperty(city) &&
-        (new Date().getTime() - knownWeather[city].retrievedAt) < weatherTimeout
+        knownWeather 
+        && knownWeather.hasOwnProperty(city) 
+        // && (new Date().getTime() - knownWeather[city].retrievedAt) < weatherTimeout
     ) {
         weatherOutputElem.innerText = tempFormat(knownWeather[city]);
     } else {
         city = city === "" ? "delft" : city;
-        const apiKey = settingsMenu.getWeatherAPIKey();
-        fetch(`http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`)
-            .then(response =>
-                response.json().then(data => ({
-                        data: data,
-                        status: response.status
-                    })
-                ).then(res => {
-                    knownWeather[city] = res.data;
-                    knownWeather[city].retrievedAt = new Date().getTime();
-                    window.localStorage.setItem("weatherInfo", JSON.stringify(knownWeather));
-                    weatherOutputElem.innerText = tempFormat(res.data);
-                }))
-            .catch((err) => {
-                console.log(err);
-                weatherOutputElem.innerText = `${weatherEmoji.Error} no (valid) key`;
-            });
+        // const apiKey = settingsPane.getWeatherAPIKey();
+        // fetch(`http://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}`)
+        //     .then(response =>
+        //         response.json().then(data => ({
+        //                 data: data,
+        //                 status: response.status
+        //             })
+        //         ).then(res => {
+        //             knownWeather[city] = res.data;
+        //             knownWeather[city].retrievedAt = new Date().getTime();
+        //             window.localStorage.setItem("weatherInfo", JSON.stringify(knownWeather));
+        //             weatherOutputElem.innerText = tempFormat(res.data);
+        //         }))
+        //     .catch((err) => {
+        //         console.log(err);
+        //         weatherOutputElem.innerText = `${weatherEmoji.Error} no (valid) key`;
+        //     });
     }
 }
 

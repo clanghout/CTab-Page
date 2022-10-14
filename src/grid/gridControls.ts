@@ -11,7 +11,6 @@ import vanillaPicker from "vanilla-picker";
 import * as weatherEl from "../controls/weatherControls";
 import * as widgetTypes from "../widgets/widgets";
 import bigText from "big-text.js-patched";
-import {GridWrapper} from "./gridWrapper";
 import muuri from "muuri";
 import {Widget, WidgetCollection} from "../widgets/widgetCollection";
 import TagFilterMenu from "../controls/filterMenu";
@@ -36,8 +35,8 @@ export class CTabGrid {
     public filterMenu: TagFilterMenu;
 
     constructor() {
-        settingsPane.initialize();
-        this.grid = new GridWrapper(".grid").grid;
+        // settingsPane.initialize(); // TODO
+        this.grid = {} as any; //new GridWrapper(".grid").grid;
         this.loadModel();
 
         // start after Muuri initialized, because we need access to the widgets
@@ -47,7 +46,9 @@ export class CTabGrid {
         window.onbeforeunload = () => {
             // loosely implemented dirty state (did not care much before, dirty in the probability of change)
             // so an additional check is added as well comparing the current state to the saved state
-            if (this.hasChanges() && settingsPane.getShowUnsavedWarning()) {
+            if (this.hasChanges() 
+            // && settingsPane.getShowUnsavedWarning()
+            ) {
                 // You have unsaved changes on this page. Do you want to leave this page and discard your changes or stay on this page?
                 return "";
             }
@@ -58,7 +59,7 @@ export class CTabGrid {
             note.addEventListener("change", this.noteChanged);
             note.addEventListener("keyup", this.noteChanged);
         });
-        // Set dirty to false, since note widgets might have set the state to dirty
+        // Set dirty to false, since setting initial values for note widgets might have changed the state to dirty
         this.dirty = false;
 
         this.initWidgetOrderViewData();

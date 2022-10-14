@@ -12,6 +12,14 @@ type WidgetType = {
     orderIndex: number,
 }
 
+/**
+ * This is the POC implementation for using custom elements for the widget page
+ * What seems to be the biggest blockers right now:
+ * - static styles do not allow for per widget colors
+ * - the custom elements per widget do not seem to add too much value
+ * since you need to create them via JS anyways. The benefits are
+ * separation of concerns and no leaking styles (hopefully)
+ */
 @customElement('widget-page')
 export class WidgetPage extends LitElement {
     private grid?: muuri;
@@ -90,14 +98,8 @@ export class WidgetPage extends LitElement {
         //     --item-background-color:${'red'}//this.backgroundColor};
         //     "`;
         // };
-        let itemElem = document.createElement("null");
+        let itemElem = document.createElement("clock-element");
 
-        itemElem.innerHTML = `<div class="item he${widget.height} w${widget.width}">
-            <div class="item-content">
-                <widget-controls></widget-controls>
-                <clock-element id="${widget.id}"></clock-element>
-            </div>
-        </div>`;
         let items = grid.add(itemElem.firstElementChild! as HTMLElement, {index: widget.id});
         grid.refreshItems(items);
 
