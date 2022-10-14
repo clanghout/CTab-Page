@@ -30,15 +30,15 @@
     "big-text.js-patched": "^1.0.1",
     "muuri": "^0.9.5",
     "rome": "^10.0.4-beta",
-    "streamsaver": "2.0.5",
-    "vanilla-picker": "^2.11.2"
+    "streamsaver": "2.0.6",
+    "vanilla-picker": "^2.12.1"
   },
   "devDependencies": {
-    "@types/node": "^16.4.13",
+    "@types/node": "^18.8.5",
     "parcel-bundler": "^1.12.4",
     "parcel-plugin-web-extension": "^1.6.1",
-    "sass": "^1.37.5",
-    "typescript": "^4.3.5"
+    "sass": "^1.55.0",
+    "typescript": "^4.8.4"
   },
   "private": true
 }
